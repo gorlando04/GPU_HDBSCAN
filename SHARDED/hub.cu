@@ -1,6 +1,9 @@
 #include <iostream>
 #include <cuda_runtime.h>
 #include <math.h>
+#include <algorithm>
+#include <time.h>
+
 
 const int numGPUs = 3;
 const long int numValues = 1000000; // Número de valores possíveis no vetor
@@ -25,7 +28,6 @@ struct Untie_hub
 __global__ void ShardVector(int *vec_dev,int *vectors,long int off_set_size,long int end,int offset=0){
 
 
-    long int list_id = blockIdx.x;
     long int tid = (blockIdx.x * blockSize) + threadIdx.x;
 
     if (tid < end){
@@ -50,7 +52,6 @@ __global__ void countValues(int *data, int *counts, long int size) {
 __global__ void ShardVertex(Vertex *vec_dev,Vertex *vectors,long int off_set_size,long int end,int offset=0){
 
 
-    long int list_id = blockIdx.x;
     long int tid = (blockIdx.x * blockSize) + threadIdx.x;
 
     if (tid < end){
@@ -70,7 +71,7 @@ __global__ void countTreshold(Vertex *data, int *counts, long int size,int compa
         long int value = data[tid].grau;
 
         if (value == comparision)
-            atomicAdd(&counts[0], 1);
+            atomicAdd(&counts[value], 1);
     }
 }
 
@@ -91,65 +92,15 @@ __global__ void calculateScore(int *vectors,int *treshold_idx, Untie_hub *vertex
 
 }
 
-void merge(struct Vertex arr[], int l, int m, int r) {
-    int i, j, k;
-    int n1 = m - l + 1;
-    int n2 = r - m;
-
-    // Crie arrays temporários para a metade esquerda e direita
-    struct Vertex L[n1];
-    struct Vertex R[n2];
-
-    // Copie os dados para os arrays temporários L[] e R[]
-    for (i = 0; i < n1; i++)
-        L[i] = arr[l + i];
-    for (j = 0; j < n2; j++)
-        R[j] = arr[m + 1 + j];
-
-    // Mescla os arrays temporários de volta em arr[l..r]
-    i = 0;
-    j = 0;
-    k = l;
-    while (i < n1 && j < n2) {
-        if (L[i].grau <= R[j].grau) {
-            arr[k] = L[i];
-            i++;
-        } else {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
-    }
-
-    // Copie os elementos restantes de L[], se houver
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-
-    // Copie os elementos restantes de R[], se houver
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
+// Custom comparator to sort MyStruct based on the 'value' field
+bool compareVertexByDegree(const Vertex &a, const Vertex &b) {
+    return a.grau < b.grau;
 }
 
-void mergeSort(struct Vertex arr[], int l, int r) {
-    if (l < r) {
-        // Encontra o ponto médio do array
-        int m = l + (r - l) / 2;
 
-        // Classifica a primeira metade
-        mergeSort(arr, l, m);
-
-        // Classifica a segunda metade
-        mergeSort(arr, m + 1, r);
-
-        // Mescla as duas metades ordenadas
-        merge(arr, l, m, r);
-    }
+// Custom comparator to sort MyStruct based on the 'value' field
+bool compareVertexByScore(const Untie_hub &a, const Untie_hub &b) {
+    return a.score < b.score;
 }
 
 
@@ -164,6 +115,13 @@ int main() {
     // Aloca memória para o vetor na CPU
 	cudaMallocManaged(&h_data,(size_t)vectorSize * sizeof(int));
   
+    // Aqui da pra colocar um perfectch
+
+    for (int i=0;i<numGPUs;i++){
+        cudaSetDevice(i);
+        cudaMemPrefetchAsync(h_data,(size_t)vectorSize * sizeof(int),i);
+    }
+
 
     auto cuda_status = cudaGetLastError();
     if (cuda_status != cudaSuccess) {
@@ -177,6 +135,9 @@ int main() {
     }
 
     printf("Comecand a busca\n");
+
+    clock_t t; 
+    t = clock(); 
 
 
     // Inicializa contagens na CPU para cada GPU
@@ -204,7 +165,6 @@ int main() {
 
 // Realiza a contagem de graus para todos os vértices
 
-    long int end = 0;
  int iters = shards_num / numGPUs;
 
     for (int s=0;s < iters;s++){
@@ -262,7 +222,6 @@ int main() {
 
 
 
-    printf("\naaa");
     
  // Combina as contagens de todas as GPUs na CPU
     finalCounts = new int[numValues];
@@ -289,6 +248,10 @@ int main() {
     // Aloca memória para o vetor na CPU
 	cudaMallocManaged(&vertexes,(size_t)numValues * sizeof(Vertex));
   
+      for (int i=0;i<numGPUs;i++){
+        cudaSetDevice(i);
+        cudaMemPrefetchAsync(vertexes,(size_t)numValues * sizeof(Vertex),i);
+    }
 
     cuda_status = cudaGetLastError();
     if (cuda_status != cudaSuccess) {
@@ -306,16 +269,28 @@ int main() {
 
     // Ordenar o vetor de structs pelo valor do grau.
 
-    /* Isso vai ser feito aqui.*/
-
-
     // Pegar os threshold
-    int pos_threshold = sqrt(numValues);
+    int pos_threshold = sqrt(numValues) ;
+
+    std::partial_sort(vertexes, vertexes + pos_threshold, vertexes + numValues, compareVertexByDegree);
+
 
     // Pegar o valor do threshold 
     int value_threshold = vertexes[pos_threshold].grau;
 
+    // Pega quantos empates temos na lista final
+
+    int missing = 0;
+    for (int i=pos_threshold-1;i > 0; i--){
+        if (vertexes[i].grau  != value_threshold){
+            missing = pos_threshold - i ;
+            break;
+        }
+    }
+
     printf("A posicao do threshold eh: %d e o valor eh: %d\n",pos_threshold,value_threshold);
+
+    
     // Encontrar quantos valores são iguais ao threshold
     Vertex *degree_count[numGPUs];  // Vetores na GPU
 
@@ -405,6 +380,10 @@ int main() {
     // Aloca memória para o vetor na CPU
 	cudaMallocManaged(&treshold_idx,(size_t)countsTreshold * sizeof(int));
   
+    for (int i=0;i<numGPUs;i++){
+        cudaSetDevice(i);
+        cudaMemPrefetchAsync(treshold_idx,(size_t)countsTreshold * sizeof(int),i);
+    }
 
     cuda_status = cudaGetLastError();
     if (cuda_status != cudaSuccess) {
@@ -517,7 +496,31 @@ int main() {
     }
 
 
-    mergeSort(vertexes, 0, numValues-1) ;
+
+    std::partial_sort(unties, unties + missing, unties + countsTreshold, compareVertexByScore);
+
+    t = clock() - t; 
+    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds 
+
+    printf("Tempo total: %.3lf\n",time_taken);
+
+
+
+    FILE *pFile;
+
+
+
+    pFile=fopen("Time_1M_32.txt", "a");
+
+    if(pFile==NULL) {
+        perror("Error opening file.");
+    }
+else {
+
+        fprintf(pFile, "%lf \n", time_taken);
+    }
+
+fclose(pFile);
 
     return 0;
 }
