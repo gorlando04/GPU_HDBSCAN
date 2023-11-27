@@ -421,7 +421,93 @@ int findKNNlist(int *kNN,long int neig,long int i,int k){
 }
 
 
+void createNodeList(int *vector,ECLgraph *g){
 
+    for(int i=0;i<g->nodes;i++){
+        
+        long int begin = g->nindex[i];
+        long int end = g->nindex[i+1];
+
+        for (long int j=begin;j<end;j++)
+            vector[j] = i;
+    }
+}
+
+
+__global__ void calculateCoreDistance_(float *coreDistances,float *kNN_distances,long int offset,long int size,long int k,long int mpts){
+
+    long int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    if (tid < size) {
+        
+        float distance = kNN_distances[(tid+offset)*k+mpts];
+        coreDistances[tid] = distance;
+    }
+
+}
+
+__global__ void initializeVectorCounts(float *vector,float value,int size){
+
+    long int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    if (tid < size) {
+        vector[tid] = value;
+    }
+
+}
+
+void calculateCoreDistance(float *coreDistances ,long int *indexesPerGPU,long int k){
+
+    float  *coreDistances_cpu[numGPUs];
+
+    float  *coreDistances_gpu[numGPUs];
+
+    float *kNN_distances;
+
+    for (int i = 0; i < numGPUs; i++) {
+
+        cudaSetDevice(i);
+
+        // Aloca memória para o vetor e contagens na GPU
+        cudaMalloc(&coreDistances_gpu[i],indexesPerGPU[i] * sizeof(float)); // Vetor de valores
+
+        // Inicializa o vetor em GPU de core_distances
+        long int numBlocks_ = (indexesPerGPU[i]/blockSize) + 1;
+        initializeVectorCounts<<<numBlocks_,blockSize>>>(coreDistances_gpu[i],0,indexesPerGPU[i]);
+
+
+
+        // Configura a grade de threads
+        long int numBlocks = ( indexesPerGPU[i]/ blockSize) +1;
+
+        calculateCoreDistance_<<<numBlocks,blockSize>>>(coreDistances_gpu[i],kNN_distances,indexesPerGPU[0],indexesPerGPU[i],k,k-1);
+        
+   
+        CheckCUDA_();
+    }
+
+    // Juntando tudo em CPU
+
+    for (int i = 0; i < numGPUs; i++) {
+            cudaSetDevice(i);
+
+            cudaDeviceSynchronize();
+
+            coreDistances_cpu[i] = new float[indexesPerGPU[i]];
+            cudaMemcpy(coreDistances_cpu[i], coreDistances_gpu[i], indexesPerGPU[i] * sizeof(float), cudaMemcpyDeviceToHost);
+
+            cudaFree(coreDistances_gpu[i]);
+
+            CheckCUDA_();
+
+    }   
+
+    // Junta em CPU
+    for (int i=0;i<numGPUs;i++){
+        for (int j=0;j<indexesPerGPU[i];j++)
+            coreDistances[(i*indexesPerGPU[0]) + j] = coreDistances_cpu[i][j];
+    }
+
+    return;
+}
 
 ECLgraph buildECLgraph(int nodes, long int edges,int *kNN,int k, int *antihubs, long int num_antihubs)
 {
@@ -447,7 +533,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN,int k, int *antihubs, 
 
     cudaDeviceSynchronize();
 
-CheckCUDA_();
+    CheckCUDA_();
 
     cudaMemPrefetchAsync(g.nindex,(size_t)(g.nodes + 1) * sizeof(g.nindex[0]),cudaCpuDeviceId);
 
@@ -502,7 +588,7 @@ CheckCUDA_();
 
     cudaDeviceSynchronize();
 
-CheckCUDA_();
+    CheckCUDA_();
 
 
 
@@ -547,7 +633,24 @@ CheckCUDA_();
 
         g.eweight = (float*)malloc(g.edges * sizeof(g.eweight[0]));
 
+        int *aux_nodes;
 
+        aux_nodes = (int*)malloc(g.nindex[nodes] * sizeof(g.nlist[0]));
+
+        createNodeList(aux_nodes,&g);
+
+         
+        long int elementsPerGPU[numGPUs];
+
+        // Calcula a quantidade de elementos por GPU
+        calculateElements(elementsPerGPU,numGPUs,numValues);
+
+
+
+        float *coreDistances;
+        coreDistances = new float[numValues];
+
+        calculateCoreDistance(coreDistances,elementsPerGPU,k);
 
 
 
@@ -757,7 +860,7 @@ int main() {
     printf("Iniciando a construcao da MST\n");
 
 
-    // run CPU code and compare result
+    /*// run CPU code and compare result
     bool* cpuMSTedges = cpuMST(g);
 
 
@@ -769,7 +872,7 @@ int main() {
         }
     }
 
-    printf("A quantidade de arestas eh: %d\n",soma);
+    printf("A quantidade de arestas eh: %d\n",soma);*/
 
 
 

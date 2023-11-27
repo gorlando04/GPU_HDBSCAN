@@ -1,7 +1,9 @@
+#ifndef MST
+#define MST
 /*
-ECLgraph: a 32-bit binary CSR graph data structure
+ECL-MST: This code computes a minimum spanning tree (MST) or a minimum spanning forest (MSF) of an undirected graph.
 
-Copyright (c) 2023, Martin Burtscher
+Copyright (c) 2023, Martin Burtscher and Alex Fallin
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -28,32 +30,33 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-URL: The latest version of this code is available at https://cs.txstate.edu/~burtscher/research/ECLgraph/.
+URL: The latest version of this code is available at https://cs.txstate.edu/~burtscher/research/ECL-MST/ and at https://github.com/burtscher/ECL-MST.
+
+Publication: This work is described in detail in the following paper.
+Alex Fallin, Andres Gonzalez, Jarim Seo, and Martin Burtscher. A High-Performance MST Implementation for GPUs. Proceedings of the 2023 ACM/IEEE International Conference for High Performance Computing, Networking, Storage, and Analysis. November 2023.
 */
 
 
-#ifndef ECL_GRAPH
-#define ECL_GRAPH
+#include <climits>
+#include <algorithm>
+#include <tuple>
+#include <vector>
+#include <sys/time.h>
+#include "../structs/ECLgraph.h"
 
-#include <cstdlib>
-#include <cstdio>
 
-struct ECLgraph {
-  int nodes;
-  long int edges;
-  long int* nindex;
-  int* nlist;
-  float* eweight;
-};
+static const int Device = 0;
+static const int ThreadsPerBlock = 512;
 
-void freeECLgraph(ECLgraph &g)
-{
-  if (g.nindex != NULL) free(g.nindex);
-  if (g.nlist != NULL) free(g.nlist);
-  if (g.eweight != NULL) free(g.eweight);
-  g.nindex = NULL;
-  g.nlist = NULL;
-  g.eweight = NULL;
-}
+typedef unsigned long long ull;
+
+
+static inline int serial_find(const int idx, int* const parent);
+
+
+static inline void serial_join(const int a, const int b, int* const parent);
+
+
+static bool* cpuMST(const ECLgraph& g);
 
 #endif
