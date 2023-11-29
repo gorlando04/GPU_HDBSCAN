@@ -15,8 +15,10 @@ add_library(hdbcuda STATIC
     calculates/calculates.cuh
     counts/count.cu
     counts/count.cuh
-    mst/mst.cpp
-    mst/mst.h
+    mst/mst.cu
+    mst/mst.cuh
+    trees/tree.cu
+    trees/tree.cuh
 )
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")

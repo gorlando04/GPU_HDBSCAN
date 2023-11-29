@@ -19,4 +19,11 @@ __global__ void initializeVectorCounts(float *vector,float value,int size);
 
 __global__ void initializeUntieHubs(Untie_hub *untie, int value, int size);
 
+
+__global__ void initializeMSTedges(MSTedge *mst_edges,int *nodes, int *edges, float *weight, bool *isInMST, long int size);
+
+
+__global__ void initializeVectorCountsOFFset(int *vector,int value,int size,long int offset);
+
+
 #endif

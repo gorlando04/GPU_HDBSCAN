@@ -14,7 +14,9 @@ void joinAntiHubs(int *antihubs,Vertex *vertexes,int not_ties, Untie_hub *unties
 
 void createNodeList(int *vector,ECLgraph *g);
 
+void createEdgeList(int *vector, ECLgraph *g);
 
+void createWeightList(float *vector,ECLgraph *g);
 
 ECLgraph buildECLgraph(int nodes, long int edges,int *kNN , float *distances ,int k, int *antihubs, long int num_antihubs);
 

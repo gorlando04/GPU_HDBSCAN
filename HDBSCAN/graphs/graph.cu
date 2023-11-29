@@ -38,7 +38,21 @@ void createNodeList(int *vector,ECLgraph *g){
     }
 }
 
+void createEdgeList(int *vector,ECLgraph *g){
 
+    for(long int i=0;i<g->edges;i++){
+        
+        vector[i] = g->nlist[i];
+    }
+}
+
+void createWeightList(float *vector,ECLgraph *g){
+
+    for(long int i=0;i<g->edges;i++){
+        
+        vector[i] = g->eweight[i];
+    }
+}
 
 ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k, int *antihubs, long int num_antihubs)
 {
@@ -157,12 +171,11 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
             // Se não tiver na lista de kNN do vizinho
             if (!FLAG){
                 g.nlist[pos] = neig;
-                
                 // Adiciona mais uma inserção no vetor auxiliar
                 auxiliar_edges[i] += 1;
-            }
+	   }
+        }
 
-    }
     // Adiciona os antiHubs
 
     for (long int i=0;i<num_antihubs;i++){
@@ -180,49 +193,43 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
             }
         }
     }
+        g.eweight = (float*)malloc(g.edges * sizeof(g.eweight[0]));
+
+	 int *aux_nodes;
+        cudaMallocManaged(&aux_nodes,(size_t)g.edges * sizeof(g.nlist[0]));
+        createNodeList(aux_nodes,&g);
+
+         
+        long int elementsPerGPU[numGPUs];
+        calculateElements(elementsPerGPU,numGPUs,numValues);
 
 
-
-    // Constrói os pesos das arestas
-    g.eweight = (float*)malloc(g.edges * sizeof(g.eweight[0]));
-
-    int *aux_nodes;
-    cudaMallocManaged(&aux_nodes,(size_t)g.edges * sizeof(g.nlist[0]));
-    createNodeList(aux_nodes,&g);
-
-        
-    long int elementsPerGPU[numGPUs];
-    calculateElements(elementsPerGPU,numGPUs,numValues);
+        float *coreDistances;
+        cudaMallocManaged(&coreDistances,(size_t)(numValues) * sizeof(float)); 
+        calculateCoreDistance(distances,coreDistances,elementsPerGPU,k);
 
 
-    float *coreDistances;
-    cudaMallocManaged(&coreDistances,(size_t)(numValues) * sizeof(float)); 
-    calculateCoreDistance(distances,coreDistances,elementsPerGPU,k);
+        float *graphDistances;
+        cudaMallocManaged(&graphDistances,(size_t)g.edges * sizeof(g.eweight[0]));
 
+        int *aux_edges;
+        cudaMallocManaged(&aux_edges,(size_t)g.edges * sizeof(g.nlist[0]));
+        for (long int i=0;i<g.edges;i++){
+            aux_edges[i] = g.nlist[i];
+        }
 
-    float *graphDistances;
-    cudaMallocManaged(&graphDistances,(size_t)g.edges * sizeof(g.eweight[0]));
+        calculateMutualReachabilityDistance(graphDistances,coreDistances,aux_nodes,aux_edges,g.edges); 
 
-    int *aux_edges;
-    cudaMallocManaged(&aux_edges,(size_t)g.edges * sizeof(g.nlist[0]));
-    for (long int i=0;i<g.edges;i++){
-        aux_edges[i] = g.nlist[i];
-    }
-
-    calculateMutualReachabilityDistance(graphDistances,coreDistances,aux_nodes,aux_edges,g.edges); 
-
-    //Le o vetor
 
     for (long int i=0;i<num_antihubs;i++){
 
         int idx_a = antihubs[i];
         long int pos_begin = g.nindex[idx_a] + auxiliar_edges[idx_a];
         for (long int j=i;j<num_antihubs-1;j++){
-            
             int idx_b = antihubs[j+1];
             
             //Calcula distancia euclidiana
-            float euclidean_distance = 999;
+            float euclidean_distance = 0.1;
 
             if (graphDistances[pos_begin + j] < euclidean_distance){
                 graphDistances[pos_begin+j] = euclidean_distance;
@@ -239,8 +246,8 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
         g.eweight[i] = graphDistances[i];
     } 
 
-    
 
+ 
   return g;   
 }
 
@@ -346,6 +353,7 @@ CheckCUDA_();
     get_IndexThreshold(finalCounts,treshold_idx,value_threshold);
 
 
+
     for (int i=0;i<numGPUs;i++){
         cudaSetDevice(i);
         cudaMemPrefetchAsync(treshold_idx,(size_t)countsTreshold * sizeof(int),i);
@@ -369,8 +377,6 @@ CheckCUDA_();
 
     std::partial_sort(unties, unties + missing_ties, unties + countsTreshold, compareVertexByScore);
 
-
-    // Junção dos antihubs
     int *antihubs;
 
     antihubs = new int[pos_threshold];
@@ -388,10 +394,6 @@ CheckCUDA_();
     ECLgraph g;
     
     g = buildECLgraph(numValues, vectorSize,h_data, distances,k, antihubs, pos_threshold);
-
-    // Comparar a distância euclidiana para os AntiHubs
-
-
 
 
     t = clock() - t; 

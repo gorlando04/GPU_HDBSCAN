@@ -11,10 +11,10 @@ __global__ void calculateScore(int *vectors,int *treshold_idx, Untie_hub *vertex
     long int tid = (blockIdx.x * blockSize) + threadIdx.x;
 
     if (tid < size){
-        int idx = treshold_idx[tid+ (offset) ];
+        long int idx = treshold_idx[tid+ (offset) ];
         vertex[tid].index = idx;
 
-        for (int j=0;j<k;j++){
+        for (long int j=0;j<k;j++){
             int neig = vectors[idx*k +j];
             vertex[tid].score += degrees[neig];
         }
@@ -32,6 +32,7 @@ __global__ void calculateCoreDistance_(float *coreDistances,float *kNN_distances
     }
 
 }
+
 
 __global__ void ShardVector(int *vec_dev,int *vectors,long int size,long int off_set_size,int offset){
 
@@ -58,8 +59,9 @@ __global__ void calculateMRD(float *d_distances,int *d_nodes,int *d_edges,float 
 
         if (core_dA > core_dB){
             d_distances[tid] = core_dA;
-            return;
-        }
+	    return;
+	}
+
         d_distances[tid] = core_dB;
         return;
     }
@@ -113,7 +115,7 @@ void calculateUntieScore(Untie_hub *unties ,long int *indexesPerGPU,int *h_data,
 
         auto cuda_status = cudaGetLastError();
         if (cuda_status != cudaSuccess) {
-            printf("%s hehehehehe",cudaGetErrorString(cuda_status));
+            printf("%s unties",cudaGetErrorString(cuda_status));
             exit(-1);
            }
     }
@@ -208,7 +210,8 @@ void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int 
 
 
 
-void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistances,int *aux_nodes,int *aux_edges, long int size){
+
+void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistances,int *aux_nodes,int *aux_edges,long int size){
 
 
     int shards_num = 9;
@@ -297,12 +300,13 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
     
     }
 
+    printf("Finalizado\n");
+
     for (int i = 0; i < shards_num; i++) {
         for (int j = 0; j < elementsPerGPU[i]; j++) {
-            graphDistances[j+ (i * elementsPerGPU[0])] = h_distances[i][j];
+		graphDistances[j+ (i * elementsPerGPU[0])] = h_distances[i][j];
         }
-    }
-
-    return;
+    }    
+   return;
 
 }

@@ -13,6 +13,12 @@ bool compareVertexByScore(const Untie_hub &a, const Untie_hub &b) {
     return a.score < b.score;
 }
 
+
+bool compareEdgeByWeight(const MSTedge &a, const MSTedge &b){
+    return a.weight < b.weight;
+}
+
+
 void CheckCUDA_(){
 
     auto cuda_status = cudaGetLastError();

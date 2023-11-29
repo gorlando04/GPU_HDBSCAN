@@ -17,17 +17,13 @@ __global__ void ShardVector(int *vec_dev,int *vectors,long int size,long int off
 __global__ void calculateMRD(float *d_distances,int *d_nodes,int *d_edges,float *coreDistances,long int size);
 
 
-
 void calculateElements(long int *elementsPerGPU,int shards_num,long int vectorSize=vectorSize);
 
 void calculateUntieScore(Untie_hub *unties ,long int *indexesPerGPU,int *h_data,int *treshold_idx,int *finalCounts);
 
 void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int *indexesPerGPU,long int k);
 
-
-void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistances,int *aux_nodes,int *aux_edges, long int size); 
-
-
+void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistances,int *aux_nodes,int *aux_edges,long int size); 
 
 
 #endif
