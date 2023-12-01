@@ -103,31 +103,24 @@ int main() {
 
      mst_edges = buildMST(g,edges,12);
 
-    UnionFind U = UnionFind(num);
-
-
     SingleLinkageNode *result_arr;
-    result_arr = new SingleLinkageNode[g.nodes-1];
 
-    for (long int i=0;i<(g.nodes-1);i++){
+    result_arr = build_Linkage_tree(mst_edges ,num ,g.nodes);
 
-      int a = mst_edges[i].from_node;
-      int b = mst_edges[i].to_node;
-      float delta = mst_edges[i].weight;
+    CondensedTreeNode* condensed_tree;
+    int condensed_size;
+    condensed_tree =  build_Condensed_tree(result_arr, num ,g.nodes-1, k,&condensed_size);
 
-      int aa = U.FastFind(a);
-      int bb = U.FastFind(b);
-      
-      result_arr[i].left_node = aa;
-      result_arr[i].right_node = bb;
-      result_arr[i].weight = delta;
-      result_arr[i].node_size = (U.getSize(aa)) + (U.getSize(bb));
 
-      U.Union(aa,bb);
+    Stability *stabilities;
+    int stability_size;
+    
+    stabilities = compute_stability(condensed_tree,condensed_size,&stability_size);
 
-    }
 
-    printf("Single Linkage Tree montada\n");
+    get_clusters(condensed_tree, condensed_size, stabilities,  stability_size, numValues);
+
+
 
 
   return 0;

@@ -4,6 +4,7 @@
 #include <cuda.h>
 
 #include "cuda_runtime.h"
+#include "vector"
 
 const int numGPUs = 3;
 const long int numValues = 1000000;//400000000; // Número de valores possíveis no vetor
@@ -53,6 +54,34 @@ struct SingleLinkageNode{
     int right_node;
     float weight;
     int node_size;
+};
+
+
+
+struct CondensedTreeNode{
+
+    int parent;
+    int child;
+    float lambda_val;
+    int child_size;
+};
+
+
+int getMaxChild(CondensedTreeNode *condensed_tree, int size);
+
+int getMaxParent(CondensedTreeNode *condensed_tree, int size);
+
+
+int getMinParent(CondensedTreeNode *condensed_tree, int size);
+
+float getMaxLambda(CondensedTreeNode *condensed_tree, int size);
+
+std::vector<int> getIndexes(CondensedTreeNode *condesed_tree, int size, int node);
+
+struct Stability{
+
+    int cluster_id;
+    float lambda;
 };
 
 
