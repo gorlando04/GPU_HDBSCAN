@@ -62,7 +62,18 @@ void ReadTxtVecs(const string &data_path, float **vectors_ptr,
     return;
   }
 
+void WriteTxtVecs(const string &data_path, const int *vectors,
+                           const int write_num) {
+    ofstream out(data_path);
 
+    for (int i = 0; i < write_num; i++) {
+      out << write_num << '\n';
+        out << vectors[i] << '\t';
+      out << endl;
+    }
+    out.close();
+    return;
+}
 
 
 
@@ -148,6 +159,12 @@ int main() {
     int condensed_size;
     condensed_tree =  build_Condensed_tree(result_arr, num ,g.nodes-1, k,&condensed_size);
 
+    for(int i=0;i<condensed_size;i++){
+
+      if (condensed_tree[i].parent == 1000120)
+        printf("PARENT: %d CHILD: %d SIZE: %d\n",condensed_tree[i].parent,condensed_tree[i].child, condensed_tree[i].child_size);
+    }
+
 
 
 
@@ -160,7 +177,8 @@ int main() {
     labels = get_clusters(condensed_tree, condensed_size, stabilities,  stability_size, numValues);
 
 
-
+    const std::string out_PATH = "/nndescent/GPU_HDBSCAN/HDBSCAN/groudtruth/approximate_result.txt";
+    WriteTxtVecs(out_PATH,labels,100);
 
 
 

@@ -193,7 +193,7 @@ SingleLinkageNode* build_Linkage_tree( MSTedge *mst_edges ,int num,int num_nodes
 
     }
 
-    printf("Single Linkage Tree montada\n");
+//    printf("Single Linkage Tree montada\n");
 
     return result_arr;
 
@@ -211,8 +211,6 @@ std::vector<int> BFS_from_hierarchy(SingleLinkageNode *hierarchy,int bfs_root, i
     to_process.push_back(bfs_root);
 
     std::vector<int>  result;
-
-
 
     while (to_process.size() > 0){
 
@@ -536,39 +534,30 @@ std::vector<int> BFS_from_cluster_tree(CondensedTreeNode *condensed_tree, int bf
     to_process.push_back(bfs_root);
 
     std::vector<int>  result;
-
-    while (to_process.size() > 0){
-
+     while (to_process.size() > 0){
+	sort(to_process.begin(),to_process.end());
         //merge result com to_process
         result.insert( result.end(), to_process.begin(), to_process.end() );
 
         //Aux vector
         std::vector<int> aux;
-        int to_process_counter = 0;
         for(int i=0;i<condensed_size;i++){
-
-            if(condensed_tree[i].parent == to_process[to_process_counter]){
+            int pos = buscaBinaria(to_process, condensed_tree[i].parent);
+            if(pos != -1){
                 aux.push_back(i);
             }
-
-            if (i + 1 < condensed_size && condensed_tree[i].parent == condensed_tree[i+1].parent)
-                continue;
-            else if(i + 1 < condensed_size && condensed_tree[i].parent != condensed_tree[i+1].parent)
-                to_process_counter += 1;
         }
 
         std::vector<int> aux_;
         for(int i=0;i<aux.size();i++)
             aux_.push_back(condensed_tree[aux[i]].child);
 
-        to_process.swap(aux);
+        to_process.swap(aux_);
     }
-
-
+    sort(result.begin(),result.end());
     return result;
 
 }
-
 
 int* do_labelling(CondensedTreeNode *condensed_tree, int condensed_size, std::vector<int> cluster, std::vector<std::tuple<int,int>> cluster_map){
 
@@ -576,7 +565,7 @@ int* do_labelling(CondensedTreeNode *condensed_tree, int condensed_size, std::ve
     int max_parent = getMaxParent(condensed_tree,condensed_size);
     
     int *result_arr;
-    printf("ROOT = %d\n",root_cluster);
+//    printf("ROOT = %d\n",root_cluster);
     result_arr = new int[root_cluster];
 
     HashLabels arrays;
@@ -654,10 +643,19 @@ int* get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stabili
         }
     }
 
-    std::vector<std::tuple<int,bool>> is_cluster;
-    for (int i=size_node_list-1;i >= 0;i--)
-        is_cluster.push_back(std::make_tuple(node_list[i],true));
+    std::vector<bool> is_cluster;
 
+    // Hashed is_cluster
+    int max_parent = getMaxParent(condensed_tree,condensed_size);
+    int min_parent = getMinParent(condensed_tree,condensed_size);
+
+    for (int i=0;i < max_parent+1;i++){
+        if (i > min_parent)
+        is_cluster.push_back(true);
+        else
+        is_cluster.push_back(false);
+
+    }
 
 
     int num_points = numValues;
@@ -666,12 +664,17 @@ int* get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stabili
 
     int max_cluster_size = num_points+1;
 
+    std::vector<int> cluster_sizes;
 
-    std::vector<std::tuple<int,int>> cluster_sizes;
-    for (int i=0;i< count; i++)
-        cluster_sizes.push_back(std::make_tuple(cluster_tree[i].child, cluster_tree[i].child_size));
-    
-    sort(cluster_sizes.begin(), cluster_sizes.end()); 
+
+    for (int i=0;i< (max_parent-min_parent+1); i++)
+        cluster_sizes.push_back(0);
+
+    for (int i=0;i< count; i++){
+        int pos = (cluster_tree[i].child - min_parent);
+        cluster_sizes[pos] = cluster_tree[i].child_size;
+    }
+
 
 
     for (long int i=0;i<size_node_list;i++){
@@ -682,24 +685,17 @@ int* get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stabili
         //Subtree_stability
         float subtree_stability = 0;
         for(int j=0;j<child_selection.size();j++){
+
             int child = cluster_tree[child_selection[j]].child;
             int pos = buscaBinaria(stabilities, child, stability_size);
             subtree_stability += stabilities[pos].lambda;
         }
 
         int pos = buscaBinaria(stabilities, node_list[i], stability_size);
-	int pos2 = buscaBinaria(cluster_sizes,node_list[i]);
 
-        if (subtree_stability > stabilities[pos].lambda || std::get<1>(cluster_sizes[pos2]) > max_cluster_size){
 
-            int pos_ = buscaBinaria(is_cluster,node_list[i]);
-            if (pos_ == -1){
-                        is_cluster.push_back(std::make_tuple(node_list[i],false));
-                         sort(is_cluster.begin(),is_cluster.end());
-                    }
-
-                    else {is_cluster[pos_] = std::make_tuple(node_list[i],false);}
-
+        if (subtree_stability > stabilities[pos].lambda || cluster_sizes[node_list[i]-min_parent] > max_cluster_size){
+            is_cluster[node_list[i]] = false;
             stabilities[pos].lambda = subtree_stability;
         }
 
@@ -708,13 +704,7 @@ int* get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stabili
             sub_nodes = BFS_from_cluster_tree(condensed_tree, node_list[i], condensed_size);
             for (int j=0;j<sub_nodes.size();j++){
                 if (sub_nodes[j] != node_list[i]){
-                    int pos_ = buscaBinaria(is_cluster,sub_nodes[j]);
-                    if (pos_ == -1){
-                        is_cluster.push_back(std::make_tuple(node_list[i],false));
-                         sort(is_cluster.begin(),is_cluster.end());
-                    }
-
-                    else {is_cluster[pos_] = std::make_tuple(node_list[i],false);}
+                    is_cluster[sub_nodes[j]] = false;
                 }
 
             }
@@ -723,18 +713,20 @@ int* get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stabili
     }
 
     std::vector<int> cluster;
-    for (int i=size_node_list-1;i >= 0;i--)
-        if (std::get<1>(is_cluster[i]) ){
-            cluster.push_back(std::get<0>(is_cluster[i]));
+    for (int i=0;i < is_cluster.size();i++)
+        if (is_cluster[i]){
+            cluster.push_back(i);
 	}
+  printf("CLUSTERS FIND = %ld \n",cluster.size());
   sort(cluster.begin(),cluster.end());
 
 
     std::vector<std::tuple<int,int>> cluster_map;
+    int current_clust = 0;
     for (int i=0;i<cluster.size();i++){
-        cluster_map.push_back( std::make_tuple(cluster[i] , i)  );
+        cluster_map.push_back( std::make_tuple(cluster[i] , current_clust)  );
+	current_clust += 1;
     }
-
     int *labels;
     labels = do_labelling(condensed_tree,condensed_size,cluster,cluster_map);
 /*    for (int i=numValues;i>-1;i--){
