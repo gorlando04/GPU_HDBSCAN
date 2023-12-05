@@ -83,6 +83,7 @@ std::vector<int> getIndexes(CondensedTreeNode *condesed_tree,int size, int node)
             vec.push_back(i);
     }
 
+    
     return vec;
 
 }

@@ -1,6 +1,7 @@
 #include "calculates.cuh"
 #include "../initializer/initialize.cuh"
 #include "cuda_runtime.h"
+#include "math.h"
 
 
 
@@ -309,4 +310,15 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
     }    
    return;
 
+}
+
+
+float calculate_euclidean_distance(float *vector,long int idxa,long int idxb,int dim){
+
+    float soma = 0.0;
+    for(long int i=0;i<dim;i++){
+        soma += ( pow(vector[idxa*dim+i] - vector[idxb*dim+i],2) );
+    }
+
+    return sqrt(soma);
 }

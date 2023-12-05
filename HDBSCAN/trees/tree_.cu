@@ -5,8 +5,6 @@
 #include "../getters/getters.cuh"
 
 
-
-
 UnionFind::UnionFind(int N) {
 
 
@@ -99,6 +97,75 @@ int UnionFind::getNextLabel(){
 }
 
 
+
+TreeUnionFind::TreeUnionFind(int size){
+
+    this->size = size;
+    // Parent array
+    int *aux;
+    cudaMallocManaged(&aux,(size_t)size * sizeof(int));
+
+    
+    int gridSize = ((size) + blockSize - 1) / blockSize;
+    initializeVectorCounts<<<gridSize,blockSize>>>(aux,0,size);
+
+    cudaDeviceSynchronize();
+    CheckCUDA_();
+
+    this->_data1 = new int[size];
+    cudaMemcpy(this->_data1, aux,(size_t)size * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaFree(aux);
+
+    cudaDeviceSynchronize();
+    CheckCUDA_();
+
+    //Initiate data0
+    this->_data0 = new int[size];
+
+    cudaMallocManaged(&aux,(size_t)size * sizeof(int));
+
+    
+    gridSize = ((size) + blockSize - 1) / blockSize;
+    initializeVectorArange<<<gridSize,blockSize>>>(aux,size);
+
+    cudaDeviceSynchronize();
+    CheckCUDA_();
+
+    cudaMemcpy(this->_data0, aux,(size_t)size * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaFree(aux);
+
+    cudaDeviceSynchronize();
+    CheckCUDA_();
+
+}
+
+void TreeUnionFind::Union(int x, int y){
+
+
+    int x_root = Find(x);
+    int y_root = Find(y);
+
+
+    if (this->_data1[x_root] < this->_data1[y_root])
+        this->_data0[x_root] = y_root;
+    else if (this->_data1[x_root] > this->_data1[y_root])
+        this->_data0[y_root] = x_root;
+    else{
+        this->_data0[y_root] = x_root;
+        this->_data1[x_root] += 1;
+    }
+
+    return ;
+}
+
+int TreeUnionFind::Find(int x){
+
+    if (this->_data0[x] != x)
+        this->_data0[x] = Find(this->_data0[x]);
+
+    return this->_data0[x];
+}
+
 SingleLinkageNode* build_Linkage_tree( MSTedge *mst_edges ,int num,int num_nodes){
     
     
@@ -155,11 +222,12 @@ std::vector<int> BFS_from_hierarchy(SingleLinkageNode *hierarchy,int bfs_root, i
         result.insert( result.end(), to_process.begin(), to_process.end() );
 
         //Aux vector
-        std::vector<int> aux;
+       std::vector<int> aux;
 
         for(int i=0;i<to_process.size();i++){
             if (to_process[i] >= num_points)
-                aux.push_back(to_process[i] - num_points);
+		aux.push_back(to_process[i] - num_points);
+
         }
 
          
@@ -175,8 +243,6 @@ std::vector<int> BFS_from_hierarchy(SingleLinkageNode *hierarchy,int bfs_root, i
 
         to_process.swap(aux_);
 
-
-
     }
 
 
@@ -186,7 +252,7 @@ std::vector<int> BFS_from_hierarchy(SingleLinkageNode *hierarchy,int bfs_root, i
 }
 
 
-CondensedTreeNode* build_Condensed_tree(SingleLinkageNode *hierarchy,int num ,int num_nodes, int mpts, int *size){
+CondensedTreeNode* build_Condensed_tree(SingleLinkageNode *hierarchy,int num ,int num_nodes, int mpts,int *size){
 
 
 
@@ -199,6 +265,9 @@ CondensedTreeNode* build_Condensed_tree(SingleLinkageNode *hierarchy,int num ,in
     std::vector<int> node_list;  
     node_list = BFS_from_hierarchy(hierarchy, root,num_nodes);
     int node_list_size = node_list.size();
+
+
+
 
     int *relabel;
     relabel = new int[root+1];
@@ -295,7 +364,6 @@ CondensedTreeNode* build_Condensed_tree(SingleLinkageNode *hierarchy,int num ,in
             }
 
             aux_node_list_right = BFS_from_hierarchy(hierarchy, right, num_nodes);
-            int sub_node;
             for (int j=0;j<aux_node_list_right.size();j++){
                 sub_node = aux_node_list_right[j];
 
@@ -335,7 +403,7 @@ CondensedTreeNode* build_Condensed_tree(SingleLinkageNode *hierarchy,int num ,in
         else {
             relabel[left] = relabel[node];
             aux_node_list_right = BFS_from_hierarchy(hierarchy, right, num_nodes);
-            int sub_node;
+	    int sub_node;
             for (int j=0;j<aux_node_list_right.size();j++){
                 sub_node = aux_node_list_right[j];
 
@@ -350,11 +418,11 @@ CondensedTreeNode* build_Condensed_tree(SingleLinkageNode *hierarchy,int num ,in
                 ignore[sub_node] = 1;
             }
         }
+
+
+
     }
 
-
-    printf("APPEND: %d\n",append_variable);
-    
     CondensedTreeNode *result_list_;
     result_list_ = new CondensedTreeNode[append_variable];
 
@@ -371,10 +439,7 @@ CondensedTreeNode* build_Condensed_tree(SingleLinkageNode *hierarchy,int num ,in
     return result_list_;
 }
 
-
-
-
-Stability* compute_stability(CondensedTreeNode *condensed_tee, int size, int *pointer){
+Stability* compute_stability(CondensedTreeNode *condensed_tee, int size,int *pointer){
 
 
     int max_child = getMaxChild(condensed_tee,size);
@@ -386,23 +451,13 @@ Stability* compute_stability(CondensedTreeNode *condensed_tee, int size, int *po
 
     int smalles_cluster = min_parent;
 
-    int *sorted_children;
-    sorted_children = new int[size];
+ std::vector<std::tuple<int,float>> sorted;
+
 
     for(int i=0;i<size;i++)
-        sorted_children[i] = condensed_tee[i].child;
+        sorted.push_back(std::make_tuple(condensed_tee[i].child,condensed_tee[i].lambda_val));
 
-    std::sort(sorted_children,sorted_children+size);
-
-
-    float* sorted_lambdas;
-    sorted_lambdas = new float[size];
-
-    for(int i=0;i<size;i++)
-        sorted_lambdas[i] = condensed_tee[i].lambda_val;
-    
-    std::sort(sorted_lambdas,sorted_lambdas+size);
-
+    std::sort(sorted.begin(),sorted.end());
     float* birth_arr;
     birth_arr = new float[largest_child+1];
 
@@ -410,8 +465,8 @@ Stability* compute_stability(CondensedTreeNode *condensed_tee, int size, int *po
     float min_lambda = 0.0;
 
     for (long int i=0;i<size;i++){
-        int child = sorted_children[i];
-        float lambda_ = sorted_lambdas[i];
+        int child = std::get<0>(sorted[i]);
+        float lambda_ = std::get<1>(sorted[i]);
 
         if (child == current_child)
             min_lambda = std::min(min_lambda,lambda_);
@@ -453,12 +508,12 @@ Stability* compute_stability(CondensedTreeNode *condensed_tee, int size, int *po
         result_array[result_index] += ( (lambda_ - birth_arr[parent] ) * child_size );
     }
 
+
     int size_ = max_parent + 1 - smalles_cluster;    
 
     Stability *result;
     result = new Stability[size_];
-
-    *pointer = size;
+    *pointer = size_;
 
     for (long int i=0;i<size_;i++){
         result[i].cluster_id = smalles_cluster + i;
@@ -466,7 +521,9 @@ Stability* compute_stability(CondensedTreeNode *condensed_tee, int size, int *po
     }
 
     return result;
+
 }
+
 
 
 
@@ -513,7 +570,62 @@ std::vector<int> BFS_from_cluster_tree(CondensedTreeNode *condensed_tree, int bf
 }
 
 
-void get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stability *stabilities, int stability_size, int numValues){
+int* do_labelling(CondensedTreeNode *condensed_tree, int condensed_size, std::vector<int> cluster, std::vector<std::tuple<int,int>> cluster_map){
+
+    int root_cluster = getMinParent(condensed_tree,condensed_size);
+    int max_parent = getMaxParent(condensed_tree,condensed_size);
+    
+    int *result_arr;
+    printf("ROOT = %d\n",root_cluster);
+    result_arr = new int[root_cluster];
+
+    HashLabels arrays;
+
+    arrays = initializeHash(condensed_tree,condensed_size);
+
+    //classe maluca, passando max_parent_array+1
+    TreeUnionFind union_find = TreeUnionFind(max_parent+1);
+
+    for (long int n=0;n<condensed_size;n++){
+        int child = condensed_tree[n].child;
+        int parent = condensed_tree[n].parent;
+
+        //Mais um overload
+        if ( buscaBinaria(cluster,child) == -1){
+            union_find.Union(parent, child);
+        }
+    }
+
+   int soma=0;
+    for (long int n=0;n<root_cluster;n++){
+
+        int cluster = union_find.Find(n);
+
+        if (cluster < root_cluster)
+            result_arr[n] = -1;
+        else if (cluster == root_cluster)
+            result_arr[n] = -1;
+	else {
+
+            float point_lambda = arrays.lambda_array[n];
+
+            float cluster_lambda = arrays.lambda_array[cluster];
+            if (point_lambda > cluster_lambda){
+                soma += 1;
+		  int cluster_pos = buscaBinaria(cluster_map,cluster);
+                result_arr[n] = std::get<1>(cluster_map[cluster_pos]);
+            }
+            else
+                result_arr[n] = -1;
+        }
+    
+    }
+	printf("soma %d\n",soma);
+
+    return result_arr;
+}
+
+int* get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stability *stabilities, int stability_size, int numValues){
 
     int *node_list;
     node_list = new int[stability_size-1];
@@ -576,13 +688,18 @@ void get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stabili
         }
 
         int pos = buscaBinaria(stabilities, node_list[i], stability_size);
-        int pos2 = buscaBinaria(cluster_sizes,node_list[i]);
+	int pos2 = buscaBinaria(cluster_sizes,node_list[i]);
 
         if (subtree_stability > stabilities[pos].lambda || std::get<1>(cluster_sizes[pos2]) > max_cluster_size){
 
             int pos_ = buscaBinaria(is_cluster,node_list[i]);
+            if (pos_ == -1){
+                        is_cluster.push_back(std::make_tuple(node_list[i],false));
+                         sort(is_cluster.begin(),is_cluster.end());
+                    }
 
-            is_cluster[pos_] = std::make_tuple(node_list[i],false);
+                    else {is_cluster[pos_] = std::make_tuple(node_list[i],false);}
+
             stabilities[pos].lambda = subtree_stability;
         }
 
@@ -592,7 +709,12 @@ void get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stabili
             for (int j=0;j<sub_nodes.size();j++){
                 if (sub_nodes[j] != node_list[i]){
                     int pos_ = buscaBinaria(is_cluster,sub_nodes[j]);
-                    is_cluster[pos_] = std::make_tuple(sub_nodes[j],false);
+                    if (pos_ == -1){
+                        is_cluster.push_back(std::make_tuple(node_list[i],false));
+                         sort(is_cluster.begin(),is_cluster.end());
+                    }
+
+                    else {is_cluster[pos_] = std::make_tuple(node_list[i],false);}
                 }
 
             }
@@ -602,57 +724,22 @@ void get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stabili
 
     std::vector<int> cluster;
     for (int i=size_node_list-1;i >= 0;i--)
-        if (std::get<1>(is_cluster[i]) )
-            cluster.push_back(i);
-    
-    sort(cluster.begin(),cluster.end());
+        if (std::get<1>(is_cluster[i]) ){
+            cluster.push_back(std::get<0>(is_cluster[i]));
+	}
+  sort(cluster.begin(),cluster.end());
 
-    int index=0;
 
     std::vector<std::tuple<int,int>> cluster_map;
     for (int i=0;i<cluster.size();i++){
-        cluster_map.push_back( std::make_tuple(cluster[i] , index)  );
-        index += 1;
+        cluster_map.push_back( std::make_tuple(cluster[i] , i)  );
     }
 
-    std::vector<std::tuple<int,int>> reverese_cluster_map;
-    for (int i=0;i<cluster.size();i++){
-        int n = std::get<1>(is_cluster[i]);
-        int c = std::get<0>(is_cluster[i]);
-        reverese_cluster_map.push_back( std::make_tuple(n,c)  );
-    }
+    int *labels;
+    labels = do_labelling(condensed_tree,condensed_size,cluster,cluster_map);
+/*    for (int i=numValues;i>-1;i--){
 
-    return;
+        printf("{ID: %d, Clus_ID: %d}, ",i,labels[i]);
+    }*/
+    return labels;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

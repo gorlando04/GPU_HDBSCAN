@@ -84,5 +84,10 @@ struct Stability{
     float lambda;
 };
 
+struct HashLabels{
+
+    float *lambda_array;
+};
+
 
 #endif

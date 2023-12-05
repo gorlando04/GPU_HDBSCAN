@@ -4,7 +4,9 @@
 #include "../calculates/calculates.cuh"
 #include "../counts/count.cuh"
 
+
 #include <algorithm>
+
 
 
 void joinAntiHubs(int *antihubs,Vertex *vertexes,int not_ties, Untie_hub *unties,int missing_ties){
@@ -54,7 +56,7 @@ void createWeightList(float *vector,ECLgraph *g){
     }
 }
 
-ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k, int *antihubs, long int num_antihubs)
+ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k, int *antihubs, long int num_antihubs,float *vectors_data,int dim)
 {
 
 
@@ -229,7 +231,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
             int idx_b = antihubs[j+1];
             
             //Calcula distancia euclidiana
-            float euclidean_distance = 0.1;
+            float euclidean_distance = calculate_euclidean_distance(vectors_data,idx_a,idx_b,dim);
 
             if (graphDistances[pos_begin + j] < euclidean_distance){
                 graphDistances[pos_begin+j] = euclidean_distance;
@@ -252,7 +254,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
 }
 
 
-ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num){
+ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *vectors_data,int dim){
 
 
      clock_t t; 
@@ -393,7 +395,7 @@ CheckCUDA_();
 
     ECLgraph g;
     
-    g = buildECLgraph(numValues, vectorSize,h_data, distances,k, antihubs, pos_threshold);
+    g = buildECLgraph(numValues, vectorSize,h_data, distances,k, antihubs, pos_threshold,vectors_data,dim);
 
 
     t = clock() - t; 

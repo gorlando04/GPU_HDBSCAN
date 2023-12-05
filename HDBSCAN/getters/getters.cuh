@@ -28,5 +28,10 @@ int buscaBinaria(std::vector<std::tuple<int,int>> cluster_size, int alvo);
 
 int buscaBinaria(std::vector<std::tuple<int,bool>> cluster_size, int alvo);
 
+int buscaBinaria(std::vector<int> vector, int alvo);
+
+int buscaBinaria(int* vector, int size, int alvo);
+
+
 
 #endif

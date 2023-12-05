@@ -25,5 +25,10 @@ __global__ void initializeMSTedges(MSTedge *mst_edges,int *nodes, int *edges, fl
 
 __global__ void initializeVectorCountsOFFset(int *vector,int value,int size,long int offset);
 
+__global__ void initializeVectorArange(int *vector,int size);
+
+HashLabels initializeHash(CondensedTreeNode *condensed_tree,int condensed_size);
+
+
 
 #endif

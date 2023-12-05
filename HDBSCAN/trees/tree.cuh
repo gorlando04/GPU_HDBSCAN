@@ -41,9 +41,27 @@ Stability* compute_stability(CondensedTreeNode *condensed_tee, int size, int *po
 
 std::vector<int> BFS_from_cluster_tree(CondensedTreeNode *condensed_tree, int bfs_root, int condensed_size);
 
-void get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stability *stabilities, int stability_size, int numValues);
+int* get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stability *stabilities, int stability_size, int numValues);
+
+int* do_labelling(CondensedTreeNode *condensed_tree, int condensed_size, std::vector<int> cluster, std::vector<std::tuple<int,int>> cluster_map);
 
 
+class TreeUnionFind{
+
+
+public:
+    TreeUnionFind(int size);
+
+    void Union(int x, int y);
+
+    int Find(int x);
+
+private:
+  int *_data0;
+  int *_data1;
+  int size;
+
+};
 
 
 

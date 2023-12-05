@@ -76,3 +76,35 @@ __global__ void initializeVectorCountsOFFset(int *vector,int value,int size,long
     }
 
 }
+
+__global__ void initializeVectorArange(int *vector,int size){
+
+    long int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    if (tid < size) {
+        vector[tid] = tid;
+    }
+}
+
+
+HashLabels initializeHash(CondensedTreeNode *condensed_tree,int condensed_size){
+
+
+    HashLabels hash;
+    hash.lambda_array = new float[condensed_size+1];
+    int min_parent = getMinParent(condensed_tree,condensed_size);
+
+
+
+    for(int i=0;i<condensed_size;i++){
+
+        int position = condensed_tree[i].child;
+
+        hash.lambda_array[position] = condensed_tree[i].lambda_val;
+
+        if (condensed_tree[i].parent == min_parent)
+            hash.lambda_array[min_parent] = condensed_tree[i].lambda_val;
+    }
+
+    return hash;
+}
+

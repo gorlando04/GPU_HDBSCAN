@@ -25,5 +25,7 @@ void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int 
 
 void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistances,int *aux_nodes,int *aux_edges,long int size); 
 
+float calculate_euclidean_distance(float *vector,long int idxa,long int idxb,int dim);
+
 
 #endif

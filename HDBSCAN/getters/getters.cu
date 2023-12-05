@@ -128,3 +128,62 @@ int buscaBinaria(std::vector<std::tuple<int,bool>> cluster_size, int alvo){
     // Retorna -1 se o elemento não for encontrado
     return -1;
 }
+
+
+int buscaBinaria(std::vector<int> vector, int alvo){
+
+    int inicio = 0;
+    int fim = vector.size() - 1;
+
+    while (inicio <= fim) {
+        int meio = inicio + (fim - inicio) / 2;
+
+        // Verifica se o elemento do meio é o alvo
+        if (vector[meio] == alvo) {
+            return meio;
+        }
+
+        // Se o alvo estiver à esquerda, atualiza o índice final
+        else if (vector[meio] > alvo) {
+            fim = meio - 1;
+        }
+
+        // Se o alvo estiver à direita, atualiza o índice inicial
+        else {
+            inicio = meio + 1;
+        }
+    }
+
+    // Retorna -1 se o elemento não for encontrado
+    return -1;
+
+
+}
+
+int buscaBinaria(int* vector, int size, int alvo){
+
+    int inicio = 0;
+    int fim = size - 1;
+
+    while (inicio <= fim) {
+        int meio = inicio + (fim - inicio) / 2;
+
+        // Verifica se o elemento do meio é o alvo
+        if (vector[meio] == alvo) {
+            return meio;
+        }
+
+        // Se o alvo estiver à esquerda, atualiza o índice final
+        else if (vector[meio] > alvo) {
+            fim = meio - 1;
+        }
+
+        // Se o alvo estiver à direita, atualiza o índice inicial
+        else {
+            inicio = meio + 1;
+        }
+    }
+
+    // Retorna -1 se o elemento não for encontrado
+    return -1;
+}

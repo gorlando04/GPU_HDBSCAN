@@ -9,6 +9,10 @@
 #include "mst/mst.cuh"
 #include "trees/tree.cuh"
 
+#include <fstream>
+#include <string>
+#include <cstdio>
+
 
 void generate_random(int *h_data){
 
@@ -31,6 +35,33 @@ void generate_random(float *h_data){
     return;
 }
 
+void ReadTxtVecs(const string &data_path, float **vectors_ptr,
+                          long int *num_ptr, long int *dim_ptr,
+                          const bool show_process = true) {
+    float *&vecs = *vectors_ptr;
+    long int &num = *num_ptr;
+    long int &dim = *dim_ptr;
+    std::ifstream in(data_path);
+    if (!in.is_open()) {
+      throw(std::string("Failed to open ") + data_path);
+    }
+    in >> num >> dim;
+    std::cerr << num << " " << dim << std::endl;
+    vecs = new float[num * dim];
+   printf("%ld deu bom?\n",num*dim);
+
+   for (int i = 0; i < num; i++) {
+
+      for (int j = 0; j < dim; j++) {
+        in >> vecs[i * dim + j];
+      }
+    }
+
+    in.close();
+    delete in;
+    return;
+  }
+
 
 
 
@@ -51,7 +82,15 @@ int main() {
     int num, dim;
     FileTool::ReadBinaryVecs(path_to_kNNG , &result_graph, &num, &dim);
     num = numValues;
-    printf("%d e %d\n",num,dim);
+    printf("kNNG size = %ld e %d\n",num,dim);
+    
+    // Le o vetor de amostras
+    float *vectors_data;
+    int vecs_size, dim_;
+    const std::string path_to_data = "/nndescent/GPU_KNNG/data/artificial/SK_data.txt";
+
+    ReadTxtVecs(path_to_data,&vectors_data,&vecs_size,&dim_);
+    printf("Data size= %d e %d\n",numValues,dim_);
 
 
 
@@ -65,8 +104,6 @@ int main() {
       }
 
     } 
-
-
 
     CheckCUDA_();
 
@@ -88,7 +125,7 @@ int main() {
 
 
     ECLgraph g;
-    g = buildEnhancedKNNG(result_index_graph,distances,shards_num);
+    g = buildEnhancedKNNG(result_index_graph,distances,shards_num,vectors_data,dim_);
 
     printf("O grafo tem %d NOHS e %ld arestas\n",g.nodes,g.edges);
      bool* edges = cpuMST(g);
@@ -112,13 +149,17 @@ int main() {
     condensed_tree =  build_Condensed_tree(result_arr, num ,g.nodes-1, k,&condensed_size);
 
 
+
+
     Stability *stabilities;
     int stability_size;
     
     stabilities = compute_stability(condensed_tree,condensed_size,&stability_size);
 
+    int* labels;
+    labels = get_clusters(condensed_tree, condensed_size, stabilities,  stability_size, numValues);
 
-    get_clusters(condensed_tree, condensed_size, stabilities,  stability_size, numValues);
+
 
 
 
