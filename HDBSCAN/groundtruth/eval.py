@@ -51,11 +51,23 @@ while args:
 
 
 # Read EXACT FILE
-exact = NULL
+exact = '/nndescent/GPU_HDBSCAN/experiments/HDBSCAN/groundtruth/groundtruth_1.0.txt'
+with open(exact) as f:
+    lines = f.readlines()
+
+exact_labels = []
+for i in lines:
+    insert = int(i.split(".")[0])
+    exact_labels.append(insert)
 
 # Read Approximate FILE
-pred = NULL
-
+pred = "/nndescent/GPU_HDBSCAN/experiments/HDBSCAN/groundtruth/approximate_result.txt"
+with open(pred) as f:
+    lines = f.readlines()
+pred_labels = []
+for i in lines:
+    insert = int(i)
+    pred_labels.append(insert)
 
 df_gpu = None
 
@@ -77,7 +89,7 @@ info['mpts'] = mpts
 info['Iter'] = iter
 info['Time'] = 0
 
-info['ARI'] = ARI_val(exact,pred)
+info['ARI'] = ARI_val(exact_labels,pred_labels)
 
 write_df(df_gpu,index_,info)
 df_gpu.to_csv(file_name, index=False)
