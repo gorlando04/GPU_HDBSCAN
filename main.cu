@@ -73,11 +73,7 @@ void TestConstructLargeKNNGraph(int shards) {
 
 
   printf("Time cost = %lf \n",timer.end());
-  //Put the result into a txt file. BEGIN
-  ToTxtResult(result_path,result_path + "-BEGIN.txt");
 
-  //Put the result into a txt file. END
-  ToTxtResult(result_path,result_path + "-FINAL.txt",true);
 
 
 
