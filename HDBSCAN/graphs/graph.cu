@@ -257,8 +257,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
 ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *vectors_data,int dim, long int numValues){
 
 
-     clock_t t; 
-    t = clock(); 
+ 
     long int vectorSize = numValues*k;
     // Aqui da pra colocar um perfectch
     for (int i=0;i<numGPUs;i++){
@@ -266,7 +265,6 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
         cudaMemPrefetchAsync(h_data,(size_t)vectorSize * sizeof(int),i);
     }
 
-    printf("Comecand a busca\n");
 
  
     long int elementsPerGPU[shards_num];
@@ -392,16 +390,13 @@ CheckCUDA_();
     std::sort(antihubs,antihubs+pos_threshold);
 
 
-    printf("Iniciando a construcao do grafo\n");
 
     ECLgraph g;
     
     g = buildECLgraph(numValues, vectorSize,h_data, distances,k, antihubs, pos_threshold,vectors_data,dim,numValues);
 
 
-    t = clock() - t; 
-    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds 
-    printf("Demorou %lf segundos para montar o enhanced kNNG\n",time_taken);
+
 
     return g;
 }

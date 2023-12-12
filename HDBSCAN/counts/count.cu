@@ -117,7 +117,6 @@ int countThreshold_(long int *elementsPerGPU_,Vertex *vertexes,int value_thresho
     }
 
 
-    printf("Buscando os vertices\n");
 
     for (int i = 0; i < numGPUs; i++) {
 

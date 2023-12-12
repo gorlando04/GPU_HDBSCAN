@@ -74,10 +74,8 @@ class FileTool {
                                   const int dim) {
     string cmd = "fallocate -l ";
 
-    printf("Na hora de criar o grafo: NUM: %d e DIM = %d\n",num,dim);
 
     size_t byte_size = (size_t)num * (dim + 1) * sizeof(NNDElement);
-    printf("SIZET = %ld\n",byte_size);
 
 
     cmd += to_string(byte_size);
@@ -90,7 +88,6 @@ class FileTool {
     }
 
     ofstream out(data_path, ios::in | ios::binary);
-    cerr << num << " " << dim << endl;
     out.write((char *)&dim, 4);
     out.close();
   }

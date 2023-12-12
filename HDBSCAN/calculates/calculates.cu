@@ -301,7 +301,6 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
     
     }
 
-    printf("Finalizado\n");
 
     for (int i = 0; i < shards_num; i++) {
         for (int j = 0; j < elementsPerGPU[i]; j++) {

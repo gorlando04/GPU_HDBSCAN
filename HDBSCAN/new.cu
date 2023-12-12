@@ -26,9 +26,7 @@ void ReadTxtVecs(const string &data_path, float **vectors_ptr,
       throw(std::string("Failed to open ") + data_path);
     }
     in >> num >> dim;
-    std::cerr << num << " " << dim << std::endl;
     vecs = new float[num * dim];
-   printf("%ld deu bom?\n",num*dim);
 
    for (int i = 0; i < num; i++) {
 
@@ -90,41 +88,40 @@ printf("NUM VALUES SET TO %ld.\n",numValues);
     PrepareVector(path_to_data,"/nndescent/GPU_HDBSCAN/data/vectors.fvecs");
 
     std::string path_to_kNNG = "/nndescent/GPU_HDBSCAN/results/NNDescent-KNNG.kgraph";
+
     clock_t t; 
     t = clock(); 
+    printf("Iniciando o HDBSCAN\n");
 
 
     ConstructLargeKNNGraph(shards, "/nndescent/GPU_HDBSCAN/data/vectors", path_to_kNNG);
 
-    t = clock() - t; 
-    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds 
-    printf("Demorou %lf segundos para construir o kNNG\n",time_taken);
 
 
 
     // Le o kNNG que esta escrito no arquivo abaixo
     NNDElement *result_graph;
-    int num, dim;
-    FileTool::ReadBinaryVecs(path_to_kNNG , &result_graph, &num, &dim);
-    num = numValues;
-    printf("kNNG size = %ld e %d\n",num,dim);
+    int knng_num, knng_dim;
+    FileTool::ReadBinaryVecs(path_to_kNNG , &result_graph, &knng_num, &knng_dim);
+    knng_num = numValues;
+    printf("kNNG size = %ld e %d\n",knng_num,knng_dim);
     
     // Le o vetor de amostras
     float *vectors_data;
-    long int vecs_size, dim_;
+    long int data_size, data_dim;
 
-    ReadTxtVecs(path_to_data,&vectors_data,&vecs_size,&dim_);
-    printf("Data size= %d e %d\n",numValues,dim_);
+    ReadTxtVecs(path_to_data,&vectors_data,&data_size,&data_dim);
+    printf("Data size= %d e %d\n",numValues,data_dim);
 
 
 
 
     int *result_index_graph;
-    cudaMallocManaged(&result_index_graph,(size_t)num*dim * sizeof(int));
-    for (long int i = 0; i < num; i++) {
-      for (long int j = 0; j < dim; j++) {
+    cudaMallocManaged(&result_index_graph,(size_t)knng_num*knng_dim * sizeof(int));
+    for (long int i = 0; i < knng_num; i++) {
+      for (long int j = 0; j < knng_dim; j++) {
 
-        result_index_graph[i * dim + j] = result_graph[i * dim + j].label();
+        result_index_graph[i * knng_dim + j] = result_graph[i * knng_dim + j].label();
       }
 
     } 
@@ -133,25 +130,23 @@ printf("NUM VALUES SET TO %ld.\n",numValues);
 
    
     float *distances;
-    cudaMallocManaged(&distances,(size_t)numValues*dim * sizeof(float));
+    cudaMallocManaged(&distances,(size_t)numValues*knng_dim * sizeof(float));
 
 
-    for (long int i = 0; i < num; i++) {
-        for (long int j = 0; j < dim; j++) {
+    for (long int i = 0; i < knng_num; i++) {
+        for (long int j = 0; j < knng_dim; j++) {
           
-          distances[i * dim + j] = result_graph[i * dim + j].distance();
+          distances[i * knng_dim + j] = result_graph[i * knng_dim + j].distance();
         }
     }
 
     CheckCUDA_();
 
-    printf("Iniciando o HDBSCAN\n");
-    t = clock();
 
     //HDBSCAN
     int shards_num = 3;
     ECLgraph g;
-    g = buildEnhancedKNNG(result_index_graph,distances,shards_num,vectors_data,dim,numValues);
+    g = buildEnhancedKNNG(result_index_graph,distances,shards_num,vectors_data,data_dim,numValues);
 
     bool* edges = cpuMST(g);
 
@@ -165,11 +160,11 @@ printf("NUM VALUES SET TO %ld.\n",numValues);
 
     SingleLinkageNode *result_arr;
 
-    result_arr = build_Linkage_tree(mst_edges ,num ,g.nodes);
+    result_arr = build_Linkage_tree(mst_edges ,knng_num ,g.nodes);
 
     CondensedTreeNode* condensed_tree;
     int condensed_size;
-    condensed_tree =  build_Condensed_tree(result_arr, num ,g.nodes-1, k,&condensed_size);
+    condensed_tree =  build_Condensed_tree(result_arr, knng_num ,g.nodes-1, k,&condensed_size);
 
 
     Stability *stabilities;
@@ -181,8 +176,8 @@ printf("NUM VALUES SET TO %ld.\n",numValues);
     labels = get_clusters(condensed_tree, condensed_size, stabilities,  stability_size, numValues);
 
     t = clock() - t; 
-    time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds 
-    printf("Demorou %lf segundos para o HDBSCAN\n",time_taken);
+    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds 
+    printf("Demorou %lf segundos\n",time_taken);
 
     const std::string out_PATH = "/nndescent/GPU_HDBSCAN/HDBSCAN/groundtruth/approximate_result.txt";
     WriteTxtVecs(out_PATH,labels,numValues);

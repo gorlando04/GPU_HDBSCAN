@@ -62,16 +62,13 @@ void BuildEachShard(KNNDataManager &data_manager, const string &out_data_path,in
               (size_t)data_manager.GetVecsNum(i) * data_manager.GetDim() *
                   sizeof(float),
               cudaMemcpyHostToDevice);
-  cout << "Building No. " << i << endl;
   knn_timer.start();
   gpuknn::NNDescent(&knn_graph, vectors_dev, data_manager.GetVecsNum(i),
                     data_manager.GetDim(), 6, false);
-  cout << "End building No." << i << " in " << knn_timer.end() << " seconds"
-        << endl;
+
 
   thread th1([&data_manager, knn_graph, out_data_path, i, &mtx]() {
       mtx.lock();
-      cerr << "Start writing thread............." << endl;
       Timer writer_timer;
       writer_timer.start();
       WriteGraph(data_manager.GetGraphDataPath(), knn_graph,
@@ -85,7 +82,6 @@ void BuildEachShard(KNNDataManager &data_manager, const string &out_data_path,in
                 data_manager.GetK(), data_manager.GetBeginPosition(i));
       data_manager.DiscardShard(i);
       delete[] knn_graph;
-      cerr << "End writing thread "<<i <<" .............." << writer_timer.end() << endl;
       mtx.unlock();
     });
 
@@ -268,9 +264,7 @@ void MultiMerge(KNNDataManager &data_manager, const string &out_data_path,int id
   // Sync
   multi_merge.lock();
 
-  printf("Shard %d foi ativado e ira comecar\n",begin);
   mutex mtx;
-  printf("END para %d -> %ld \n\n",begin,&mtx);
 
   Timer merge_timer;
   merge_timer.start();
@@ -302,7 +296,6 @@ void MultiMerge(KNNDataManager &data_manager, const string &out_data_path,int id
         data_manager.GetVecsNum(i), data_manager.GetKNNGraph(i),
         data_manager.GetVectors(j), data_manager.GetVecsNum(j),
         data_manager.GetKNNGraph(j));
-    cout << "Merge costs: J = "<< j << " I = "<< i << " " << timer.end() << endl;
 
     mtx.lock();
     mtx.unlock();
@@ -363,7 +356,6 @@ void MultiMerge(KNNDataManager &data_manager, const string &out_data_path,int id
     cudaFree(result_first_dev);
     cudaFree(result_second_dev);
     cudaFree(result_knn_graph_dev);
-    cerr << "Update graph costs: " << update_graph_timer.end() << endl;
     int vecs_num = data_manager.GetVecsNum(j);
     int k = data_manager.GetK();
     int begin_pos = data_manager.GetBeginPosition(j);
@@ -386,7 +378,6 @@ void MultiMerge(KNNDataManager &data_manager, const string &out_data_path,int id
                   k, begin_pos);
       delete[] result_second;
       mtx.unlock();
-      cout << "Write KNN graph costs: " << write_graph_timer.end() << endl;
     });
     //write_th.detach();
     write_th.join();
@@ -405,9 +396,7 @@ void MultiMerge(KNNDataManager &data_manager, const string &out_data_path,int id
 
 
   float merge_time = merge_timer.end();
-  cerr << "No. " << i << " mergers cost: " << merge_time << endl;
-  cerr << "No. " << i << " avg. cost: " << merge_time / (shards_num - i - 1)
-        << "\n\n"<< endl;
+
   
 
        auto status = cudaGetLastError();
@@ -427,12 +416,10 @@ void GenLargeKNNGraph(const string &vecs_data_path, const string &out_data_path,
   data_manager.CheckStatus();
 
     //Blank knngraph costs: 0.07
-  printf("-> %d\n",data_manager.GetVecsNum());
   FileTool::CreateBlankKNNGraph(data_manager.GetGraphDataPath(),
                                 data_manager.GetVecsNum(), data_manager.GetK());
   FileTool::CreateBlankKNNGraph(out_data_path, data_manager.GetVecsNum(),
                                 data_manager.GetK());
-  printf("Iniciou?");
   Timer knn_timer;
   knn_timer.start();
 
@@ -456,12 +443,10 @@ void GenLargeKNNGraph(const string &vecs_data_path, const string &out_data_path,
 
 
 
-  cerr << "Building shards costs: " << knn_timer.end() << endl;
   sleep(2);
 
 
 
-  printf("\nIniciando o merge\n");
 
 
   for (int s=0;s<iters;s++){
@@ -491,7 +476,7 @@ void GenLargeKNNGraph(const string &vecs_data_path, const string &out_data_path,
     threads.clear();
   }
 
-  printf("Iniciando o último merge\n");
+
   MultiMerge(data_manager,out_data_path, NUM_GPU-1, shards_num - 2 ,-1,true);
   
  
