@@ -61,12 +61,12 @@ class KNNDataManager {
     }
   }
   void CheckStatus() {
-    cout << "Data path: " << data_path_ << endl;
+    /*cout << "Data path: " << data_path_ << endl;
     cout << "Total vecs num: " << vecs_num_ << endl;
     cout << "Shards num: " << shards_num_ << endl;
     cout << "Max vecs num. per shard: " << max_vecs_num_per_shard_ << endl;
     cout << "Vecs num. per shard: " << vecs_num_per_shard_ << endl;
-    cout << "Vecs num. of last shard: " << vecs_num_last_shard_ << endl;
+    cout << "Vecs num. of last shard: " << vecs_num_last_shard_ << endl;*/
     OutPutActiveIds();
   }
   string GetVecsDataPath() {

@@ -9,15 +9,12 @@ void ConstructLargeKNNGraph(int shards, string ref, string result) {
   string result_path = result;
 
 
-  Timer timer;
-  timer.start();
+
 
   int K = 32;
   
   GenLargeKNNGraph(ref_path, result_path, K,shards);
 
-
-  printf("Time cost = %lf \n",timer.end());
 
 
     return;

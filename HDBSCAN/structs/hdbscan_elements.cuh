@@ -6,12 +6,9 @@
 #include "cuda_runtime.h"
 
 const int numGPUs = 3;
-const long int numValues = 10000000;//400000000; // Número de valores possíveis no vetor
-const long int vectorSize = 320000000;//12000000000;// Tamanho do vetor
 const int blockSize = 256;
 const int k = 32;
 const int mpts=k;
-const int dimensions=12;
 
 struct Vertex {
 
