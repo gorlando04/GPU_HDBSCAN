@@ -532,6 +532,7 @@ std::vector<int> BFS_from_cluster_tree(CondensedTreeNode *condensed_tree, int bf
 
     std::vector<int> to_process;
     to_process.push_back(bfs_root);
+    int min_parent = getMinParent(condensed_tree,condensed_size);
 
     std::vector<int>  result;
      while (to_process.size() > 0){
@@ -549,9 +550,10 @@ std::vector<int> BFS_from_cluster_tree(CondensedTreeNode *condensed_tree, int bf
         }
 
         std::vector<int> aux_;
-        for(int i=0;i<aux.size();i++)
+        for(int i=0;i<aux.size();i++){
+	    if(condensed_tree[aux[i]].child >= min_parent)
             aux_.push_back(condensed_tree[aux[i]].child);
-
+	}
         to_process.swap(aux_);
     }
     sort(result.begin(),result.end());
@@ -735,3 +737,4 @@ int* get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stabili
     }*/
     return labels;
 }
+

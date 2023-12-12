@@ -15,7 +15,7 @@ int get_NumThreshold(long int numValues_);
 int get_TiedVertexes(Vertex *vertexes,int pos_threshold, int value_threshold);
 
 
-void get_IndexThreshold(int *finalCounts,int *treshold_idx,int value_threshold);
+void get_IndexThreshold(int *finalCounts,int *treshold_idx,int value_threshold,long int numValues);
 
 int findKNNlist(int *kNN,long int neig,long int i,int k);
 

@@ -1,4 +1,4 @@
-# Install script for directory: /nndescent/GPU_HDBSCAN/experiments/HDBSCAN
+# Install script for directory: /nndescent/GPU_HDBSCAN/HDBSCAN
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/nndescent/GPU_HDBSCAN/experiments/HDBSCAN/cmake/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

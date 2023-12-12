@@ -264,7 +264,7 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
   /usr/include/c++/11/bits/ostream.tcc \
   /usr/include/c++/11/istream \
   /usr/include/c++/11/bits/istream.tcc \
-  /nndescent/GPU_HDBSCAN/experiments/tools/filetool.hpp \
+  /nndescent/GPU_HDBSCAN/tools/filetool.hpp \
   /usr/include/c++/11/fstream \
   /usr/include/c++/11/bits/codecvt.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
@@ -275,8 +275,85 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
   /usr/include/c++/11/bits/stl_vector.h \
   /usr/include/c++/11/bits/stl_bvector.h \
   /usr/include/c++/11/bits/vector.tcc \
-  /nndescent/GPU_HDBSCAN/experiments/tools/nndescent_element.cuh \
+  /nndescent/GPU_HDBSCAN/tools/nndescent_element.cuh \
   /usr/local/cuda/targets/x86_64-linux/include/cuda.h \
+  /nndescent/GPU_HDBSCAN/build_kNNG.cuh \
+  /usr/include/unistd.h \
+  /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+  /usr/include/x86_64-linux-gnu/bits/environments.h \
+  /usr/include/x86_64-linux-gnu/bits/confname.h \
+  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
+  /usr/include/x86_64-linux-gnu/bits/unistd.h \
+  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
+  /usr/include/linux/close_range.h \
+  /usr/include/c++/11/algorithm \
+  /usr/include/c++/11/bits/stl_algo.h \
+  /usr/include/c++/11/bits/algorithmfwd.h \
+  /usr/include/c++/11/bits/stl_heap.h \
+  /usr/include/c++/11/bits/stl_tempbuf.h \
+  /usr/include/c++/11/bits/uniform_int_dist.h \
+  /usr/include/c++/11/chrono \
+  /usr/include/c++/11/ratio \
+  /usr/include/c++/11/limits \
+  /usr/include/c++/11/ctime \
+  /usr/include/c++/11/bits/parse_numbers.h \
+  /nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cuh \
+  /nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cuh \
+  /nndescent/GPU_HDBSCAN/tools/nndescent_element.cuh \
+  /nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cuh \
+  /nndescent/GPU_HDBSCAN/gpuknn/nndescent.cuh \
+  /nndescent/GPU_HDBSCAN/xmuknn.h \
+  /usr/include/c++/11/list \
+  /usr/include/c++/11/bits/stl_list.h \
+  /usr/include/c++/11/bits/allocated_ptr.h \
+  /usr/include/c++/11/ext/aligned_buffer.h \
+  /usr/include/c++/11/bits/list.tcc \
+  /usr/include/c++/11/random \
+  /usr/include/c++/11/bits/random.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/opt_random.h \
+  /usr/include/c++/11/bits/random.tcc \
+  /usr/include/c++/11/numeric \
+  /usr/include/c++/11/bits/stl_numeric.h \
+  /usr/include/c++/11/bit \
+  /nndescent/GPU_HDBSCAN/tools/distfunc.hpp \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/xmmintrin.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/mmintrin.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/mm_malloc.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/emmintrin.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/ammintrin.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/pmmintrin.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/mwaitintrin.h \
+  /nndescent/GPU_HDBSCAN/tools/knndata_manager.hpp \
+  /usr/include/c++/11/memory \
+  /usr/include/c++/11/bits/stl_raw_storage_iter.h \
+  /usr/include/c++/11/bits/align.h \
+  /usr/include/c++/11/bits/uses_allocator.h \
+  /usr/include/c++/11/bits/unique_ptr.h \
+  /usr/include/c++/11/tuple \
+  /usr/include/c++/11/array \
+  /usr/include/c++/11/bits/invoke.h \
+  /usr/include/c++/11/bits/shared_ptr.h \
+  /usr/include/c++/11/bits/shared_ptr_base.h \
+  /usr/include/c++/11/bits/refwrap.h \
+  /usr/include/c++/11/ext/concurrence.h \
+  /usr/include/c++/11/bits/shared_ptr_atomic.h \
+  /usr/include/c++/11/bits/atomic_base.h \
+  /usr/include/c++/11/bits/atomic_lockfree_defines.h \
+  /usr/include/c++/11/backward/auto_ptr.h \
+  /usr/include/c++/11/set \
+  /usr/include/c++/11/bits/stl_tree.h \
+  /usr/include/c++/11/bits/stl_set.h \
+  /usr/include/c++/11/bits/stl_multiset.h \
+  /usr/include/c++/11/bits/erase_if.h \
+  /usr/include/c++/11/map \
+  /usr/include/c++/11/bits/stl_map.h \
+  /usr/include/c++/11/bits/stl_multimap.h \
+  /usr/include/c++/11/mutex \
+  /usr/include/c++/11/bits/std_mutex.h \
+  /usr/include/c++/11/bits/unique_lock.h \
+  /nndescent/GPU_HDBSCAN/tools/timer.hpp \
+  /nndescent/GPU_HDBSCAN/xmuknn.h \
   ../structs/hdbscan_elements.cuh \
   ../structs/ECLgraph.h \
   ../graphs/graph.cuh \
@@ -284,16 +361,6 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
   ../structs/ECLgraph.h \
   ../mst/mst.cuh \
   /usr/include/c++/11/climits \
-  /usr/include/c++/11/algorithm \
-  /usr/include/c++/11/bits/stl_algo.h \
-  /usr/include/c++/11/bits/algorithmfwd.h \
-  /usr/include/c++/11/bits/stl_heap.h \
-  /usr/include/c++/11/bits/stl_tempbuf.h \
-  /usr/include/c++/11/bits/uniform_int_dist.h \
-  /usr/include/c++/11/tuple \
-  /usr/include/c++/11/array \
-  /usr/include/c++/11/bits/uses_allocator.h \
-  /usr/include/c++/11/bits/invoke.h \
   /usr/include/x86_64-linux-gnu/sys/time.h \
   ../structs/ECLgraph.h \
   ../structs/hdbscan_elements.cuh \
@@ -303,13 +370,79 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/include/x86_64-linux-gnu/sys/time.h:
 
-/usr/include/c++/11/bits/invoke.h:
+../structs/ECLgraph.h:
 
-/usr/include/c++/11/bits/uses_allocator.h:
+/nndescent/GPU_HDBSCAN/tools/timer.hpp:
+
+/usr/include/c++/11/bits/std_mutex.h:
+
+/usr/include/c++/11/mutex:
+
+/usr/include/c++/11/bits/stl_multimap.h:
+
+/usr/include/c++/11/bits/stl_map.h:
+
+/usr/include/c++/11/map:
+
+/usr/include/c++/11/bits/stl_multiset.h:
+
+/usr/include/c++/11/bits/stl_set.h:
+
+/usr/include/c++/11/bits/stl_tree.h:
+
+/usr/include/c++/11/set:
+
+/usr/include/c++/11/bits/atomic_lockfree_defines.h:
+
+/usr/include/c++/11/bits/atomic_base.h:
+
+/usr/include/c++/11/bits/shared_ptr_atomic.h:
+
+/usr/include/c++/11/bits/invoke.h:
 
 /usr/include/c++/11/array:
 
 /usr/include/c++/11/tuple:
+
+/usr/include/c++/11/bits/align.h:
+
+/usr/include/c++/11/bits/stl_raw_storage_iter.h:
+
+/nndescent/GPU_HDBSCAN/tools/knndata_manager.hpp:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/mwaitintrin.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/pmmintrin.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/mmintrin.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/xmmintrin.h:
+
+/usr/include/c++/11/bit:
+
+/usr/include/c++/11/numeric:
+
+/usr/include/c++/11/bits/random.h:
+
+/usr/include/c++/11/random:
+
+/usr/include/c++/11/bits/list.tcc:
+
+/usr/include/c++/11/bits/allocated_ptr.h:
+
+/nndescent/GPU_HDBSCAN/xmuknn.h:
+
+/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cuh:
+
+/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cuh:
+
+/usr/include/c++/11/bits/parse_numbers.h:
+
+/usr/include/c++/11/ctime:
+
+/usr/include/c++/11/limits:
+
+/usr/include/c++/11/ratio:
 
 /usr/include/c++/11/bits/stl_tempbuf.h:
 
@@ -319,7 +452,25 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/include/c++/11/algorithm:
 
-../structs/ECLgraph.h:
+/usr/include/linux/close_range.h:
+
+/usr/include/x86_64-linux-gnu/bits/unistd_ext.h:
+
+/usr/include/x86_64-linux-gnu/bits/unistd.h:
+
+/usr/include/x86_64-linux-gnu/bits/getopt_core.h:
+
+/usr/include/x86_64-linux-gnu/bits/confname.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix_opt.h:
+
+/usr/include/c++/11/bits/unique_lock.h:
+
+/usr/include/c++/11/bits/uses_allocator.h:
+
+/nndescent/GPU_HDBSCAN/build_kNNG.cuh:
+
+/usr/include/c++/11/bits/stl_numeric.h:
 
 /usr/local/cuda/targets/x86_64-linux/include/cuda.h:
 
@@ -339,17 +490,23 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/include/c++/11/fstream:
 
+/nndescent/GPU_HDBSCAN/tools/filetool.hpp:
+
 /usr/include/c++/11/bits/istream.tcc:
 
 /usr/include/c++/11/istream:
 
 /usr/include/c++/11/bits/ostream.tcc:
 
+/usr/include/x86_64-linux-gnu/c++/11/bits/opt_random.h:
+
 /usr/include/c++/11/bits/codecvt.h:
 
 /usr/include/c++/11/bits/basic_ios.tcc:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/ctype_inline.h:
+
+/usr/include/c++/11/bits/stl_list.h:
 
 /usr/include/x86_64-linux-gnu/bits/iscanonical.h:
 
@@ -371,9 +528,9 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
 
-/usr/include/c++/11/bits/uniform_int_dist.h:
-
 ../structs/hdbscan_elements.cuh:
+
+/usr/include/c++/11/bits/uniform_int_dist.h:
 
 /usr/include/c++/11/bits/basic_ios.h:
 
@@ -382,6 +539,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/include/c++/11/cstdlib:
 
 /usr/include/c++/11/bits/stl_iterator_base_types.h:
+
+/usr/include/c++/11/bits/refwrap.h:
 
 /usr/local/cuda/targets/x86_64-linux/include/crt/math_functions.hpp:
 
@@ -413,6 +572,10 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
 
+/usr/include/c++/11/memory:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/ammintrin.h:
+
 /usr/include/x86_64-linux-gnu/bits/string_fortified.h:
 
 /usr/local/cuda/targets/x86_64-linux/include/crt/common_functions.h:
@@ -425,6 +588,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/local/cuda/targets/x86_64-linux/include/vector_functions.h:
 
+/nndescent/GPU_HDBSCAN/tools/distfunc.hpp:
+
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
 /usr/include/c++/11/bits/ostream_insert.h:
@@ -436,6 +601,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/include/c++/11/ext/new_allocator.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
+
+/usr/include/x86_64-linux-gnu/bits/getopt_posix.h:
 
 /usr/include/time.h:
 
@@ -474,6 +641,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/include/x86_64-linux-gnu/bits/stdio2.h:
 
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
+
+/usr/include/c++/11/backward/auto_ptr.h:
 
 /usr/local/cuda/targets/x86_64-linux/include/channel_descriptor.h:
 
@@ -517,6 +686,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/local/cuda/targets/x86_64-linux/include/sm_35_atomic_functions.h:
 
+/usr/include/c++/11/bits/unique_ptr.h:
+
 /usr/local/cuda/targets/x86_64-linux/include/vector_types.h:
 
 /usr/include/x86_64-linux-gnu/bits/types.h:
@@ -532,6 +703,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/include/c++/11/string:
 
 /usr/include/x86_64-linux-gnu/bits/uio_lim.h:
+
+/usr/include/c++/11/bits/erase_if.h:
 
 /usr/include/c++/11/bits/ptr_traits.h:
 
@@ -561,9 +734,13 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/include/x86_64-linux-gnu/bits/endian.h:
 
+/usr/include/c++/11/bits/shared_ptr_base.h:
+
 /usr/include/linux/limits.h:
 
 /usr/include/c++/11/bits/basic_string.h:
+
+/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cuh:
 
 /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:
 
@@ -580,6 +757,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/local/cuda/targets/x86_64-linux/include/crt/host_config.h:
 
 /usr/local/cuda/targets/x86_64-linux/include/sm_20_intrinsics.h:
+
+/usr/include/c++/11/chrono:
 
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
@@ -627,6 +806,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/include/c++/11/cwchar:
 
+/usr/include/unistd.h:
+
 /usr/include/c++/11/bits/stl_algobase.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h:
@@ -642,6 +823,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/include/x86_64-linux-gnu/bits/types/error_t.h:
 
 /usr/local/cuda/targets/x86_64-linux/include/texture_types.h:
+
+/usr/include/c++/11/bits/random.tcc:
 
 /usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 
@@ -661,6 +844,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
 
+/usr/include/c++/11/ext/aligned_buffer.h:
+
 /usr/include/x86_64-linux-gnu/sys/types.h:
 
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
@@ -674,6 +859,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/local/cuda/targets/x86_64-linux/include/crt/device_double_functions.hpp:
 
 /usr/local/cuda/targets/x86_64-linux/include/sm_20_atomic_functions.h:
+
+/usr/include/c++/11/ext/concurrence.h:
 
 /usr/local/cuda/targets/x86_64-linux/include/sm_20_atomic_functions.hpp:
 
@@ -697,17 +884,17 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/atomic_word.h:
 
+/usr/include/c++/11/list:
+
 /usr/local/cuda/targets/x86_64-linux/include/sm_32_intrinsics.hpp:
 
 /usr/local/cuda/targets/x86_64-linux/include/sm_61_intrinsics.hpp:
 
 /usr/local/cuda/targets/x86_64-linux/include/crt/sm_70_rt.h:
 
+/nndescent/GPU_HDBSCAN/tools/nndescent_element.cuh:
+
 /usr/include/c++/11/bits/localefwd.h:
-
-/nndescent/GPU_HDBSCAN/experiments/tools/nndescent_element.cuh:
-
-/nndescent/GPU_HDBSCAN/experiments/tools/filetool.hpp:
 
 /usr/local/cuda/targets/x86_64-linux/include/crt/sm_70_rt.hpp:
 
@@ -721,7 +908,11 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/local/cuda/targets/x86_64-linux/include/surface_indirect_functions.h:
 
+/usr/include/c++/11/bits/shared_ptr.h:
+
 /usr/include/c++/11/bits/stl_construct.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/emmintrin.h:
 
 /usr/local/cuda/targets/x86_64-linux/include/device_launch_parameters.h:
 
@@ -745,6 +936,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/include/c++/11/ext/string_conversions.h:
 
+/usr/include/x86_64-linux-gnu/bits/environments.h:
+
 /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h:
 
 /usr/include/c++/11/bits/exception_defines.h:
@@ -752,6 +945,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 
 /usr/include/c++/11/typeinfo:
+
+/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cuh:
 
 /usr/local/cuda/targets/x86_64-linux/include/device_atomic_functions.hpp:
 
@@ -866,6 +1061,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/local/cuda/targets/x86_64-linux/include/crt/cudacc_ext.h:
 
 /usr/include/c++/11/bits/basic_string.tcc:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/mm_malloc.h:
 
 /usr/include/c++/11/system_error:
 

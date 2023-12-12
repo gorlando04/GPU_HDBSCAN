@@ -56,7 +56,7 @@ void createWeightList(float *vector,ECLgraph *g){
     }
 }
 
-ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k, int *antihubs, long int num_antihubs,float *vectors_data,int dim)
+ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k, int *antihubs, long int num_antihubs,float *vectors_data,int dim, long int numValues)
 {
 
 
@@ -254,11 +254,12 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
 }
 
 
-ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *vectors_data,int dim){
+ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *vectors_data,int dim, long int numValues){
 
 
      clock_t t; 
     t = clock(); 
+    long int vectorSize = numValues*k;
     // Aqui da pra colocar um perfectch
     for (int i=0;i<numGPUs;i++){
         cudaSetDevice(i);
@@ -271,7 +272,7 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
     long int elementsPerGPU[shards_num];
 
     // Calcula a quantidade de elementos por GPU
-    calculateElements(elementsPerGPU,shards_num);
+    calculateElements(elementsPerGPU,shards_num,vectorSize);
 
 
     // Realiza a contagem de graus para todos os vértices
@@ -294,7 +295,7 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
     }
 
     // Conta os graus de cada vértice
-    countDegrees(finalCounts,h_data,numGPUs,elementsPerGPU);
+    countDegrees(finalCounts,h_data,numGPUs,elementsPerGPU,numValues);
 
 
     Vertex *vertexes;
@@ -352,7 +353,7 @@ CheckCUDA_();
     CheckCUDA_();
 
     // Pega os índices dos pontos que são iguais ao threshold
-    get_IndexThreshold(finalCounts,treshold_idx,value_threshold);
+    get_IndexThreshold(finalCounts,treshold_idx,value_threshold,numValues);
 
 
 
@@ -395,7 +396,7 @@ CheckCUDA_();
 
     ECLgraph g;
     
-    g = buildECLgraph(numValues, vectorSize,h_data, distances,k, antihubs, pos_threshold,vectors_data,dim);
+    g = buildECLgraph(numValues, vectorSize,h_data, distances,k, antihubs, pos_threshold,vectors_data,dim,numValues);
 
 
     t = clock() - t; 

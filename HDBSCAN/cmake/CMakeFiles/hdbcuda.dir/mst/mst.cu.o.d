@@ -1,4 +1,4 @@
-CMakeFiles/hdbcuda.dir/mst/mst.cu.o : /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/mst/mst.cu \
+CMakeFiles/hdbcuda.dir/mst/mst.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/mst/mst.cu \
     /usr/include/stdc-predef.h \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda_runtime.h \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/crt/host_config.h \
@@ -159,7 +159,7 @@ CMakeFiles/hdbcuda.dir/mst/mst.cu.o : /nndescent/GPU_HDBSCAN/experiments/HDBSCAN
     /usr/include/c++/11/bits/move.h \
     /usr/include/c++/11/type_traits \
     /usr/include/c++/11/initializer_list \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/mst/mst.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/mst/mst.cuh \
     /usr/include/c++/11/climits \
     /usr/include/c++/11/algorithm \
     /usr/include/c++/11/bits/stl_algobase.h \
@@ -199,18 +199,18 @@ CMakeFiles/hdbcuda.dir/mst/mst.cu.o : /nndescent/GPU_HDBSCAN/experiments/HDBSCAN
     /usr/include/c++/11/bits/hash_bytes.h \
     /usr/include/c++/11/bits/vector.tcc \
     /usr/include/x86_64-linux-gnu/sys/time.h \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/mst/../structs/ECLgraph.h \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/mst/../structs/ECLgraph.h \
     /usr/include/c++/11/cstdio \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/mst/../structs/hdbscan_elements.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/mst/../structs/hdbscan_elements.cuh \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda.h \
     /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h \
     /usr/include/stdint.h \
     /usr/include/x86_64-linux-gnu/bits/wchar.h \
     /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/mst/../graphs/graph.cuh \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/mst/../graphs/../structs/hdbscan_elements.cuh \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/mst/../graphs/../structs/ECLgraph.h \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/mst/../calculates/calculates.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/mst/../graphs/graph.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/mst/../graphs/../structs/hdbscan_elements.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/mst/../graphs/../structs/ECLgraph.h \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/mst/../calculates/calculates.cuh \
     /usr/include/c++/11/iostream \
     /usr/include/c++/11/ostream \
     /usr/include/c++/11/ios \
@@ -286,6 +286,6 @@ CMakeFiles/hdbcuda.dir/mst/mst.cu.o : /nndescent/GPU_HDBSCAN/experiments/HDBSCAN
     /usr/include/c++/11/bits/ostream.tcc \
     /usr/include/c++/11/istream \
     /usr/include/c++/11/bits/istream.tcc \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/mst/../calculates/../structs/hdbscan_elements.cuh \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/mst/../initializer/initialize.cuh \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/mst/../initializer/../structs/hdbscan_elements.cuh
+    /nndescent/GPU_HDBSCAN/HDBSCAN/mst/../calculates/../structs/hdbscan_elements.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/mst/../initializer/initialize.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/mst/../initializer/../structs/hdbscan_elements.cuh

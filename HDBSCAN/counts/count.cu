@@ -31,7 +31,7 @@ __global__ void countTreshold(Vertex *data, int *counts, long int size, long int
 
 
 
-void countDegrees(int *finalCounts,int *h_data,int shards_num,long int *elementsPerGPU){
+void countDegrees(int *finalCounts,int *h_data,int shards_num,long int *elementsPerGPU, long int numValues){
 
     int *d_counts[shards_num];  // Vetores na GPU
     int *h_counts[shards_num]; // Contagens na CPU para cada GPU

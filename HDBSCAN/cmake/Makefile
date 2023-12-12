@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /nndescent/GPU_HDBSCAN/experiments/HDBSCAN
+CMAKE_SOURCE_DIR = /nndescent/GPU_HDBSCAN/HDBSCAN
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/cmake
+CMAKE_BINARY_DIR = /nndescent/GPU_HDBSCAN/HDBSCAN/cmake
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/cmake/CMakeFiles /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/cmake//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles /nndescent/GPU_HDBSCAN/HDBSCAN/cmake//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/cmake/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -310,6 +310,174 @@ new.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbscan_.dir/build.make CMakeFiles/hdbscan_.dir/new.cu.s
 .PHONY : new.cu.s
 
+nndescent/GPU_HDBSCAN/build_kNNG.o: nndescent/GPU_HDBSCAN/build_kNNG.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/build_kNNG.o
+
+# target to build an object file
+nndescent/GPU_HDBSCAN/build_kNNG.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/build_kNNG.cu.o
+
+nndescent/GPU_HDBSCAN/build_kNNG.i: nndescent/GPU_HDBSCAN/build_kNNG.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/build_kNNG.i
+
+# target to preprocess a source file
+nndescent/GPU_HDBSCAN/build_kNNG.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/build_kNNG.cu.i
+
+nndescent/GPU_HDBSCAN/build_kNNG.s: nndescent/GPU_HDBSCAN/build_kNNG.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/build_kNNG.s
+
+# target to generate assembly for a file
+nndescent/GPU_HDBSCAN/build_kNNG.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/build_kNNG.cu.s
+
+nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.o: nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.o
+
+# target to build an object file
+nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o
+
+nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.i: nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.i
+
+# target to preprocess a source file
+nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.i
+
+nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.s: nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.s
+
+# target to generate assembly for a file
+nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.s
+
+nndescent/GPU_HDBSCAN/gpuknn/knncuda.o: nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda.o
+
+# target to build an object file
+nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o
+
+nndescent/GPU_HDBSCAN/gpuknn/knncuda.i: nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda.i
+
+# target to preprocess a source file
+nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.i
+
+nndescent/GPU_HDBSCAN/gpuknn/knncuda.s: nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda.s
+
+# target to generate assembly for a file
+nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.s
+
+nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.o: nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.o
+
+# target to build an object file
+nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o
+
+nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.i: nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.i
+
+# target to preprocess a source file
+nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.i
+
+nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.s: nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.s
+
+# target to generate assembly for a file
+nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.s
+
+nndescent/GPU_HDBSCAN/gpuknn/knnmerge.o: nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knnmerge.o
+
+# target to build an object file
+nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o
+
+nndescent/GPU_HDBSCAN/gpuknn/knnmerge.i: nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knnmerge.i
+
+# target to preprocess a source file
+nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.i
+
+nndescent/GPU_HDBSCAN/gpuknn/knnmerge.s: nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knnmerge.s
+
+# target to generate assembly for a file
+nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.s
+
+nndescent/GPU_HDBSCAN/gpuknn/nndescent.o: nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/nndescent.o
+
+# target to build an object file
+nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o
+
+nndescent/GPU_HDBSCAN/gpuknn/nndescent.i: nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/nndescent.i
+
+# target to preprocess a source file
+nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.i
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.i
+
+nndescent/GPU_HDBSCAN/gpuknn/nndescent.s: nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/nndescent.s
+
+# target to generate assembly for a file
+nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.s
+.PHONY : nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.s
+
+nndescent/GPU_HDBSCAN/xmuknn.o: nndescent/GPU_HDBSCAN/xmuknn.cpp.o
+.PHONY : nndescent/GPU_HDBSCAN/xmuknn.o
+
+# target to build an object file
+nndescent/GPU_HDBSCAN/xmuknn.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.o
+.PHONY : nndescent/GPU_HDBSCAN/xmuknn.cpp.o
+
+nndescent/GPU_HDBSCAN/xmuknn.i: nndescent/GPU_HDBSCAN/xmuknn.cpp.i
+.PHONY : nndescent/GPU_HDBSCAN/xmuknn.i
+
+# target to preprocess a source file
+nndescent/GPU_HDBSCAN/xmuknn.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.i
+.PHONY : nndescent/GPU_HDBSCAN/xmuknn.cpp.i
+
+nndescent/GPU_HDBSCAN/xmuknn.s: nndescent/GPU_HDBSCAN/xmuknn.cpp.s
+.PHONY : nndescent/GPU_HDBSCAN/xmuknn.s
+
+# target to generate assembly for a file
+nndescent/GPU_HDBSCAN/xmuknn.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.s
+.PHONY : nndescent/GPU_HDBSCAN/xmuknn.cpp.s
+
 structs/hdbscan_elements.o: structs/hdbscan_elements.cu.o
 .PHONY : structs/hdbscan_elements.o
 
@@ -389,6 +557,27 @@ help:
 	@echo "... new.o"
 	@echo "... new.i"
 	@echo "... new.s"
+	@echo "... nndescent/GPU_HDBSCAN/build_kNNG.o"
+	@echo "... nndescent/GPU_HDBSCAN/build_kNNG.i"
+	@echo "... nndescent/GPU_HDBSCAN/build_kNNG.s"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.o"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.i"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.s"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/knncuda.o"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/knncuda.i"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/knncuda.s"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.o"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.i"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.s"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/knnmerge.o"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/knnmerge.i"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/knnmerge.s"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/nndescent.o"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/nndescent.i"
+	@echo "... nndescent/GPU_HDBSCAN/gpuknn/nndescent.s"
+	@echo "... nndescent/GPU_HDBSCAN/xmuknn.o"
+	@echo "... nndescent/GPU_HDBSCAN/xmuknn.i"
+	@echo "... nndescent/GPU_HDBSCAN/xmuknn.s"
 	@echo "... structs/hdbscan_elements.o"
 	@echo "... structs/hdbscan_elements.i"
 	@echo "... structs/hdbscan_elements.s"

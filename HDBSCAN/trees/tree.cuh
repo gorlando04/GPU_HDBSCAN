@@ -9,6 +9,7 @@
 
 #define INFINITE INT_MAX;
 
+
 class UnionFind {
 public:
      UnionFind(int N);
@@ -28,6 +29,7 @@ private:
 };
 
 
+
 SingleLinkageNode* build_Linkage_tree( MSTedge *mst_edges ,int num,int num_nodes);
 
 
@@ -36,8 +38,7 @@ std::vector<int> BFS_from_hierarchy(SingleLinkageNode *hierarchy,int bfs_root, i
 
 CondensedTreeNode* build_Condensed_tree(SingleLinkageNode *hierarchy,int num ,int num_nodes, int mpts, int *size);
 
-
-Stability* compute_stability(CondensedTreeNode *condensed_tee, int size, int *pointer);
+Stability* compute_stability(CondensedTreeNode *condensed_tee, int size,int *pointer);
 
 std::vector<int> BFS_from_cluster_tree(CondensedTreeNode *condensed_tree, int bfs_root, int condensed_size);
 
@@ -62,7 +63,6 @@ private:
   int size;
 
 };
-
 
 
 

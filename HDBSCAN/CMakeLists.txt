@@ -19,6 +19,24 @@ add_library(hdbcuda STATIC
     mst/mst.cuh
     trees/tree.cu
     trees/tree.cuh
+    ../gpuknn/gen_large_knngraph.cu
+    ../gpuknn/gen_large_knngraph.cuh
+    ../gpuknn/knncuda.cu
+    ../gpuknn/knncuda.cuh
+    ../gpuknn/nndescent.cu
+    ../gpuknn/nndescent.cuh
+    ../gpuknn/knncuda_tools.cuh
+    ../gpuknn/knncuda_tools.cu
+    ../gpuknn/knnmerge.cuh
+    ../gpuknn/knnmerge.cu
+    ../tools/distfunc.hpp
+    ../tools/filetool.hpp
+    ../tools/nndescent_element.cuh
+    ../tools/knndata_manager.hpp
+    ../xmuknn.h
+    ../xmuknn.cpp
+    ../build_kNNG.cu
+    ../build_kNNG.cuh
 )
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")

@@ -1,4 +1,4 @@
-CMakeFiles/hdbcuda.dir/trees/tree.cu.o : /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/trees/tree.cu \
+CMakeFiles/hdbcuda.dir/trees/tree.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/trees/tree.cu \
     /usr/include/stdc-predef.h \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda_runtime.h \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/crt/host_config.h \
@@ -159,13 +159,13 @@ CMakeFiles/hdbcuda.dir/trees/tree.cu.o : /nndescent/GPU_HDBSCAN/experiments/HDBS
     /usr/include/c++/11/bits/move.h \
     /usr/include/c++/11/type_traits \
     /usr/include/c++/11/initializer_list \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/trees/tree.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/trees/tree.cuh \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda.h \
     /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h \
     /usr/include/stdint.h \
     /usr/include/x86_64-linux-gnu/bits/wchar.h \
     /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/trees/../structs/hdbscan_elements.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/trees/../structs/hdbscan_elements.cuh \
     /usr/include/c++/11/vector \
     /usr/include/c++/11/bits/stl_algobase.h \
     /usr/include/c++/11/bits/functexcept.h \
@@ -193,7 +193,7 @@ CMakeFiles/hdbcuda.dir/trees/tree.cu.o : /nndescent/GPU_HDBSCAN/experiments/HDBS
     /usr/include/c++/11/bits/hash_bytes.h \
     /usr/include/c++/11/bits/range_access.h \
     /usr/include/c++/11/bits/vector.tcc \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/trees/../initializer/initialize.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/trees/../initializer/initialize.cuh \
     /usr/include/c++/11/iostream \
     /usr/include/c++/11/ostream \
     /usr/include/c++/11/ios \
@@ -270,4 +270,16 @@ CMakeFiles/hdbcuda.dir/trees/tree.cu.o : /nndescent/GPU_HDBSCAN/experiments/HDBS
     /usr/include/c++/11/bits/ostream.tcc \
     /usr/include/c++/11/istream \
     /usr/include/c++/11/bits/istream.tcc \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/trees/../initializer/../structs/hdbscan_elements.cuh
+    /nndescent/GPU_HDBSCAN/HDBSCAN/trees/../initializer/../structs/hdbscan_elements.cuh \
+    /usr/include/c++/11/algorithm \
+    /usr/include/c++/11/bits/stl_algo.h \
+    /usr/include/c++/11/bits/algorithmfwd.h \
+    /usr/include/c++/11/bits/stl_heap.h \
+    /usr/include/c++/11/bits/stl_tempbuf.h \
+    /usr/include/c++/11/bits/uniform_int_dist.h \
+    /usr/include/c++/11/tuple \
+    /usr/include/c++/11/array \
+    /usr/include/c++/11/bits/uses_allocator.h \
+    /usr/include/c++/11/bits/invoke.h \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/trees/../getters/getters.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/trees/../getters/../structs/hdbscan_elements.cuh

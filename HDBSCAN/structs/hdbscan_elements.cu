@@ -18,6 +18,16 @@ bool compareEdgeByWeight(const MSTedge &a, const MSTedge &b){
     return a.weight < b.weight;
 }
 
+
+void CheckCUDA_(){
+
+    auto cuda_status = cudaGetLastError();
+    if (cuda_status != cudaSuccess) {
+        printf("%s ",cudaGetErrorString(cuda_status));
+        exit(-1);
+    }
+}
+
 int getMaxChild(CondensedTreeNode *condensed_tree, int size){
 
     int max = condensed_tree[0].child;
@@ -61,6 +71,7 @@ int getMinParent(CondensedTreeNode *condensed_tree, int size){
     
 }
 
+
 float getMaxLambda(CondensedTreeNode *condensed_tree, int size){
     float max = condensed_tree[0].lambda_val;
 
@@ -83,19 +94,6 @@ std::vector<int> getIndexes(CondensedTreeNode *condesed_tree,int size, int node)
             vec.push_back(i);
     }
 
-    
     return vec;
 
-}
-
-
-
-
-void CheckCUDA_(){
-
-    auto cuda_status = cudaGetLastError();
-    if (cuda_status != cudaSuccess) {
-        printf("%s ",cudaGetErrorString(cuda_status));
-        exit(-1);
-    }
 }

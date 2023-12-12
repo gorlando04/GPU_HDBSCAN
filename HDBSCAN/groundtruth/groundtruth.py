@@ -195,4 +195,3 @@ df_gpu.to_csv(file_name, index=False)
 if int(iter) == 0:
     #Save labels
     np.savetxt(f'/nndescent/GPU_HDBSCAN/experiments/HDBSCAN/groundtruth/groundtruth_{N//1e6}.txt', clus.labels, delimiter='    ')  
-

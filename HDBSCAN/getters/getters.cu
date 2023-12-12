@@ -23,7 +23,7 @@ int get_TiedVertexes(Vertex *vertexes,int pos_threshold, int value_threshold){
 }
 
 
-void get_IndexThreshold(int *finalCounts,int *treshold_idx,int value_threshold){
+void get_IndexThreshold(int *finalCounts,int *treshold_idx,int value_threshold, long int numValues){
 
     int control = 0;
 

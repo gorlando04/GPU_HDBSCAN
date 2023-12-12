@@ -51,7 +51,7 @@ while args:
 
 
 # Read EXACT FILE
-exact = '/nndescent/GPU_HDBSCAN/experiments/HDBSCAN/groundtruth/groundtruth_1.0.txt'
+exact = '/nndescent/GPU_HDBSCAN/HDBSCAN/groundtruth/groundtruth_1.0.txt'
 with open(exact) as f:
     lines = f.readlines()
 
@@ -61,7 +61,7 @@ for i in lines:
     exact_labels.append(insert)
 
 # Read Approximate FILE
-pred = "/nndescent/GPU_HDBSCAN/experiments/HDBSCAN/groundtruth/approximate_result.txt"
+pred = "/nndescent/GPU_HDBSCAN/HDBSCAN/groundtruth/approximate_result.txt"
 with open(pred) as f:
     lines = f.readlines()
 pred_labels = []
@@ -71,7 +71,7 @@ for i in lines:
 
 df_gpu = None
 
-file_name = 'fapesp.csv'
+file_name = '/nndescent/GPU_HDBSCAN/HDBSCAN/results/fapesp.csv'
 
 try:   
     df_gpu = pd.read_csv(file_name)

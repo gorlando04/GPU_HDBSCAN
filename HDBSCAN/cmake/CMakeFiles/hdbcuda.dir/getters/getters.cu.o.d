@@ -1,4 +1,4 @@
-CMakeFiles/hdbcuda.dir/getters/getters.cu.o : /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/getters/getters.cu \
+CMakeFiles/hdbcuda.dir/getters/getters.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/getters/getters.cu \
     /usr/include/stdc-predef.h \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda_runtime.h \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/crt/host_config.h \
@@ -159,10 +159,41 @@ CMakeFiles/hdbcuda.dir/getters/getters.cu.o : /nndescent/GPU_HDBSCAN/experiments
     /usr/include/c++/11/bits/move.h \
     /usr/include/c++/11/type_traits \
     /usr/include/c++/11/initializer_list \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/getters/getters.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/getters/getters.cuh \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda.h \
     /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h \
     /usr/include/stdint.h \
     /usr/include/x86_64-linux-gnu/bits/wchar.h \
     /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
-    /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/getters/../structs/hdbscan_elements.cuh
+    /nndescent/GPU_HDBSCAN/HDBSCAN/getters/../structs/hdbscan_elements.cuh \
+    /usr/include/c++/11/vector \
+    /usr/include/c++/11/bits/stl_algobase.h \
+    /usr/include/c++/11/bits/functexcept.h \
+    /usr/include/c++/11/bits/exception_defines.h \
+    /usr/include/c++/11/ext/numeric_traits.h \
+    /usr/include/c++/11/bits/stl_iterator_base_types.h \
+    /usr/include/c++/11/bits/stl_iterator_base_funcs.h \
+    /usr/include/c++/11/bits/concept_check.h \
+    /usr/include/c++/11/debug/assertions.h \
+    /usr/include/c++/11/bits/stl_iterator.h \
+    /usr/include/c++/11/bits/ptr_traits.h \
+    /usr/include/c++/11/debug/debug.h \
+    /usr/include/c++/11/bits/predefined_ops.h \
+    /usr/include/c++/11/bits/allocator.h \
+    /usr/include/x86_64-linux-gnu/c++/11/bits/c++allocator.h \
+    /usr/include/c++/11/ext/new_allocator.h \
+    /usr/include/c++/11/bits/memoryfwd.h \
+    /usr/include/c++/11/bits/stl_construct.h \
+    /usr/include/c++/11/bits/stl_uninitialized.h \
+    /usr/include/c++/11/ext/alloc_traits.h \
+    /usr/include/c++/11/bits/alloc_traits.h \
+    /usr/include/c++/11/bits/stl_vector.h \
+    /usr/include/c++/11/bits/stl_bvector.h \
+    /usr/include/c++/11/bits/functional_hash.h \
+    /usr/include/c++/11/bits/hash_bytes.h \
+    /usr/include/c++/11/bits/range_access.h \
+    /usr/include/c++/11/bits/vector.tcc \
+    /usr/include/c++/11/tuple \
+    /usr/include/c++/11/array \
+    /usr/include/c++/11/bits/uses_allocator.h \
+    /usr/include/c++/11/bits/invoke.h
