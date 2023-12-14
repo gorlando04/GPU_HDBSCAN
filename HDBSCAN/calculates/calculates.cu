@@ -89,7 +89,7 @@ void calculateElements(long int *elementsPerGPU,int shards_num,long int vectorSi
     return;
 }
 
-void calculateUntieScore(Untie_hub *unties ,long int *indexesPerGPU,int *h_data,int *treshold_idx,int *finalCounts){
+void calculateUntieScore(Untie_hub *unties ,long int *indexesPerGPU,int *h_data,int *treshold_idx,int *finalCounts,long int k){
 
      Untie_hub *unties_gpus[numGPUs];
 
@@ -155,7 +155,7 @@ void calculateUntieScore(Untie_hub *unties ,long int *indexesPerGPU,int *h_data,
     return;
 }
 
-void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int *indexesPerGPU,long int k){
+void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int *indexesPerGPU,long int k,long int mpts){
 
     float  *coreDistances_cpu[numGPUs];
 

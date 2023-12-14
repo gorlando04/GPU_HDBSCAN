@@ -10,7 +10,7 @@ repeat(){
 	N=1000000
 	shards=3
 	ID=10M
-        for i in 1 2 3 4 5
+        for i in 1
         do 
         
  
@@ -21,7 +21,7 @@ repeat(){
 		
 
 		#./hdbscan_ > /nndescent/GPU_HDBSCAN/experiments/HDBSCAN/results/$ID/HDBSCAN_$i.txt
-		./hdbscan_ 1000000 3
+		./hdbscan_ 1000000 32 3
 		python3 eval.py -name standart -D 12 -N $N -iter $i -mpts 32
 
 		rm /nndescent/GPU_HDBSCAN/results/NNDescent-KNNG.*

@@ -56,7 +56,7 @@ void createWeightList(float *vector,ECLgraph *g){
     }
 }
 
-ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k, int *antihubs, long int num_antihubs,float *vectors_data,int dim, long int numValues)
+ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k,long int mpts ,int *antihubs, long int num_antihubs,float *vectors_data,int dim, long int numValues)
 {
 
 
@@ -208,7 +208,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
 
         float *coreDistances;
         cudaMallocManaged(&coreDistances,(size_t)(numValues) * sizeof(float)); 
-        calculateCoreDistance(distances,coreDistances,elementsPerGPU,k);
+        calculateCoreDistance(distances,coreDistances,elementsPerGPU,k,mpts);
 
 
         float *graphDistances;
@@ -254,7 +254,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
 }
 
 
-ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *vectors_data,int dim, long int numValues){
+ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *vectors_data,int dim, long int numValues,long int k,long int mpts){
 
 
  
@@ -312,7 +312,7 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
 
     cudaDeviceSynchronize();
 
-CheckCUDA_();
+    CheckCUDA_();
 
     // Pegar os threshold
     int pos_threshold = get_NumThreshold(numValues);
@@ -343,6 +343,13 @@ CheckCUDA_();
 
     int *treshold_idx;
 
+    int *antihubs;
+
+    antihubs = new int[pos_threshold];
+
+
+    if (countsTreshold > 1){
+
     // Aloca memória para o vetor na CPU
 	cudaMallocManaged(&treshold_idx,(size_t)countsTreshold * sizeof(int));
   
@@ -370,7 +377,7 @@ CheckCUDA_();
     unties = new Untie_hub[countsTreshold];
 
     // Calculata os scores dos empates
-    calculateUntieScore(unties,indexesPerGPU,h_data,treshold_idx,finalCounts);
+    calculateUntieScore(unties,indexesPerGPU,h_data,treshold_idx,finalCounts,k);
 
     // Pega quantos empates temos na lista final
     int missing_ties = get_TiedVertexes(vertexes,pos_threshold,value_threshold);
@@ -378,13 +385,19 @@ CheckCUDA_();
 
     std::partial_sort(unties, unties + missing_ties, unties + countsTreshold, compareVertexByScore);
 
-    int *antihubs;
-
-    antihubs = new int[pos_threshold];
-
-
     // Junta todos os antihubs em um vetor
     joinAntiHubs(antihubs,vertexes,not_ties,unties,missing_ties);
+
+    }
+
+
+    else{
+        // Bota os não empatados
+        for(int i=0;i< pos_threshold;i++)
+            antihubs[i] = vertexes[i].index;
+
+    }
+
 
     // Ordena pelo índice para inserir na MST
     std::sort(antihubs,antihubs+pos_threshold);
@@ -393,7 +406,7 @@ CheckCUDA_();
 
     ECLgraph g;
     
-    g = buildECLgraph(numValues, vectorSize,h_data, distances,k, antihubs, pos_threshold,vectors_data,dim,numValues);
+    g = buildECLgraph(numValues, vectorSize,h_data, distances,k,mpts, antihubs, pos_threshold,vectors_data,dim,numValues);
 
 
 

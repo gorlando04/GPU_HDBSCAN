@@ -18,11 +18,13 @@ void createEdgeList(int *vector, ECLgraph *g);
 
 void createWeightList(float *vector,ECLgraph *g);
 
-ECLgraph buildECLgraph(int nodes, long int edges,int *kNN , float *distances ,int k, int *antihubs, long int num_antihubs,float *vectors_data,int dim, long int numValues);
+ECLgraph buildECLgraph(int nodes, long int edges,int *kNN , float *distances ,int k,long int mpts, int *antihubs, long int num_antihubs,float *vectors_data,int dim, long int numValues);
 
 
 
-ECLgraph buildEnhancedKNNG(int *h_data,float *distances ,int shards_num, float *vectors_data,int dim,long int numValues);
+ECLgraph buildEnhancedKNNG(int *h_data,float *distances ,int shards_num, float *vectors_data,int dim,long int numValues, long int k,long int mpts);
 
 
 #endif
+
+// buildEnhancedKNNG needs k parameter

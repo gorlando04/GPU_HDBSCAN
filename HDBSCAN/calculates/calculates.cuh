@@ -19,9 +19,9 @@ __global__ void calculateMRD(float *d_distances,int *d_nodes,int *d_edges,float 
 
 void calculateElements(long int *elementsPerGPU,int shards_num,long int vectorSize); //
 
-void calculateUntieScore(Untie_hub *unties ,long int *indexesPerGPU,int *h_data,int *treshold_idx,int *finalCounts); //
+void calculateUntieScore(Untie_hub *unties ,long int *indexesPerGPU,int *h_data,int *treshold_idx,int *finalCounts, long int k); //
 
-void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int *indexesPerGPU,long int k);//
+void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int *indexesPerGPU,long int k,long int mpts);//
 
 void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistances,int *aux_nodes,int *aux_edges,long int size); //
 
@@ -29,3 +29,6 @@ float calculate_euclidean_distance(float *vector,long int idxa,long int idxb,int
 
 
 #endif
+
+//CalculateUntieScore needs k parameter
+//calculateCoreDistance needs mpts

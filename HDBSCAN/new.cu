@@ -61,14 +61,19 @@ int main( int argc, char *argv[]) {
   //Standard parameters
   int shards = 30;
   long int numValues = 1000000;
+  long int k = NEIGHB_NUM_PER_LIST;
+  long int mpts = 10;
 
 
-  // ./hdbscan_ NUM_VALUES shards
-  if (argc == 3){
+  // ./hdbscan_ NUM_VALUES mpts shards
+  if (argc == 4){
     numValues = atoi(argv[1]);
-printf("NUM VALUES SET TO %ld.\n",numValues);
+    printf("NUM VALUES SET TO %ld.\n",numValues);
 
-    shards = atoi(argv[2]);
+    mpts = atoi(argv[2]);
+    printf("mpts SET TO %ld.\n",mpts);
+
+    shards = atoi(argv[3]);
     printf("SHARDS SET TO %d.\n",shards);
 
   }
@@ -79,6 +84,7 @@ printf("NUM VALUES SET TO %ld.\n",numValues);
   }
 
 
+  assert(k >= mpts);
 
   //kNNG
 
@@ -146,7 +152,7 @@ printf("NUM VALUES SET TO %ld.\n",numValues);
     //HDBSCAN
     int shards_num = 3;
     ECLgraph g;
-    g = buildEnhancedKNNG(result_index_graph,distances,shards_num,vectors_data,data_dim,numValues);
+    g = buildEnhancedKNNG(result_index_graph,distances,shards_num,vectors_data,data_dim,numValues,k,mpts);
 
     bool* edges = cpuMST(g);
 
@@ -164,7 +170,7 @@ printf("NUM VALUES SET TO %ld.\n",numValues);
 
     CondensedTreeNode* condensed_tree;
     int condensed_size;
-    condensed_tree =  build_Condensed_tree(result_arr, knng_num ,g.nodes-1, k,&condensed_size);
+    condensed_tree =  build_Condensed_tree(result_arr, knng_num ,g.nodes-1, mpts,&condensed_size);
 
 
     Stability *stabilities;
