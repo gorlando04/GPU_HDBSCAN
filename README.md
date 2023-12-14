@@ -2,6 +2,70 @@
 
 This repository presents a multi-GPU version of HDBSCAN, and uses the kNNG implementation presented in [Multi-GPU kNNG](https://github.com/gorlando04/Scalable-distributed-algorithms-for-approximating-the-kNNG) and benefits from paralelism provided by the multiple GPUs.
 
+
+## Software Especifications
+
+The comparsion was performed in a GPU server with the following specifications
+
+<aside>
+💡 RAM: 128 GB
+	
+💡 Processor: 2 Intel(R) Xeon(R) Silver 4208 CPU
+
+💡 GPU: 3 NVIDIA GeForce RTX 2080 Super
+
+💡 Ubuntu 22.04
+
+💡 CUDA 12.0
+
+💡 Docker Version: 20.10.21
+
+</aside>
+
+
+## Docker images 
+
+In this experiment, we used one docker-image for supporting our work.
+
+To build the container for HDBSCAN , the following image was used:
+
+```
+docker run --gpus '"device=0,1,2"' --name GPU_HDBSCAN --rm -it -v /home/gabriel:/nndescent -w /nndescent --shm-size=1g --ulimit memlock=-1 nvidia/cuda:12.0.1-devel-ubuntu22.04
+```
+
+When acessing the container, the following steps were done:
+
+```bash
+#Installing Nano
+apt update
+apt install nano
+apt install -y tmux
+clear 
+
+apt install -y cmake
+
+apt install -y wget
+
+apt install -y python
+
+apt install -y python3-pip
+
+pip install scikit-learn
+
+pip install numpy
+
+pip install pandas
+
+pip install cython
+pip install hdbscan
+
+
+
+```
+
+After the beggining of every execution, it was tested if the container was with GPUs working with the **************nvidia-smi************** command. 
+
+
 ## Observations
 
 Firstly, it is important to say that in order to compile correctly the source code it is important to follow this instructions:
