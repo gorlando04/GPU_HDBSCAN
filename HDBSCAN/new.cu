@@ -13,6 +13,7 @@
 #include <fstream>
 #include <string>
 #include <cstdio>
+#include<unistd.h>
 
 
 void ReadTxtVecs(const string &data_path, float **vectors_ptr,
@@ -91,34 +92,29 @@ int main( int argc, char *argv[]) {
     //Preparing vector
     const std::string path_to_data = "/nndescent/GPU_HDBSCAN/data/artificial/SK_data.txt";
 
-    PrepareVector(path_to_data,"/nndescent/GPU_HDBSCAN/data/vectors.fvecs");
+//    PrepareVector(path_to_data,"/nndescent/GPU_HDBSCAN/data/vectors.fvecs");
 
     std::string path_to_kNNG = "/nndescent/GPU_HDBSCAN/results/NNDescent-KNNG.kgraph";
 
-    clock_t t; 
-    t = clock(); 
+/*    clock_t t; 
+    t = clock(); */
     printf("Iniciando o HDBSCAN\n");
 
 
-    ConstructLargeKNNGraph(shards, "/nndescent/GPU_HDBSCAN/data/vectors", path_to_kNNG);
+  //  ConstructLargeKNNGraph(shards, "/nndescent/GPU_HDBSCAN/data/vectors", path_to_kNNG);
 
-
-
-
-    // Le o kNNG que esta escrito no arquivo abaixo
-    NNDElement *result_graph;
-    int knng_num, knng_dim;
-    FileTool::ReadBinaryVecs(path_to_kNNG , &result_graph, &knng_num, &knng_dim);
-    knng_num = numValues;
-    printf("kNNG size = %ld e %d\n",knng_num,knng_dim);
-    
     // Le o vetor de amostras
     float *vectors_data;
     long int data_size, data_dim;
 
-    ReadTxtVecs(path_to_data,&vectors_data,&data_size,&data_dim);
-    printf("Data size= %d e %d\n",numValues,data_dim);
 
+    // Le o kNNG que esta escrito no arquivo abaixo
+    NNDElement *result_graph;
+    long int knng_num, knng_dim;
+    FileTool::ReadBinaryVecs(path_to_kNNG , &result_graph, &knng_num, &knng_dim);
+    knng_num = numValues;
+    printf("kNNG size = %ld e %d\n",knng_num,knng_dim);
+    
 
 
 
@@ -147,14 +143,22 @@ int main( int argc, char *argv[]) {
     }
 
     CheckCUDA_();
-
+    delete result_graph;
+    result_graph = NULL;
 
     //HDBSCAN
     int shards_num = 3;
     ECLgraph g;
-    g = buildEnhancedKNNG(result_index_graph,distances,shards_num,vectors_data,data_dim,numValues,k,mpts);
+    double time_taken = 0.0;
+    g = buildEnhancedKNNG(result_index_graph,distances,shards_num,vectors_data,data_dim,numValues,k,mpts,&time_taken);
 
-    bool* edges = cpuMST(g);
+    cudaFree(result_index_graph);
+    cudaFree(distances);
+
+    result_index_graph = NULL;
+    distances = NULL;
+
+/*    bool* edges = cpuMST(g);
 
      
 
@@ -162,7 +166,10 @@ int main( int argc, char *argv[]) {
      MSTedge *mst_edges;
      mst_edges = new MSTedge[g.nodes-1];
 
-     mst_edges = buildMST(g,edges,12);
+     mst_edges = buildMST(g,edges,12);*/
+
+
+/*
 
     SingleLinkageNode *result_arr;
 
@@ -182,11 +189,12 @@ int main( int argc, char *argv[]) {
     labels = get_clusters(condensed_tree, condensed_size, stabilities,  stability_size, numValues);
 
     t = clock() - t; 
-    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds 
+    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
+
     printf("Demorou %lf segundos\n",time_taken);
 
     const std::string out_PATH = "/nndescent/GPU_HDBSCAN/HDBSCAN/groundtruth/approximate_result.txt";
-    WriteTxtVecs(out_PATH,labels,numValues);
+    //WriteTxtVecs(out_PATH,labels,numValues);
 
 
 

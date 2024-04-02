@@ -22,9 +22,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN , float *distances ,in
 
 
 
-ECLgraph buildEnhancedKNNG(int *h_data,float *distances ,int shards_num, float *vectors_data,int dim,long int numValues, long int k,long int mpts);
+ECLgraph buildEnhancedKNNG(int *h_data,float *distances ,int shards_num, float *vectors_data,int dim,long int numValues,long int k,long int mpts,double *time_taken);
 
 
 #endif
-
-// buildEnhancedKNNG needs k parameter

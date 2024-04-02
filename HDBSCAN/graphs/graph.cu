@@ -3,9 +3,13 @@
 #include "../getters/getters.cuh"
 #include "../calculates/calculates.cuh"
 #include "../counts/count.cuh"
-
+#include <time.h>
+#include <unistd.h>
+#include "../../tools/filetool.hpp"
 
 #include <algorithm>
+#include <vector>
+
 
 
 
@@ -56,7 +60,7 @@ void createWeightList(float *vector,ECLgraph *g){
     }
 }
 
-ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k,long int mpts ,int *antihubs, long int num_antihubs,float *vectors_data,int dim, long int numValues)
+ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k,long int mpts, int *antihubs, long int num_antihubs,float *vectors_data,int dim, long int numValues)
 {
 
 
@@ -65,7 +69,6 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
 
 
   g.nodes = nodes;
-
 
 
 
@@ -83,8 +86,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
     CheckCUDA_();
 
     cudaMemPrefetchAsync(g.nindex,(size_t)(g.nodes + 1) * sizeof(g.nindex[0]),cudaCpuDeviceId);
-
-
+    bool *flag_knn = (bool*)malloc(numValues*k * sizeof(bool));
 
     // Calcula quantas arestas cada noh terá, levando em conta que eh um grafo não direcional.
     for (long int i=0;i<nodes;i++){
@@ -97,6 +99,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
             int FLAG = findKNNlist(kNN,neig,i,k);
 
             g.nindex[neig+1] += 1;
+	    flag_knn[i*k + j] = FLAG;
 
             if (!FLAG)
                 soma += 1;
@@ -115,13 +118,13 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
             g.nindex[i+1] += (num_antihubs-1);
     }
     
+    
     //Calcular offsets
     for (long int i=1;i<nodes+1;i++){
 
         g.nindex[i] = g.nindex[i-1] + g.nindex[i];
 
     }
-
     // Nesse pontos os nós já estão calculados, agora precisamos inserir as arestas. Essa parte será bem demorada.
 
     long int *auxiliar_edges;
@@ -138,14 +141,13 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
     CheckCUDA_();
 
 
-
-    g.nlist = (int*)malloc(g.nindex[nodes] * sizeof(g.nlist[0]));
+    /*g.nlist = (int*)malloc(g.nindex[nodes] * sizeof(int));*/ cudaMallocManaged(&g.nlist,(size_t)(g.nindex[nodes]) * sizeof(int));
     g.edges = g.nindex[nodes];
 
     // Adicionar as arestas sem antihubs
     long int k2 = k;
 
-    for (long int i=0;i<nodes;i++)
+    for (long int i=0;i<nodes;i++){
 
         for (long int j=0;j<k2;j++){
 
@@ -159,8 +161,9 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
             long int neig = kNN[i*k2+j];
 
             // Verifica se o ponto esta na lista dos vizinhos do outro ponto
-            int FLAG = findKNNlist(kNN,neig,i,k2);
-
+//            int FLAG = findKNNlist(kNN,neig,i,k2);
+	    int FLAG = flag_knn[i*k2+j];
+            
             // Calcula o offset do vizinho
             long int neig_edge_offset = g.nindex[neig];
             int neig_insertion_offset = auxiliar_edges[neig];
@@ -177,6 +180,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
                 auxiliar_edges[i] += 1;
 	   }
         }
+    }
 
     // Adiciona os antiHubs
 
@@ -195,7 +199,8 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
             }
         }
     }
-        g.eweight = (float*)malloc(g.edges * sizeof(g.eweight[0]));
+
+        cudaMallocManaged(&g.eweight,(size_t)g.edges * sizeof(g.eweight[0]));
 
 	 int *aux_nodes;
         cudaMallocManaged(&aux_nodes,(size_t)g.edges * sizeof(g.nlist[0]));
@@ -205,23 +210,28 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
         long int elementsPerGPU[numGPUs];
         calculateElements(elementsPerGPU,numGPUs,numValues);
 
-
         float *coreDistances;
         cudaMallocManaged(&coreDistances,(size_t)(numValues) * sizeof(float)); 
         calculateCoreDistance(distances,coreDistances,elementsPerGPU,k,mpts);
 
 
-        float *graphDistances;
-        cudaMallocManaged(&graphDistances,(size_t)g.edges * sizeof(g.eweight[0]));
+    cudaFree(distances);
+    cudaFree(kNN);
+    
+    distances = NULL;
+    kNN = NULL;
 
-        int *aux_edges;
-        cudaMallocManaged(&aux_edges,(size_t)g.edges * sizeof(g.nlist[0]));
-        for (long int i=0;i<g.edges;i++){
-            aux_edges[i] = g.nlist[i];
-        }
+    calculateMutualReachabilityDistance(g.eweight,coreDistances,aux_nodes,g.nlist,g.edges); 
 
-        calculateMutualReachabilityDistance(graphDistances,coreDistances,aux_nodes,aux_edges,g.edges); 
 
+
+
+    // Read vector txtx
+    const std::string path_to_data_binary = "/nndescent/GPU_HDBSCAN/data/vectors.fvecs";
+    long int data_size2, data_dim2;
+
+    //FileTool::ReadTxtVecsAntiHubs(path_to_data,&vectors_data,&data_size2,&data_dim2,antihubs,num_antihubs);
+    FileTool::ReadBinaryAntihubs(path_to_data_binary,&vectors_data, &data_size2, &data_dim2,antihubs,num_antihubs);    	
 
     for (long int i=0;i<num_antihubs;i++){
 
@@ -231,41 +241,33 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
             int idx_b = antihubs[j+1];
             
             //Calcula distancia euclidiana
-            float euclidean_distance = calculate_euclidean_distance(vectors_data,idx_a,idx_b,dim);
+            float euclidean_distance = calculate_euclidean_distance(vectors_data,i,j+1,dim);
 
-            if (graphDistances[pos_begin + j] < euclidean_distance){
-                graphDistances[pos_begin+j] = euclidean_distance;
+            if (g.eweight[pos_begin + j] < euclidean_distance){
+                g.eweight[pos_begin+j] = euclidean_distance;
 
                 long int pos_begin2 = g.nindex[idx_b] + auxiliar_edges[idx_b];
-                graphDistances[pos_begin2 + i] = euclidean_distance;
+                g.eweight[pos_begin2 + i] = euclidean_distance;
             }
 
 
         }
     }
 
-    for (long int i=0;i<g.edges;i++){
-        g.eweight[i] = graphDistances[i];
-    } 
 
 
- 
   return g;   
 }
 
 
-ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *vectors_data,int dim, long int numValues,long int k,long int mpts){
+ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *vectors_data,int dim, long int numValues,long int k,long int mpts,double *time_taken){
 
 
- 
+
+
     long int vectorSize = numValues*k;
-    // Aqui da pra colocar um perfectch
-    for (int i=0;i<numGPUs;i++){
-        cudaSetDevice(i);
-        cudaMemPrefetchAsync(h_data,(size_t)vectorSize * sizeof(int),i);
-    }
 
-
+   cudaMemPrefetchAsync(h_data,(size_t)vectorSize * sizeof(int), cudaCpuDeviceId);
  
     long int elementsPerGPU[shards_num];
 
@@ -293,8 +295,7 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
     }
 
     // Conta os graus de cada vértice
-    countDegrees(finalCounts,h_data,numGPUs,elementsPerGPU,numValues);
-
+  countDegrees(finalCounts,h_data,numGPUs,elementsPerGPU,numValues);
 
     Vertex *vertexes;
 
@@ -312,7 +313,7 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
 
     cudaDeviceSynchronize();
 
-    CheckCUDA_();
+CheckCUDA_();
 
     // Pegar os threshold
     int pos_threshold = get_NumThreshold(numValues);
@@ -347,9 +348,9 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
 
     antihubs = new int[pos_threshold];
 
+     Untie_hub *unties;
 
-    if (countsTreshold > 1){
-
+     if (countsTreshold > 1){
     // Aloca memória para o vetor na CPU
 	cudaMallocManaged(&treshold_idx,(size_t)countsTreshold * sizeof(int));
   
@@ -373,7 +374,6 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
     calculateElements(indexesPerGPU,numGPUs,countsTreshold);
 
 
-    Untie_hub *unties;
     unties = new Untie_hub[countsTreshold];
 
     // Calculata os scores dos empates
@@ -388,8 +388,9 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
     // Junta todos os antihubs em um vetor
     joinAntiHubs(antihubs,vertexes,not_ties,unties,missing_ties);
 
+    delete unties;
+    unties = NULL;
     }
-
 
     else{
         // Bota os não empatados
@@ -397,19 +398,28 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
             antihubs[i] = vertexes[i].index;
 
     }
-
-
     // Ordena pelo índice para inserir na MST
     std::sort(antihubs,antihubs+pos_threshold);
 
 
+    // Libera a galera
+    cudaFree(finalCounts);
+    cudaFree(vertexes);
+    cudaFree(treshold_idx);
 
+    finalCounts = NULL;
+    vertexes = NULL;
+    treshold_idx = NULL;
+
+
+    printf("Vamos comecar a montar o ECL\n");
+    clock_t t;
+    t = clock();
     ECLgraph g;
     
     g = buildECLgraph(numValues, vectorSize,h_data, distances,k,mpts, antihubs, pos_threshold,vectors_data,dim,numValues);
 
-
-
-
+    t = clock() - t;
+    *time_taken = ((double)t)/CLOCKS_PER_SEC;
     return g;
 }
