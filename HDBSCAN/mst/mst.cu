@@ -2,6 +2,7 @@
 #include "../graphs/graph.cuh"
 #include "../calculates/calculates.cuh"
 #include "../initializer/initialize.cuh"
+#include "../merge_sort/merge_sort.cuh"
 
 static inline int serial_find(const int idx, int* const parent)
 {
@@ -317,8 +318,11 @@ MSTedge* buildMST(ECLgraph g,bool *edges, int shards_num){
     exit(1);
   }
 
-  std::sort(finalEdges,finalEdges+(g.nodes-1),compareEdgeByWeight);
 
+
+  // Ordena em GPU
+  finalEdges = sort_edges(finalEdges,g.nodes-1);
+  
   return finalEdges;
 
 }
@@ -364,9 +368,8 @@ MSTedge* buildMST_gpu(GPUECLgraph g,bool *edges, int shards_num,int mult){
     exit(1);
   }
 
-
-  // Aqui vai entrar a ordenação em multi-GPU
-  std::sort(finalEdges,finalEdges+(g.nodes-1),compareEdgeByWeight);
+  // Ordena em GPU
+  finalEdges = sort_edges(finalEdges,g.nodes-1);
 
   return finalEdges;
 
