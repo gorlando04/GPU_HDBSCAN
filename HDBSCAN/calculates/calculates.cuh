@@ -29,6 +29,3 @@ float calculate_euclidean_distance(float *vector,long int idxa,long int idxb,int
 
 
 #endif
-
-//CalculateUntieScore needs k parameter
-//calculateCoreDistance needs mpts

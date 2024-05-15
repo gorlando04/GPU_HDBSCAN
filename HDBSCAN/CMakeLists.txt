@@ -29,8 +29,8 @@ add_library(hdbcuda STATIC
     ../gpuknn/knncuda_tools.cu
     ../gpuknn/knnmerge.cuh
     ../gpuknn/knnmerge.cu
-    ../tools/distfunc.hpp
-    ../tools/filetool.hpp
+     ../tools/distfunc.hpp
+     ../tools/filetool.hpp
     ../tools/nndescent_element.cuh
     ../tools/knndata_manager.hpp
     ../xmuknn.h

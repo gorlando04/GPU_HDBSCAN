@@ -215,7 +215,17 @@ void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int 
 void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistances,int *aux_nodes,int *aux_edges,long int size){
 
 
-    int shards_num = 9;
+
+    int shards_num = numGPUs;
+
+    double total_size_mb = 3 * sizeof(aux_nodes[0]) * size  / pow(10,9);
+
+    while (total_size_mb / shards_num > GPU_SIZE){
+        shards_num += numGPUs;
+    }
+
+    printf("SHARDS NUM = %d e edges = %ld\n",shards_num,size);
+
     int *d_nodes[shards_num], *d_edges[shards_num]; // Vetores na GPU
     float *d_distances[shards_num];  // Vetores na GPU
     float *h_distances[shards_num]; // Contagens na CPU para cada GPU
@@ -251,12 +261,11 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
     // Realiza a contagem de graus para todos os vértices
 
     int iters = shards_num / numGPUs;
-
     for (int s=0;s < iters;s++){
 
 	for (int i = 0; i < numGPUs; i++) {
 
-        int idx = i + (s*numGPUs);
+        long int idx = i + (s*numGPUs);
         cudaSetDevice(i);
 
         // Aloca memória para o vetor de nohs na GPU
@@ -272,9 +281,13 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
         // Configura a grade de threads
         long int numBlocks = ( elementsPerGPU[idx]/ blockSize) +1;
         
-        ShardVector<<<numBlocks,blockSize>>>(d_nodes[idx],aux_nodes,elementsPerGPU[idx],elementsPerGPU[0],idx);
+/*        ShardVector<<<numBlocks,blockSize>>>(d_nodes[idx],aux_nodes,elementsPerGPU[idx],elementsPerGPU[0],idx);
         ShardVector<<<numBlocks,blockSize>>>(d_edges[idx],aux_edges,elementsPerGPU[idx],elementsPerGPU[0],idx);
-
+*/
+        long int offset = elementsPerGPU[0] * idx;
+        cudaMemcpy(d_nodes[idx], &aux_nodes[offset], elementsPerGPU[idx]*sizeof(int), cudaMemcpyHostToDevice);
+        cudaMemcpy(d_edges[idx], &aux_edges[offset], elementsPerGPU[idx]*sizeof(int), cudaMemcpyHostToDevice);
+        
         
         calculateMRD<<<numBlocks,blockSize>>>(d_distances[idx],d_nodes[idx],d_edges[idx],coreDistances,elementsPerGPU[idx]);
 
@@ -300,7 +313,6 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
         CheckCUDA_();
     
     }
-
 
     for (int i = 0; i < shards_num; i++) {
         for (int j = 0; j < elementsPerGPU[i]; j++) {

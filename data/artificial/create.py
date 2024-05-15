@@ -112,7 +112,7 @@ N = int(sys.argv[1])
 db = create_dataset(int(N),12)[0]
 
 
-path_file  = f'/nndescent/GPU_KNNG/data/artificial/SK_data.txt'
+path_file  = f'/nndescent/GPU_HDBSCAN/data/artificial/SK_data.txt'
 
 np.savetxt(path_file, db, delimiter='\t',fmt='%.30f',header=f'{N} 12',comments='')
 

@@ -66,7 +66,6 @@ void BuildEachShard(KNNDataManager &data_manager, const string &out_data_path,in
   gpuknn::NNDescent(&knn_graph, vectors_dev, data_manager.GetVecsNum(i),
                     data_manager.GetDim(), 6, false);
 
-
   thread th1([&data_manager, knn_graph, out_data_path, i, &mtx]() {
       mtx.lock();
       Timer writer_timer;
@@ -396,7 +395,6 @@ void MultiMerge(KNNDataManager &data_manager, const string &out_data_path,int id
 
 
   float merge_time = merge_timer.end();
-
   
 
        auto status = cudaGetLastError();
@@ -476,12 +474,10 @@ void GenLargeKNNGraph(const string &vecs_data_path, const string &out_data_path,
     threads.clear();
   }
 
-
   MultiMerge(data_manager,out_data_path, NUM_GPU-1, shards_num - 2 ,-1,true);
   
  
 
-  //data_manager.CheckStatus();
 
   return;
 

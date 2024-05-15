@@ -7,8 +7,10 @@
 
 const int numGPUs = 3;
 const int blockSize = 256;
-/*const int k = 32;
-const int mpts=k;*/
+const int k = 32;
+const int mpts=k;
+const double GPU_SIZE = 8; 
+//const int dimensions=12;
 
 struct Vertex {
 

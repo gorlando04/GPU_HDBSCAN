@@ -5,13 +5,13 @@
 
 
 // Função do kernel CUDA para calcular a contagem de valores em um vetor
-__global__ void countValues(int *data, int *counts, long int size, long int off_set_size,int offset) {
+__global__ void countValues(int *data, int *counts, long int size/*, long int off_set_size,int offset*/) {
 
 
     //int tid = blockIdx.x * blockDim.x + threadIdx.x;
     long int tid = (blockIdx.x * blockSize) + threadIdx.x;
     if (tid < size) {
-        long int value = data[tid+ off_set_size*offset];
+        long int value = data[tid];
         atomicAdd(&counts[value], 1);
     }
 }
@@ -34,6 +34,8 @@ __global__ void countTreshold(Vertex *data, int *counts, long int size, long int
 void countDegrees(int *finalCounts,int *h_data,int shards_num,long int *elementsPerGPU, long int numValues){
 
     int *d_counts[shards_num];  // Vetores na GPU
+    int *data_device[shards_num]; // Contagens na CPU para cada GPU
+
     int *h_counts[shards_num]; // Contagens na CPU para cada GPU
 
         // Inicializa contagens na CPU para cada GPU
@@ -49,6 +51,10 @@ void countDegrees(int *finalCounts,int *h_data,int shards_num,long int *elements
 
         // Aloca memória para o vetor e contagens na GPU
         cudaMalloc(&d_counts[idx], numValues * sizeof(int)); // Vetor de frequências
+	cudaMalloc(&data_device[idx], elementsPerGPU[idx] * sizeof(int)); // Vetor de frequ  ncias
+
+        long int offset = elementsPerGPU[0] * idx;
+        cudaMemcpy(data_device[idx], &h_data[offset], elementsPerGPU[idx]*sizeof(int), cudaMemcpyHostToDevice);
 
 
         // Configura a grade de threads
@@ -58,7 +64,7 @@ void countDegrees(int *finalCounts,int *h_data,int shards_num,long int *elements
 
         initializeVectorCounts<<<gridSize,blockSize>>>(d_counts[idx],0,numValues);
         
-        countValues<<<numBlocks, blockSize>>>(h_data, d_counts[idx], elementsPerGPU[idx],elementsPerGPU[0],idx);
+        countValues<<<numBlocks, blockSize>>>(data_device[idx], d_counts[idx], elementsPerGPU[idx]);
 
 
     
@@ -75,8 +81,7 @@ void countDegrees(int *finalCounts,int *h_data,int shards_num,long int *elements
 
         cudaMemcpy(h_counts[idx], d_counts[idx], numValues * sizeof(int), cudaMemcpyDeviceToHost);
 
-        cudaFree(d_counts[idx]);  
-
+        cudaFree(d_counts[idx]); 
     }
   
 

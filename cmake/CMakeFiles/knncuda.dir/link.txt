@@ -1,0 +1,2 @@
+/usr/bin/ar qc libknncuda.a CMakeFiles/knncuda.dir/gpuknn/gen_large_knngraph.cu.o CMakeFiles/knncuda.dir/gpuknn/knncuda.cu.o CMakeFiles/knncuda.dir/gpuknn/nndescent.cu.o CMakeFiles/knncuda.dir/gpuknn/knncuda_tools.cu.o CMakeFiles/knncuda.dir/gpuknn/knnmerge.cu.o CMakeFiles/knncuda.dir/xmuknn.cpp.o
+/usr/bin/ranlib libknncuda.a

@@ -1,0 +1,13 @@
+NUM VALUES SET TO 1000000.
+mpts SET TO 32.
+SHARDS SET TO 3.
+Iniciando o HDBSCAN
+kNNG size = 1000000 e 32
+A posicao do threshold eh: 999 e o valor eh: 0
+Vetores inicializados com sucesso - 1
+Vetores inicializados com sucesso - 2
+Demorou 2.756021 segundos com BUCKETS = 128 e THREADS = 32
+Vetores inicializados com sucesso - 3
+Vetores inicializados com sucesso - 4 - 0.834634
+SHARDS NUM = 3 e edges = 49201817
+Vetores inicializados com sucesso - 5

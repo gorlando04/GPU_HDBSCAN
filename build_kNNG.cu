@@ -10,10 +10,10 @@ void ConstructLargeKNNGraph(int shards, string ref, string result) {
 
 
 
-
   int K = 32;
   
   GenLargeKNNGraph(ref_path, result_path, K,shards);
+
 
 
 

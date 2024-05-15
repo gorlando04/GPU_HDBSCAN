@@ -94,33 +94,11 @@ class FileTool {
 
   template <typename T>
   static void ReadBinaryVecs(const string &data_path, T **vectors_ptr,
-                             int *num_ptr, int *dim_ptr) {
-    // T *&vectors = *vectors_ptr;
-    // int &num = *num_ptr;
-    // int &dim = *dim_ptr;
-    // ifstream in(data_path, ios::binary);
-    // if (!in.is_open()) {
-    //   cerr << "Can't open " << data_path << endl;
-    //   exit(-1);
-    // }
-    // in.read((char *)&dim, 4);
-    // in.seekg(0, ios::end);
-    // ios::pos_type file_tail_pos = in.tellg();
-    // size_t file_size = (size_t)file_tail_pos;
-    // num = file_size / (size_t)(4 + dim * sizeof(T));
-
-    // in.seekg(0, ios::beg);
-    // vectors = new T[(size_t)num * (size_t)dim];
-    // int tmp = 0;
-    // for (int i = 0; i < num; i++) {
-    //   in.read((char *)&tmp, 4);
-    //   in.read((char *)(vectors + (size_t)i * dim), dim * sizeof(T));
-    // }
-    // in.close();
+                             long int *num_ptr, long int *dim_ptr) {
 
     T *&vectors = *vectors_ptr;
-    int &num = *num_ptr;
-    int &dim = *dim_ptr;
+    long int &num = *num_ptr;
+    long int &dim = *dim_ptr;
     FILE *file_ptr = fopen(data_path.c_str(), "r");
     if (file_ptr != NULL) {
       fread((char *)&dim, sizeof(char), 4, file_ptr);
@@ -132,7 +110,7 @@ class FileTool {
       rewind(file_ptr);
       vectors = new T[(size_t)num * (size_t)dim];
       int tmp;
-      for (int i = 0; i < num; i++) {
+      for (long int i = 0; i < num; i++) {
         fread((char *)&tmp, sizeof(char), 4, file_ptr);
         fread((char *)(vectors + (size_t)i * dim), sizeof(char),
                dim * sizeof(T), file_ptr);
@@ -269,24 +247,20 @@ class FileTool {
     float *&vecs = *vectors_ptr;
     long int &num = *num_ptr;
     long int &dim = *dim_ptr;
+
     std::ifstream in(data_path);
     if (!in.is_open()) {
       throw(std::string("Failed to open ") + data_path);
     }
     in >> num >> dim;
-    std::cerr << num << " " << dim << std::endl;
     vecs = new float[num * dim];
-   printf("%ld deu bom?\n",num*dim);
-
    for (int i = 0; i < num; i++) {
-      if (show_process) {
-        if (i % 12345 == 0) std::cerr << "\r" << i;
-        if (i == num - 1) std::cerr << "\r" << num;
-      }
       for (int j = 0; j < dim; j++) {
         in >> vecs[i * dim + j];
       }
     }
+
+
     if (show_process) {
       std::cerr << std::endl;
     }
@@ -331,6 +305,137 @@ class FileTool {
     }
     out.close();
   }
+
+
+static void ReadTxtVecsAntiHubs(const string &data_path, float **vectors_ptr,
+                          long int *num_ptr, long int *dim_ptr, int *antihubs,long int num_antihubs,
+                          const bool show_process = true) {
+
+
+    float *&vecs = *vectors_ptr;
+    long int &num = *num_ptr;
+    long int &dim = *dim_ptr;
+    std::ifstream in(data_path);
+    if (!in.is_open()) {
+      throw(std::string("Failed to open ") + data_path);
+    }
+    in >> num >> dim;
+    //std::cerr << num << " " << dim << std::endl;
+    vecs = new float[num_antihubs*dim];
+
+   long int indice_soma = 0;
+   for (long int i = 0; i < num; i++) {
+
+      if (antihubs[indice_soma] == i){
+      for (long int j = 0; j < dim; j++) {
+        
+        in >> vecs[indice_soma * dim + j];
+      	}
+
+	indice_soma += 1;
+      }
+
+	else{
+	float bin;
+      for (int j = 0; j < dim; j++) {
+        
+        in >> bin;
+        }
+
+      }
+
+
+	if (indice_soma ==  num_antihubs) break;
+	}
+
+
+    if (show_process) {
+      std::cerr << std::endl;
+    }
+    in.close();
+  }
+
+
+  static void ReadBinaryAntihubs(const string &data_path, float **vectors_ptr,
+                             long int *num_ptr, long int *dim_ptr,int *antihubs,int num_antihubs) {
+
+    float *&vectors = *vectors_ptr;
+    long int &num = *num_ptr;
+    long int &dim = *dim_ptr;
+    FILE *file_ptr = fopen(data_path.c_str(), "r");
+    if (file_ptr != NULL) {
+      fread((char *)&dim, sizeof(char), 4, file_ptr);
+      fseek(file_ptr, 0, SEEK_END);
+      size_t file_size = ftell(file_ptr);
+      int total_num = file_size / (size_t)(4 + dim * sizeof(float));
+      num = total_num ;
+      rewind(file_ptr);
+      vectors = new float[(size_t)num * (size_t)dim];
+      int tmp;
+      float *temp_vector = new float[(size_t)dim];
+      int aux_antihubs = 0;
+
+      for (int i = 0; i < num; i++) {
+        fread((char *)&tmp, sizeof(char), 4, file_ptr);
+	
+	if (antihubs[aux_antihubs] == i){
+        	fread((char *)(vectors + (size_t)i * dim), sizeof(char),
+               		dim * sizeof(float), file_ptr);
+		aux_antihubs += 1;
+	}
+
+	else { fread((char *)(&temp_vector), sizeof(char),
+                        dim * sizeof(float), file_ptr);}
+	if (aux_antihubs == num_antihubs) break;
+
+      }
+    } else {
+      fclose(file_ptr);
+      cerr << "Open " << data_path << " failed." << endl;
+      exit(-1);
+    }
+    fclose(file_ptr);
+  }
+
+  template <typename T>
+  static double GetMinDistanceFromKNNG(const string &data_path, T **vectors_ptr,
+                             long int *num_ptr, long int *dim_ptr) {
+
+    T *&vectors = *vectors_ptr;
+    long int &num = *num_ptr;
+    long int &dim = *dim_ptr;
+      double min_value = 999.0;
+    FILE *file_ptr = fopen(data_path.c_str(), "r");
+    if (file_ptr != NULL) {
+      fread((char *)&dim, sizeof(char), 4, file_ptr);
+      fseek(file_ptr, 0, SEEK_END);
+      size_t file_size = ftell(file_ptr);
+      int total_num = file_size / (size_t)(4 + dim * sizeof(T));
+       //cerr << file_size << " " << total_num << " " << dim << endl;
+      num = total_num ;
+      rewind(file_ptr);
+      vectors = new T[(size_t)dim];
+      int tmp;
+      for (long int i = 0; i < num; i++) {
+        fread((char *)&tmp, sizeof(char), 4, file_ptr);
+        fread((char *)(vectors), sizeof(char),
+               dim * sizeof(T), file_ptr);
+	if (i ==0 && vectors[0].distance() > 0.0 ) min_value = vectors[0].distance();
+	else if (min_value > vectors[0].distance() && vectors[0].distance() > 0.0 )  min_value = vectors[0].distance();
+	
+
+      }
+    } else {
+      fclose(file_ptr);
+      cerr << "Open " << data_path << " failed." << endl;
+      exit(-1);
+    }
+    fclose(file_ptr);
+
+	return min_value;
+  }
+
+
 };
 
 #endif

@@ -8,7 +8,7 @@
 
 
 // Função do kernel CUDA para calcular a contagem de valores em um vetor
-__global__ void countValues(int *data, int *counts, long int size, long int off_set_size,int offset=0); //
+__global__ void countValues(int *data, int *counts, long int size/*, long int off_set_size,int offset=0*/); //
 
 
 // Função do kernel CUDA para calcular a contagem de valores em um vetor

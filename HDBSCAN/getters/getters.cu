@@ -10,10 +10,11 @@ int get_NumThreshold(long int numValues_){
 
 int get_TiedVertexes(Vertex *vertexes,int pos_threshold, int value_threshold){
 
-        // Pega quantos empates temos na lista final
+     // Pega quantos empates temos na lista final
     int missing = 0;
-    for (int i=pos_threshold-1;i >= 0; i--){
-        if (vertexes[i].grau  != value_threshold){
+    
+    for (int i=0;i < pos_threshold; i++){
+        if (vertexes[i].grau  == value_threshold){
             missing = pos_threshold - i ;
             break;
         }
@@ -39,10 +40,12 @@ void get_IndexThreshold(int *finalCounts,int *treshold_idx,int value_threshold, 
 
 int findKNNlist(int *kNN,long int neig,long int i,int k){
 
+   int soma = 0;
     for (long int j=0;j<k;j++)
-        if (kNN[neig*k+j] == i)
-            return 1;
-    return 0;
+        if (kNN[neig*k+j] == i){
+	   soma += 1;
+	}
+    return soma;
 }
 
 

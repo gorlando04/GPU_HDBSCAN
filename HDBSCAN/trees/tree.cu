@@ -611,7 +611,7 @@ int* do_labelling(CondensedTreeNode *condensed_tree, int condensed_size, std::ve
         }
     
     }
-	printf("Non-Outliers: %d\n",soma);
+	printf("Non Outliers: %d\n",soma);
 
     return result_arr;
 }
