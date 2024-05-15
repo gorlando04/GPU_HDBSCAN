@@ -1,7 +1,10 @@
 #include "calculates.cuh"
 #include "../initializer/initialize.cuh"
+#include "../getters/getters.cuh"
 #include "cuda_runtime.h"
 #include "math.h"
+#include <omp.h>
+#include <pthread.h>
 
 
 
@@ -215,7 +218,17 @@ void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int 
 void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistances,int *aux_nodes,int *aux_edges,long int size){
 
 
-    int shards_num = 9;
+
+    int shards_num = numGPUs;
+
+    double total_size_mb = 3 * sizeof(aux_nodes[0]) * size  / pow(10,9);
+
+    while (total_size_mb / shards_num > GPU_SIZE-2){
+        shards_num += numGPUs;
+    }
+
+    printf("SHARDS NUM = %d e edges = %ld\n",shards_num,size);
+
     int *d_nodes[shards_num], *d_edges[shards_num]; // Vetores na GPU
     float *d_distances[shards_num];  // Vetores na GPU
     float *h_distances[shards_num]; // Contagens na CPU para cada GPU
@@ -251,7 +264,6 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
     // Realiza a contagem de graus para todos os vértices
 
     int iters = shards_num / numGPUs;
-printf("Iters %d\n",aux_edges[0]);
     for (int s=0;s < iters;s++){
 
 	for (int i = 0; i < numGPUs; i++) {
@@ -305,7 +317,6 @@ printf("Iters %d\n",aux_edges[0]);
     
     }
 
-    printf("Fazendo o final");
     for (int i = 0; i < shards_num; i++) {
         for (int j = 0; j < elementsPerGPU[i]; j++) {
 		graphDistances[j+ (i * elementsPerGPU[0])] = h_distances[i][j];
@@ -325,3 +336,122 @@ float calculate_euclidean_distance(float *vector,long int idxa,long int idxb,int
 
     return sqrt(soma);
 }
+
+
+void calculate_nindex(int nodes, int *kNN, bool *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs){
+
+ // Calcula quantas arestas cada noh terá, levando em conta que eh um grafo não direcional.
+    for (long int i=0;i<nodes;i++){
+
+        long int soma = 0;
+
+
+        for (long int j=0;j<k;j++){
+
+            long int neig = kNN[i*k + j];
+
+            //Verifica se i esta na lista de neig
+            int FLAG = findKNNlist(kNN,neig,i,k);
+	        flag_knn[i*k + j] = FLAG;
+
+            if (FLAG > 1){ g->nindex[neig+1] += FLAG-1; g->nindex[i+1] -= (FLAG-1);}
+
+            g->nindex[neig+1] += 1;
+           
+            if (!FLAG)
+                soma += 1;
+        }
+        g->nindex[i+1] += soma;
+    }
+
+    // Adicionar os antihubs
+    int contador = 0;
+
+    for (long int i=0;i<nodes;i++)
+
+        if (i == antihubs[contador]){
+            contador ++;
+            g->nindex[i+1] += (num_antihubs-1);
+    }
+     
+    
+    //Calcular offsets
+    for (long int i=1;i<nodes+1;i++){
+
+        g->nindex[i] = g->nindex[i-1] + g->nindex[i];
+
+    }
+
+}
+
+void calculate_nlist(int nodes, int *kNN,int k, bool *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs,long int *auxiliar_edges){
+
+    long int k2 = k;
+
+    // Adiciona os vizinhos paralelamente
+    omp_set_num_threads(32);
+    #pragma omp parallel for 
+    for (long int i = 0; i < nodes; i++) {
+        
+        // Calcula o offset do ponto
+        long int edge_offset = g->nindex[i];
+        long int pos = edge_offset + auxiliar_edges[i];    
+
+        for (long int j = 0; j < k2; j++) {
+        
+            // Pega o   ndice do vizinho  
+            long int neig = kNN[i * k2 + j];
+
+            g->nlist[pos] = neig;
+            auxiliar_edges[i] += 1;
+
+            pos += 1; 
+
+        }
+    }
+
+    // Adiciona vizinhos que não são mútuos
+    for (long int i = 0; i < nodes; i++) {
+        
+
+        for (long int j = 0; j < k2; j++) {
+        
+            // Pega o   indice do vizinho  
+            long int neig = kNN[i * k2 + j];
+
+            int FLAG = flag_knn[i*k2+j]; 
+
+            // Deu problema
+            if (!FLAG){
+
+                //Calcula Propriedades de NEIG em NList
+                long int neig_edge_offset = g->nindex[neig];
+
+
+                long int neig_pos = neig_edge_offset + auxiliar_edges[neig];
+                // Adicionando o idx i na lista do neig
+                auxiliar_edges[neig] += 1;
+                g->nlist[neig_pos] = i;
+            }
+        }
+    }
+
+    //Adiciona os antihubs
+    for (long int i=0;i<num_antihubs;i++){
+
+        int current = antihubs[i];
+        long int pos_begin = g->nindex[current];
+        long int offset = auxiliar_edges[current];
+
+        for (long int j=0;j<num_antihubs;j++){
+            int neig = antihubs[j];
+
+            if (neig != current){
+                g->nlist[pos_begin+offset] = neig;
+                offset++;
+            }
+        }
+    }
+
+}
+

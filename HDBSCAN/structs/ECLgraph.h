@@ -46,7 +46,15 @@ struct ECLgraph {
   float* eweight;
 };
 
-/*void freeECLgraph(ECLgraph &g)
+struct GPUECLgraph {
+  int nodes;
+  int edges;
+  int* nindex;
+  int* nlist;
+  int* eweight;
+};
+
+void freeECLgraph(ECLgraph &g)
 {
   if (g.nindex != NULL) free(g.nindex);
   if (g.nlist != NULL) free(g.nlist);
@@ -54,6 +62,6 @@ struct ECLgraph {
   g.nindex = NULL;
   g.nlist = NULL;
   g.eweight = NULL;
-}*/
+}
 
 #endif

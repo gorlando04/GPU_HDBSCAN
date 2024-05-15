@@ -9,20 +9,11 @@
 
 void joinAntiHubs(int *antihubs,Vertex *vertexes,int not_ties, Untie_hub *unties,int missing_ties);
 
+void Check();
 
+ECLgraph buildECLgraph(int nodes, long int edges,int *kNN , float *distances ,int k,long int mpts, int *antihubs, long int num_antihubs,float *vectors_data,int dim, long int numValues,int mst_gpu=0);
 
-
-void createNodeList(int *vector,ECLgraph *g);
-
-void createEdgeList(int *vector, ECLgraph *g);
-
-void createWeightList(float *vector,ECLgraph *g);
-
-ECLgraph buildECLgraph(int nodes, long int edges,int *kNN , float *distances ,int k,long int mpts, int *antihubs, long int num_antihubs,float *vectors_data,int dim, long int numValues);
-
-
-
-ECLgraph buildEnhancedKNNG(int *h_data,float *distances ,int shards_num, float *vectors_data,int dim,long int numValues,long int k,long int mpts,double *time_taken);
+ECLgraph buildEnhancedKNNG(int *h_data,float *distances ,int shards_num,long int numValues,long int k,long int mpts,int mst_gpu=0);
 
 
 #endif

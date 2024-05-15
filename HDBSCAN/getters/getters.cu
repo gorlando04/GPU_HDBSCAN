@@ -40,10 +40,12 @@ void get_IndexThreshold(int *finalCounts,int *treshold_idx,int value_threshold, 
 
 int findKNNlist(int *kNN,long int neig,long int i,int k){
 
+   int soma = 0;
     for (long int j=0;j<k;j++)
-        if (kNN[neig*k+j] == i)
-            return 1;
-    return 0;
+        if (kNN[neig*k+j] == i){
+	   soma += 1;
+	}
+    return soma;
 }
 
 

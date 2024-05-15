@@ -16,6 +16,8 @@
 #include<unistd.h>
 
 
+#define MST_GPU 1
+
 void ReadTxtVecs(const string &data_path, float **vectors_ptr,
                           long int *num_ptr, long int *dim_ptr,
                           const bool show_process = true) {
@@ -64,10 +66,12 @@ int main( int argc, char *argv[]) {
   long int numValues = 1000000;
   long int k = NEIGHB_NUM_PER_LIST;
   long int mpts = 10;
-
+  int mst_gpu = 0;
+  int num_buckets = 32;
+  int num_threads = 32;
 
   // ./hdbscan_ NUM_VALUES mpts shards
-  if (argc == 4){
+  if (argc == 7){
     numValues = atoi(argv[1]);
     printf("NUM VALUES SET TO %ld.\n",numValues);
 
@@ -76,6 +80,12 @@ int main( int argc, char *argv[]) {
 
     shards = atoi(argv[3]);
     printf("SHARDS SET TO %d.\n",shards);
+
+    mst_gpu  = atoi(argv[4]);
+
+    num_buckets = atoi(argv[5]);
+    num_threads = atoi(argv[6]);
+
 
   }
   
@@ -92,7 +102,7 @@ int main( int argc, char *argv[]) {
     //Preparing vector
     const std::string path_to_data = "/nndescent/GPU_HDBSCAN/data/artificial/SK_data.txt";
 
-//    PrepareVector(path_to_data,"/nndescent/GPU_HDBSCAN/data/vectors.fvecs");
+//   PrepareVector(path_to_data,"/nndescent/GPU_HDBSCAN/data/vectors.fvecs");
 
     std::string path_to_kNNG = "/nndescent/GPU_HDBSCAN/results/NNDescent-KNNG.kgraph";
 
@@ -101,12 +111,7 @@ int main( int argc, char *argv[]) {
     printf("Iniciando o HDBSCAN\n");
 
 
-  //  ConstructLargeKNNGraph(shards, "/nndescent/GPU_HDBSCAN/data/vectors", path_to_kNNG);
-
-    // Le o vetor de amostras
-    float *vectors_data;
-    long int data_size, data_dim;
-
+  //ConstructLargeKNNGraph(shards, "/nndescent/GPU_HDBSCAN/data/vectors", path_to_kNNG);
 
     // Le o kNNG que esta escrito no arquivo abaixo
     NNDElement *result_graph;
@@ -122,9 +127,9 @@ int main( int argc, char *argv[]) {
     cudaMallocManaged(&result_index_graph,(size_t)knng_num*knng_dim * sizeof(int));
     for (long int i = 0; i < knng_num; i++) {
       for (long int j = 0; j < knng_dim; j++) {
-
+	
         result_index_graph[i * knng_dim + j] = result_graph[i * knng_dim + j].label();
-      }
+	}
 
     } 
 
@@ -149,24 +154,73 @@ int main( int argc, char *argv[]) {
     //HDBSCAN
     int shards_num = 3;
     ECLgraph g;
-    double time_taken = 0.0;
-    g = buildEnhancedKNNG(result_index_graph,distances,shards_num,vectors_data,data_dim,numValues,k,mpts,&time_taken);
+    g = buildEnhancedKNNG(result_index_graph,distances,shards_num,numValues,k,mpts,mst_gpu);
 
-    cudaFree(result_index_graph);
-    cudaFree(distances);
 
-    result_index_graph = NULL;
-    distances = NULL;
+   return 0;
 
-/*    bool* edges = cpuMST(g);
+/*    bool* edges;
+    MSTedge *mst_edges;
 
+    if(mst_gpu){
+    NNDElement *result_graph2;
+    long int knng_num2, knng_dim2;
+    double min_dist = FileTool::GetMinDistanceFromKNNG(path_to_kNNG,&result_graph2, &knng_num2, &knng_dim2);
+
+    int multiplicacoes = ceil(-log10(fabs(min_dist))) + 2;
+
+  
+    double *eweights = new double[g.edges];
+
+    for(long int i=0;i<g.edges;i++)
+      eweights[i] = g.eweight[i];
+
+    GPUECLgraph g_gpu;
+
+
+    g_gpu.edges = g.edges;
+    g_gpu.nodes = g.nodes;
+
+    g_gpu.nindex = new int[g_gpu.nodes+1];
+
+    for(int i=0;i<g.nodes+1;i++){
+      g_gpu.nindex[i] = g.nindex[i];
+    }
+
+    g_gpu.nlist = new int[g.edges];
+    g_gpu.eweight = new int[g.edges];
+
+    for(int i=0;i<g.edges;i++){
+      g_gpu.nlist[i] = g.nlist[i];
+
+      g_gpu.eweight[i] =  (int)(pow(10.0,multiplicacoes) *  eweights[i] / 1);
+    }
+
+     delete eweights; eweights = NULL;
+     delete result_graph2; result_graph2 = NULL;
      
+     edges = gpuMST(g_gpu, INT_MAX);
+     mst_edges = buildMST_gpu(g_gpu,edges,12,multiplicacoes);
+     
+     //Liberar G_gpu
+	
+	cudaFree(distances);
+    distances = NULL;
+    }
 
 
-     MSTedge *mst_edges;
-     mst_edges = new MSTedge[g.nodes-1];
 
-     mst_edges = buildMST(g,edges,12);*/
+
+    else{
+	edges = cpuMST(g);
+	mst_edges = buildMST(g,edges,12);
+    }
+
+    int qntd_nohs = g.nodes;
+
+    // Liberar G
+
+
 
 
 /*
@@ -191,9 +245,8 @@ int main( int argc, char *argv[]) {
     t = clock() - t; 
     double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
 
-    printf("Demorou %lf segundos\n",time_taken);
 
-    const std::string out_PATH = "/nndescent/GPU_HDBSCAN/HDBSCAN/groundtruth/approximate_result.txt";
+//    const std::string out_PATH = "/nndescent/GPU_HDBSCAN/HDBSCAN/groundtruth/approximate_result.txt";
     //WriteTxtVecs(out_PATH,labels,numValues);
 
 

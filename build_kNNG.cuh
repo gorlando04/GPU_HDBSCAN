@@ -27,7 +27,7 @@ using namespace std;
 using namespace xmuknn;
 
 
-void ConstructLargeKNNGraph(int shards, string ref, string result);
+void ConstructLargeKNNGraph(int shards, string ref, string result,int K=32);
 
 void PrepareVector(string base,string out);
 

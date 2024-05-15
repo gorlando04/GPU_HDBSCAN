@@ -29,8 +29,8 @@ add_library(hdbcuda STATIC
     ../gpuknn/knncuda_tools.cu
     ../gpuknn/knnmerge.cuh
     ../gpuknn/knnmerge.cu
-    ../tools/distfunc.hpp
-    ../tools/filetool.hpp
+     ../tools/distfunc.hpp
+     ../tools/filetool.hpp
     ../tools/nndescent_element.cuh
     ../tools/knndata_manager.hpp
     ../xmuknn.h
@@ -52,4 +52,3 @@ set_property(TARGET hdbscan_ PROPERTY CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 set_property(TARGET hdbscan_ PROPERTY CUDA_ARCHITECTURES 75)
 
 target_link_libraries(hdbscan_ PRIVATE hdbcuda ${CUDA_cublas_LIBRARY} ${CUDA_curand_LIBRARY})
- 

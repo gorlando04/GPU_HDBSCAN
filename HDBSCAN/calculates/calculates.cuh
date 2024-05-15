@@ -8,6 +8,7 @@
 #include "cuda_runtime.h"
 #include "../structs/hdbscan_elements.cuh"
 
+
 __global__ void calculateScore(int *vectors,int *treshold_idx, Untie_hub *vertex , int *degrees ,long int size,int k,int offset); //
 
 __global__ void calculateCoreDistance_(float *coreDistances,float *kNN_distances,long int offset,long int size,long int k,long int mpts); //
@@ -27,5 +28,8 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
 
 float calculate_euclidean_distance(float *vector,long int idxa,long int idxb,int dim); //
 
+void calculate_nindex(int nodes, int *kNN, bool *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs);
+
+void calculate_nlist(int nodes, int *kNN,int k, bool *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs,long int *auxiliar_edges);
 
 #endif

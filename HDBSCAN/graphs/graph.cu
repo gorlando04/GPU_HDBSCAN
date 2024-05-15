@@ -12,7 +12,6 @@
 
 
 
-
 void joinAntiHubs(int *antihubs,Vertex *vertexes,int not_ties, Untie_hub *unties,int missing_ties){
 
     // Bota os não empatados
@@ -28,209 +27,101 @@ void joinAntiHubs(int *antihubs,Vertex *vertexes,int not_ties, Untie_hub *unties
     return ;
 }
 
+void Check(){
 
+    cudaDeviceSynchronize();
 
-
-
-void createNodeList(int *vector,ECLgraph *g){
-
-    for(int i=0;i<g->nodes;i++){
-        
-        long int begin = g->nindex[i];
-        long int end = g->nindex[i+1];
-
-        for (long int j=begin;j<end;j++)
-            vector[j] = i;
-    }
+    CheckCUDA_();
+    return ;
 }
 
-void createEdgeList(int *vector,ECLgraph *g){
 
-    for(long int i=0;i<g->edges;i++){
-        
-        vector[i] = g->nlist[i];
-    }
-}
 
-void createWeightList(float *vector,ECLgraph *g){
 
-    for(long int i=0;i<g->edges;i++){
-        
-        vector[i] = g->eweight[i];
-    }
-}
 
-ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k,long int mpts, int *antihubs, long int num_antihubs,float *vectors_data,int dim, long int numValues)
+ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k,long int mpts, int *antihubs, long int num_antihubs,int mst_gpu)
 {
 
+    long int numValues = nodes;
 
+    ECLgraph g; g.nodes = nodes;
 
-  ECLgraph g;
-
-
-  g.nodes = nodes;
-
-
-
-   /*Isso significa, que o nó 0 está conectado com Y-x NÓS,
+    /*Isso significa, que o nó 0 está conectado com Y-x NÓS,
    O nó 1 está conetado com z-y nós, e etc...*/
     cudaMallocManaged(&g.nindex,(size_t)(g.nodes + 1) * sizeof(g.nindex[0])); // nindex[0] = X, nindex[1] = y, nindex[2] = z
 
     int gridSize = (g.nodes + 1 + blockSize - 1) / blockSize;
 
+    
+    initializeVectorCounts_<<<gridSize,blockSize>>>(g.nindex,0,g.nodes+1); // Aqui usar GPU
 
-    initializeVectorCounts_<<<gridSize,blockSize>>>(g.nindex,0,g.nodes+1);
-
-    cudaDeviceSynchronize();
-
-    CheckCUDA_();
+    Check();            
 
     cudaMemPrefetchAsync(g.nindex,(size_t)(g.nodes + 1) * sizeof(g.nindex[0]),cudaCpuDeviceId);
+
     bool *flag_knn = (bool*)malloc(numValues*k * sizeof(bool));
 
-    // Calcula quantas arestas cada noh terá, levando em conta que eh um grafo não direcional.
-    for (long int i=0;i<nodes;i++){
-        long int soma = 0;
-        for (long int j=0;j<k;j++){
 
-            long int neig = kNN[i*k + j];
+    calculate_nindex(nodes, kNN, flag_knn,&g,antihubs,num_antihubs);
 
-            //Verifica se i esta na lista de neig
-            int FLAG = findKNNlist(kNN,neig,i,k);
-
-            g.nindex[neig+1] += 1;
-	    flag_knn[i*k + j] = FLAG;
-
-            if (!FLAG)
-                soma += 1;
-        }
-        g.nindex[i+1] += soma;
-    }
-
-
-    // Adicionar os antihubs
-    int contador = 0;
-
-    for (long int i=0;i<nodes;i++)
-
-        if (i == antihubs[contador]){
-            contador ++;
-            g.nindex[i+1] += (num_antihubs-1);
-    }
-    
-    
-    //Calcular offsets
-    for (long int i=1;i<nodes+1;i++){
-
-        g.nindex[i] = g.nindex[i-1] + g.nindex[i];
-
-    }
     // Nesse pontos os nós já estão calculados, agora precisamos inserir as arestas. Essa parte será bem demorada.
 
     long int *auxiliar_edges;
 
     cudaMallocManaged(&auxiliar_edges,(size_t)(g.nodes) * sizeof(long int)); // nindex[0] = X, nindex[1] = y, nindex[2] = z
 
-    gridSize = (g.nodes + 1 + blockSize - 1) / blockSize;
+    gridSize = (g.nodes + 1  + blockSize - 1) / blockSize;
+
+    initializeVectorCounts_<<<gridSize,blockSize>>>(auxiliar_edges,0,g.nodes); //Aqui usar GPU
+
+    Check();
+
+    cudaMemPrefetchAsync(auxiliar_edges,(size_t)(g.nodes ) * sizeof(long int),cudaCpuDeviceId); //Inserir no código
 
 
-    initializeVectorCounts_<<<gridSize,blockSize>>>(auxiliar_edges,0,g.nodes);
-
-    cudaDeviceSynchronize();
-
-    CheckCUDA_();
-
-
-    /*g.nlist = (int*)malloc(g.nindex[nodes] * sizeof(int));*/ cudaMallocManaged(&g.nlist,(size_t)(g.nindex[nodes]) * sizeof(int));
+    cudaMallocManaged(&g.nlist,(size_t)(g.nindex[nodes]) * sizeof(int));
     g.edges = g.nindex[nodes];
 
-    // Adicionar as arestas sem antihubs
-    long int k2 = k;
+  
+    calculate_nlist(nodes, kNN,k, flag_knn,&g,antihubs,num_antihubs,auxiliar_edges);
 
-    for (long int i=0;i<nodes;i++){
 
-        for (long int j=0;j<k2;j++){
-
-            // Posição de insertion da edge no vetor nlist.     
-            long int edge_offset = g.nindex[i];
-            int insertion_offset = auxiliar_edges[i];
-            long int pos = edge_offset + insertion_offset;
-
-            
-            // Pega o índice do vizinho
-            long int neig = kNN[i*k2+j];
-
-            // Verifica se o ponto esta na lista dos vizinhos do outro ponto
-//            int FLAG = findKNNlist(kNN,neig,i,k2);
-	    int FLAG = flag_knn[i*k2+j];
-            
-            // Calcula o offset do vizinho
-            long int neig_edge_offset = g.nindex[neig];
-            int neig_insertion_offset = auxiliar_edges[neig];
-            long int neig_pos = neig_edge_offset + neig_insertion_offset;
-
-            auxiliar_edges[neig] += 1;
-
-            g.nlist[neig_pos] = i;
-
-            // Se não tiver na lista de kNN do vizinho
-            if (!FLAG){
-                g.nlist[pos] = neig;
-                // Adiciona mais uma inserção no vetor auxiliar
-                auxiliar_edges[i] += 1;
-	   }
-        }
-    }
-
-    // Adiciona os antiHubs
-
-    for (long int i=0;i<num_antihubs;i++){
-
-        int current = antihubs[i];
-        long int pos_begin = g.nindex[current];
-        long int offset = auxiliar_edges[current];
-
-        for (long int j=0;j<num_antihubs;j++){
-            int neig = antihubs[j];
-
-            if (neig != current){
-                g.nlist[pos_begin+offset] = neig;
-                offset++;
-            }
-        }
-    }
-
-        cudaMallocManaged(&g.eweight,(size_t)g.edges * sizeof(g.eweight[0]));
+    cudaMallocManaged(&g.eweight,(size_t)g.edges * sizeof(g.eweight[0]));
 
 	 int *aux_nodes;
-        cudaMallocManaged(&aux_nodes,(size_t)g.edges * sizeof(g.nlist[0]));
-        createNodeList(aux_nodes,&g);
+    cudaMallocManaged(&aux_nodes,(size_t)g.edges * sizeof(g.nlist[0]));
+    createNodeList(aux_nodes,&g) ; //Aqui usar GPU
 
+    Check();
          
-        long int elementsPerGPU[numGPUs];
-        calculateElements(elementsPerGPU,numGPUs,numValues);
+    long int elementsPerGPU[numGPUs];
+    calculateElements(elementsPerGPU,numGPUs,numValues); 
 
-        float *coreDistances;
-        cudaMallocManaged(&coreDistances,(size_t)(numValues) * sizeof(float)); 
-        calculateCoreDistance(distances,coreDistances,elementsPerGPU,k,mpts);
+    float *coreDistances;
+    cudaMallocManaged(&coreDistances,(size_t)(numValues) * sizeof(float)); 
+    calculateCoreDistance(distances,coreDistances,elementsPerGPU,k,mpts); //Aqui usa GPU
+
+    Check();
 
 
-    cudaFree(distances);
     cudaFree(kNN);
     
-    distances = NULL;
     kNN = NULL;
 
-    calculateMutualReachabilityDistance(g.eweight,coreDistances,aux_nodes,g.nlist,g.edges); 
+    if(mst_gpu != 1){
+	cudaFree(distances); distances = NULL; }
 
 
+    calculateMutualReachabilityDistance(g.eweight,coreDistances,aux_nodes,g.nlist,g.edges);  //Aqui usa GPU
+
+    Check();
 
 
-    // Read vector txtx
+    // Read vector 
+    float *vectors_data;
     const std::string path_to_data_binary = "/nndescent/GPU_HDBSCAN/data/vectors.fvecs";
     long int data_size2, data_dim2;
 
-    //FileTool::ReadTxtVecsAntiHubs(path_to_data,&vectors_data,&data_size2,&data_dim2,antihubs,num_antihubs);
     FileTool::ReadBinaryAntihubs(path_to_data_binary,&vectors_data, &data_size2, &data_dim2,antihubs,num_antihubs);    	
 
     for (long int i=0;i<num_antihubs;i++){
@@ -241,7 +132,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
             int idx_b = antihubs[j+1];
             
             //Calcula distancia euclidiana
-            float euclidean_distance = calculate_euclidean_distance(vectors_data,i,j+1,dim);
+            float euclidean_distance = calculate_euclidean_distance(vectors_data,i,j+1,data_dim2);
 
             if (g.eweight[pos_begin + j] < euclidean_distance){
                 g.eweight[pos_begin+j] = euclidean_distance;
@@ -249,25 +140,21 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
                 long int pos_begin2 = g.nindex[idx_b] + auxiliar_edges[idx_b];
                 g.eweight[pos_begin2 + i] = euclidean_distance;
             }
-
-
         }
     }
-
-
 
   return g;   
 }
 
 
-ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *vectors_data,int dim, long int numValues,long int k,long int mpts,double *time_taken){
 
 
 
+ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num, long int numValues,long int k,long int mpts,int mst_gpu){
 
     long int vectorSize = numValues*k;
 
-   cudaMemPrefetchAsync(h_data,(size_t)vectorSize * sizeof(int), cudaCpuDeviceId);
+    cudaMemPrefetchAsync(h_data,(size_t)vectorSize * sizeof(int), cudaCpuDeviceId);
  
     long int elementsPerGPU[shards_num];
 
@@ -286,16 +173,10 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
     // Inicializa o vetor
     initializeVectorCounts<<<gridSize,blockSize>>>(finalCounts,0,numValues);
 
-    cudaDeviceSynchronize();
-
-    auto cuda_status = cudaGetLastError();
-    if (cuda_status != cudaSuccess) {
-        printf("%s hehehehehe",cudaGetErrorString(cuda_status));
-        exit(-1);
-    }
+    Check();
 
     // Conta os graus de cada vértice
-  countDegrees(finalCounts,h_data,numGPUs,elementsPerGPU,numValues);
+    countDegrees(finalCounts,h_data,numGPUs,elementsPerGPU,numValues);
 
     Vertex *vertexes;
 
@@ -304,16 +185,13 @@ ECLgraph buildEnhancedKNNG(int *h_data, float *distances, int shards_num,float *
 	cudaMallocManaged(&vertexes,(size_t)numValues * sizeof(Vertex));
 
 
-  
     //Configura a grade de threads
     gridSize = (numValues + blockSize - 1) / blockSize;    
     
     // Inicializa o vetor de vértices, com  os graus específicos.
     initializeVertex<<<gridSize,blockSize>>>(vertexes,finalCounts,numValues);
 
-    cudaDeviceSynchronize();
-
-CheckCUDA_();
+    Check();
 
     // Pegar os threshold
     int pos_threshold = get_NumThreshold(numValues);
@@ -326,7 +204,6 @@ CheckCUDA_();
     int value_threshold = vertexes[pos_threshold-1].grau;
 
     printf("A posicao do threshold eh: %d e o valor eh: %d\n",pos_threshold-1,value_threshold);
-
 
     // Evita page fault
     for (int i=0;i<numGPUs;i++){
@@ -354,7 +231,6 @@ CheckCUDA_();
     // Aloca memória para o vetor na CPU
 	cudaMallocManaged(&treshold_idx,(size_t)countsTreshold * sizeof(int));
   
-
 
     CheckCUDA_();
 
@@ -390,6 +266,8 @@ CheckCUDA_();
 
     delete unties;
     unties = NULL;
+
+
     }
 
     else{
@@ -398,6 +276,8 @@ CheckCUDA_();
             antihubs[i] = vertexes[i].index;
 
     }
+
+    
     // Ordena pelo índice para inserir na MST
     std::sort(antihubs,antihubs+pos_threshold);
 
@@ -412,14 +292,9 @@ CheckCUDA_();
     treshold_idx = NULL;
 
 
-    printf("Vamos comecar a montar o ECL\n");
-    clock_t t;
-    t = clock();
     ECLgraph g;
     
-    g = buildECLgraph(numValues, vectorSize,h_data, distances,k,mpts, antihubs, pos_threshold,vectors_data,dim,numValues);
+    g = buildECLgraph(numValues, vectorSize,h_data, distances,k,mpts, antihubs, pos_threshold,mst_gpu);
 
-    t = clock() - t;
-    *time_taken = ((double)t)/CLOCKS_PER_SEC;
     return g;
 }

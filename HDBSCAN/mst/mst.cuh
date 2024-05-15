@@ -45,7 +45,7 @@ Alex Fallin, Andres Gonzalez, Jarim Seo, and Martin Burtscher. A High-Performanc
 #include "../structs/ECLgraph.h"
 #include "../structs/hdbscan_elements.cuh"
 #include <cuda.h>
-
+#include <math.h>
 #include "cuda_runtime.h"
 
 
@@ -63,6 +63,34 @@ static inline void serial_join(const int a, const int b, int* const parent);
 
 bool* cpuMST(const ECLgraph& g);
 
+
+static inline __device__ int find(int curr, const int* const __restrict__ parent);
+
+static inline __device__ void join(int arep, int brep, int* const __restrict__ parent);
+
+
+static __global__ void initPM(const int nodes, int* const __restrict__ parent, ull* const __restrict__ minv);
+
+
+template <bool first>
+static __global__ void initWL(int4* const __restrict__ wl2, int* const __restrict__ wl2size, const int nodes, const int* const __restrict__ nindex, const int* const __restrict__ nlist, const int* const __restrict__ eweight, ull* const __restrict__ minv, const int* const __restrict__ parent, const int threshold);
+
+
+static __global__ void kernel1(const int4* const __restrict__ wl1, const int wl1size, int4* const __restrict__ wl2, int* const __restrict__ wl2size, const int* const __restrict__ parent, volatile ull* const __restrict__ minv);
+
+static __global__ void kernel2(const int4* const __restrict__ wl, const int wlsize, int* const __restrict__ parent,ull* const __restrict__ minv, bool* const __restrict__ inMST);
+
+static __global__ void kernel3(const int4* const __restrict__ wl, const int wlsize, volatile ull* const __restrict__ minv);
+
+
+static void CheckCuda(const int line);
+
+bool* gpuMST(const GPUECLgraph& g, int threshold);
+
+
 MSTedge* buildMST(ECLgraph g,bool *edges, int shards_num);
+
+
+MSTedge* buildMST_gpu(GPUECLgraph g,bool *edges, int shards_num,int mult);
 
 #endif

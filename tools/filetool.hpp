@@ -397,6 +397,45 @@ static void ReadTxtVecsAntiHubs(const string &data_path, float **vectors_ptr,
     fclose(file_ptr);
   }
 
+  template <typename T>
+  static double GetMinDistanceFromKNNG(const string &data_path, T **vectors_ptr,
+                             long int *num_ptr, long int *dim_ptr) {
+
+    T *&vectors = *vectors_ptr;
+    long int &num = *num_ptr;
+    long int &dim = *dim_ptr;
+      double min_value = 999.0;
+    FILE *file_ptr = fopen(data_path.c_str(), "r");
+    if (file_ptr != NULL) {
+      fread((char *)&dim, sizeof(char), 4, file_ptr);
+      fseek(file_ptr, 0, SEEK_END);
+      size_t file_size = ftell(file_ptr);
+      int total_num = file_size / (size_t)(4 + dim * sizeof(T));
+       //cerr << file_size << " " << total_num << " " << dim << endl;
+      num = total_num ;
+      rewind(file_ptr);
+      vectors = new T[(size_t)dim];
+      int tmp;
+      for (long int i = 0; i < num; i++) {
+        fread((char *)&tmp, sizeof(char), 4, file_ptr);
+        fread((char *)(vectors), sizeof(char),
+               dim * sizeof(T), file_ptr);
+	if (i ==0 && vectors[0].distance() > 0.0 ) min_value = vectors[0].distance();
+	else if (min_value > vectors[0].distance() && vectors[0].distance() > 0.0 )  min_value = vectors[0].distance();
+	
+
+      }
+    } else {
+      fclose(file_ptr);
+      cerr << "Open " << data_path << " failed." << endl;
+      exit(-1);
+    }
+    fclose(file_ptr);
+
+	return min_value;
+  }
+
+
 };
 
 #endif

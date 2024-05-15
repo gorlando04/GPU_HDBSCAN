@@ -1,7 +1,7 @@
 #include "build_kNNG.cuh"
 
 
-void ConstructLargeKNNGraph(int shards, string ref, string result) {
+void ConstructLargeKNNGraph(int shards, string ref, string result,int K) {
 
 
   string ref_path = ref;
@@ -11,7 +11,6 @@ void ConstructLargeKNNGraph(int shards, string ref, string result) {
 
 
 
-  int K = 32;
   
   GenLargeKNNGraph(ref_path, result_path, K,shards);
 

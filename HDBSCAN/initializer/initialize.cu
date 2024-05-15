@@ -108,3 +108,45 @@ HashLabels initializeHash(CondensedTreeNode *condensed_tree,int condensed_size){
     return hash;
 }
 
+
+void createNodeList(int *vector,ECLgraph *g){
+
+    for(int i=0;i<g->nodes;i++){
+        
+        long int begin = g->nindex[i];
+        long int end = g->nindex[i+1];
+
+        for (long int j=begin;j<end;j++)
+            vector[j] = i;
+    }
+}
+
+void createNodeList_gpu(int *vector,GPUECLgraph *g){
+
+    for(int i=0;i<g->nodes;i++){
+
+        long int begin = g->nindex[i];
+        long int end = g->nindex[i+1];
+
+        for (long int j=begin;j<end;j++)
+            vector[j] = i;
+    }
+}
+
+
+
+void createEdgeList(int *vector,ECLgraph *g){
+
+    for(long int i=0;i<g->edges;i++){
+        
+        vector[i] = g->nlist[i];
+    }
+}
+
+void createWeightList(float *vector,ECLgraph *g){
+
+    for(long int i=0;i<g->edges;i++){
+        
+        vector[i] = g->eweight[i];
+    }
+}
