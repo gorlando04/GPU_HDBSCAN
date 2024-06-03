@@ -97,3 +97,28 @@ std::vector<int> getIndexes(CondensedTreeNode *condesed_tree,int size, int node)
     return vec;
 
 }
+
+void Check(){
+
+    cudaDeviceSynchronize();
+
+    CheckCUDA_();
+
+    return;
+
+}
+
+template <typename T>
+void avoid_pageFault(T *array,int numValues,int is_cpu=false){
+
+
+    if (is_cpu)
+        cudaMemPrefetchAsync(array,(size_t)numValues * sizeof(T),cudaCpuDeviceId);
+        return;
+
+    // Evita page fault
+    for (int i=0;i<numGPUs;i++){
+        cudaSetDevice(i);
+        cudaMemPrefetchAsync(array,(size_t)numValues * sizeof(T),i);
+    }
+}

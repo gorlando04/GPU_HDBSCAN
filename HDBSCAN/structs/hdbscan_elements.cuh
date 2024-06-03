@@ -9,7 +9,7 @@ const int numGPUs = 3;
 const int blockSize = 256;
 const int k = 32;
 const int mpts=k;
-const double GPU_SIZE = 8; 
+const double GPU_SIZE = 8 - 1.85; 
 //const int dimensions=12;
 
 struct Vertex {
@@ -89,5 +89,12 @@ struct HashLabels{
 
     float *lambda_array;
 };
+
+
+void Check();
+
+template <typename T>
+void avoid_pageFault(T *array,int numValues,int is_cpu=false);
+
 
 #endif

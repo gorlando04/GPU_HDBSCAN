@@ -264,3 +264,12 @@ int main( int argc, char *argv[]) {
 
 
 }
+
+/*
+MAPEANDO FUNÇÕES QUE PRECISAM DE SHARDING:
+
+
+
+
+
+*/

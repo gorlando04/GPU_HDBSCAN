@@ -7,6 +7,8 @@
 
 #include "cuda_runtime.h"
 #include "../structs/hdbscan_elements.cuh"
+#include "../structs/ECLgraph.h"
+#include "../getters/getters.cuh"
 
 __global__ void calculateScore(int *vectors,int *treshold_idx, Untie_hub *vertex , int *degrees ,long int size,int k,int offset); //
 
@@ -27,5 +29,16 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
 
 float calculate_euclidean_distance(float *vector,long int idxa,long int idxb,int dim); //
 
+void calculate_nindex(int nodes, int *kNN, bool *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs);
+
+void calculate_nlist(int nodes, int *kNN,int k, bool *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs,long int *auxiliar_edges);
+
+void calculate_coreDistance_antihubs(ECLgraph *g,long int *auxiliar_edges,int *antihubs,long int num_antihubs);
+
+int* calculate_degrees(int *kNN,long int vectorSize,int shards_num,long int numValues);
+
+
+int* calculate_finalAntihubs(Vertex *vertexes,int *kNN,int* finalCounts,int* antihubs,long int numValues,int countsTreshold,
+                            int pos_threshold, int value_threshold,long int k);
 
 #endif

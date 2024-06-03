@@ -7,6 +7,8 @@
 
 #include "cuda_runtime.h"
 #include "../structs/hdbscan_elements.cuh"
+#include "../structs/ECLgraph.h"
+
 
 
 __global__ void initializeVectorCounts(int *vector,int value,int size);//
@@ -29,6 +31,15 @@ __global__ void initializeVectorArange(int *vector,int size);//
 
 HashLabels initializeHash(CondensedTreeNode *condensed_tree,int condensed_size);//
 
+
+void createNodeList(int *vector,ECLgraph *g);
+
+void createNodeList_gpu(int *vector,GPUECLgraph *g);
+
+
+void createEdgeList(int *vector,ECLgraph *g);
+
+void createWeightList(float *vector,ECLgraph *g);
 
 
 #endif
