@@ -23,7 +23,7 @@ void calculateElements(long int *elementsPerGPU,int shards_num,long int vectorSi
 
 void calculateUntieScore(Untie_hub *unties ,long int *indexesPerGPU,int *h_data,int *treshold_idx,int *finalCounts, long int k); //
 
-void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int *indexesPerGPU,long int k,long int mpts);//
+void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int numValues,long int k,long int mpts);//
 
 void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistances,int *aux_nodes,int *aux_edges,long int size); //
 
@@ -35,7 +35,7 @@ void calculate_nlist(int nodes, int *kNN,int k, bool *flag_knn,ECLgraph *g,int *
 
 void calculate_coreDistance_antihubs(ECLgraph *g,long int *auxiliar_edges,int *antihubs,long int num_antihubs);
 
-int* calculate_degrees(int *kNN,long int vectorSize,int shards_num,long int numValues);
+int* calculate_degrees(int *kNN,long int vectorSize,long int numValues);
 
 
 int* calculate_finalAntihubs(Vertex *vertexes,int *kNN,int* finalCounts,int* antihubs,long int numValues,int countsTreshold,

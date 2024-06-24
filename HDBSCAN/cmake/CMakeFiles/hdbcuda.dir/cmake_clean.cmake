@@ -9,6 +9,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/hdbcuda.dir/graphs/graph.cu.o.d"
   "CMakeFiles/hdbcuda.dir/initializer/initialize.cu.o"
   "CMakeFiles/hdbcuda.dir/initializer/initialize.cu.o.d"
+  "CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.o"
+  "CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.o.d"
   "CMakeFiles/hdbcuda.dir/mst/mst.cu.o"
   "CMakeFiles/hdbcuda.dir/mst/mst.cu.o.d"
   "CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o"

@@ -271,6 +271,7 @@ CMakeFiles/hdbcuda.dir/trees/tree.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/trees/tr
     /usr/include/c++/11/istream \
     /usr/include/c++/11/bits/istream.tcc \
     /nndescent/GPU_HDBSCAN/HDBSCAN/trees/../initializer/../structs/hdbscan_elements.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/trees/../initializer/../structs/ECLgraph.h \
     /usr/include/c++/11/algorithm \
     /usr/include/c++/11/bits/stl_algo.h \
     /usr/include/c++/11/bits/algorithmfwd.h \

@@ -154,8 +154,6 @@ int main( int argc, char *argv[]) {
   long int k = NEIGHB_NUM_PER_LIST;
   long int mpts = 10;
   int mst_gpu = 0;
-  int num_buckets = 32;
-  int num_threads = 32;
 
   // ./hdbscan_ NUM_VALUES mpts shards
   if (argc == 5){
@@ -181,7 +179,7 @@ int main( int argc, char *argv[]) {
 
   //kNNG
   const std::string path_to_data = "/nndescent/GPU_HDBSCAN/data/artificial/SK_data.txt";
-  PrepareVector(path_to_data,"/nndescent/GPU_HDBSCAN/data/vectors.fvecs");
+//  PrepareVector(path_to_data,"/nndescent/GPU_HDBSCAN/data/vectors.fvecs");
 
 
   clock_t t; 
@@ -189,7 +187,11 @@ int main( int argc, char *argv[]) {
   printf("Iniciando o HDBSCAN\n");
 
   std::string path_to_kNNG = "/nndescent/GPU_HDBSCAN/results/NNDescent-KNNG.kgraph";
-  ConstructLargeKNNGraph(shards, "/nndescent/GPU_HDBSCAN/data/vectors", path_to_kNNG);
+  //ConstructLargeKNNGraph(shards, "/nndescent/GPU_HDBSCAN/data/vectors", path_to_kNNG);
+
+  t = clock() - t; 
+  double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
+  printf("TEMPO KNNG: %lf\n", time_taken);
 
   // Le o kNNG da memória
   NNDElement *result_graph;
@@ -201,22 +203,56 @@ int main( int argc, char *argv[]) {
   // Cast NNDElement to int and float
   int *result_index_graph;
   float *distances;
-  kNNG_toVecs(result_index_graph,distances,result_graph,knng_num, knng_dim);
 
+    cudaMallocManaged(&result_index_graph,(size_t)knng_num*knng_dim * sizeof(int));
+    for (long int i = 0; i < knng_num; i++) {
+      for (long int j = 0; j < knng_dim; j++) {
+	
+        result_index_graph[i * knng_dim + j] = result_graph[i * knng_dim + j].label();
+	}
+
+    } 
+
+    CheckCUDA_();
+
+   
+    cudaMallocManaged(&distances,(size_t)numValues*knng_dim * sizeof(float));
+
+
+    for (long int i = 0; i < knng_num; i++) {
+        for (long int j = 0; j < knng_dim; j++) {
+          
+          distances[i * knng_dim + j] = result_graph[i * knng_dim + j].distance();
+        }
+    }
+
+    CheckCUDA_();
+    delete result_graph;
+    result_graph = NULL;
+
+
+
+  t = clock();
   //HDBSCAN
   int shards_num = numGPUs;
   if (numValues*k > 2000000000 )
     shards_num += numGPUs;
-  
   // Constroí o kNNG enhanced
+ 
   ECLgraph g;
   g = buildEnhancedKNNG(result_index_graph,distances,shards_num,numValues,k,mpts,mst_gpu);
+
+  t = clock() - t; 
+  time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
+  printf("TEMPO ENHANCED KNNG: %lf\n", time_taken);
 
 
   bool* edges;
   MSTedge *mst_edges;
 
   int qntd_nohs = g.nodes;
+
+  t = clock();
   if(mst_gpu){
     
     int multiplicacoes=0;
@@ -235,41 +271,46 @@ int main( int argc, char *argv[]) {
     mst_edges = buildMST(g,edges,12);
   }
 
+  t = clock() - t; 
+  time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
+  printf("TEMPO MST: %lf\n", time_taken);
   // Liberar G
   freeECLgraph(g);
 
+  t = clock();
   SingleLinkageNode *result_arr;
   result_arr = build_Linkage_tree(mst_edges ,knng_num ,qntd_nohs);
+  t = clock() - t; 
+  time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
+  printf("TEMPO LINKAGE TREE: %lf\n", time_taken);
 
+  t = clock();
   CondensedTreeNode* condensed_tree;
   int condensed_size;
   condensed_tree =  build_Condensed_tree(result_arr, knng_num ,qntd_nohs-1, mpts,&condensed_size);
+  t = clock() - t; 
+  time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
+  printf("TEMPO CONDENSED TREE: %lf\n", time_taken);
 
-
+  t = clock();
   Stability *stabilities;
   int stability_size;
   stabilities = compute_stability(condensed_tree,condensed_size,&stability_size);
-
-  int* labels;
+  t = clock() - t; 
+  time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
+  printf("TEMPO STABILITY: %lf\n", time_taken);
+  
+t = clock();
+	int* labels;
   labels = get_clusters(condensed_tree, condensed_size, stabilities,  stability_size, numValues);
 
   t = clock() - t; 
-  double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
+  time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
+  printf("TEMPO GET CLUSTERS: %lf\n", time_taken);
 
-
-//    const std::string out_PATH = "/nndescent/GPU_HDBSCAN/HDBSCAN/groundtruth/approximate_result.txt";
-    //WriteTxtVecs(out_PATH,labels,numValues);
 
   return 0;
 
 
 }
 
-/*
-MAPEANDO FUNÇÕES QUE PRECISAM DE SHARDING:
-
-
-
-
-
-*/

@@ -270,4 +270,6 @@ CMakeFiles/hdbcuda.dir/counts/count.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/counts
     /usr/include/c++/11/bits/ostream.tcc \
     /usr/include/c++/11/istream \
     /usr/include/c++/11/bits/istream.tcc \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/counts/../initializer/../structs/hdbscan_elements.cuh
+    /nndescent/GPU_HDBSCAN/HDBSCAN/counts/../initializer/../structs/hdbscan_elements.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/counts/../initializer/../structs/ECLgraph.h \
+    /usr/lib/gcc/x86_64-linux-gnu/11/include/omp.h

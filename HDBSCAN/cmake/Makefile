@@ -262,6 +262,30 @@ initializer/initialize.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/initializer/initialize.cu.s
 .PHONY : initializer/initialize.cu.s
 
+merge_sort/merge_sort.o: merge_sort/merge_sort.cu.o
+.PHONY : merge_sort/merge_sort.o
+
+# target to build an object file
+merge_sort/merge_sort.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.o
+.PHONY : merge_sort/merge_sort.cu.o
+
+merge_sort/merge_sort.i: merge_sort/merge_sort.cu.i
+.PHONY : merge_sort/merge_sort.i
+
+# target to preprocess a source file
+merge_sort/merge_sort.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.i
+.PHONY : merge_sort/merge_sort.cu.i
+
+merge_sort/merge_sort.s: merge_sort/merge_sort.cu.s
+.PHONY : merge_sort/merge_sort.s
+
+# target to generate assembly for a file
+merge_sort/merge_sort.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.s
+.PHONY : merge_sort/merge_sort.cu.s
+
 mst/mst.o: mst/mst.cu.o
 .PHONY : mst/mst.o
 
@@ -551,6 +575,9 @@ help:
 	@echo "... initializer/initialize.o"
 	@echo "... initializer/initialize.i"
 	@echo "... initializer/initialize.s"
+	@echo "... merge_sort/merge_sort.o"
+	@echo "... merge_sort/merge_sort.i"
+	@echo "... merge_sort/merge_sort.s"
 	@echo "... mst/mst.o"
 	@echo "... mst/mst.i"
 	@echo "... mst/mst.s"

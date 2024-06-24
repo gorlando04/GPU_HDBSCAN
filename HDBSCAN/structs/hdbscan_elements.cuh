@@ -93,8 +93,14 @@ struct HashLabels{
 
 void Check();
 
-template <typename T>
-void avoid_pageFault(T *array,int numValues,int is_cpu=false);
+
+void avoid_pageFault(int numValues,long int *array,int is_cpu=false);
+
+
+void avoid_pageFault(int numValues,int *array,int is_cpu=false);
+
+
+void avoid_pageFault(int numValues,Vertex *array,int is_cpu=false);
 
 
 #endif

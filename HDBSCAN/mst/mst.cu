@@ -309,7 +309,6 @@ MSTedge* buildMST(ECLgraph g,bool *edges, int shards_num){
       soma += 1;
     }
   }   
-  
   if (soma == g.nodes-1)
     printf("MST montada corretamente\n");
 
@@ -319,10 +318,10 @@ MSTedge* buildMST(ECLgraph g,bool *edges, int shards_num){
   }
 
 
-
   // Ordena em GPU
   finalEdges = sort_edges(finalEdges,g.nodes-1);
-  
+
+
   return finalEdges;
 
 }

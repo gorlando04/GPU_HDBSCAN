@@ -1,8 +1,6 @@
 #include "cuda_runtime.h"
 #include "count.cuh"
 #include "../initializer/initialize.cuh"
-#include <omp.h>
-#include <pthread.h>
 
 
 
@@ -37,65 +35,70 @@ void countDegrees(int *finalCounts,int *h_data,int shards_num,long int *elements
 
     int *d_counts[shards_num];  // Vetores na GPU
     int *data_device[shards_num]; // Contagens na CPU para cada GPU
+
     int *h_counts[shards_num]; // Contagens na CPU para cada GPU
-    
-    // Inicializa contagens na CPU para cada GPU
+
+        // Inicializa contagens na CPU para cada GPU
     for (int i = 0; i < shards_num; i++) {
         h_counts[i] = new int[numValues];
     }
 
+    for (int i = 0; i < numGPUs; i++) {
 
-  // Calcula o número de iterações necessárias
-    int iters = shards_num / numGPUs;
+        int idx = i ;
 
-    for (int s=0;s < iters;s++){
+        cudaSetDevice(i);
 
-	    for (int i = 0; i < numGPUs; i++) {
+        // Aloca memória para o vetor e contagens na GPU
+        cudaMalloc(&d_counts[idx], numValues * sizeof(int)); // Vetor de frequências
+	cudaMalloc(&data_device[idx], elementsPerGPU[idx] * sizeof(int)); // Vetor de frequ  ncias
 
-            long int idx = i + (s*numGPUs);
-            cudaSetDevice(i);
+        long int offset = elementsPerGPU[0] * idx;
+        cudaMemcpy(data_device[idx], &h_data[offset], elementsPerGPU[idx]*sizeof(int), cudaMemcpyHostToDevice);
 
-            // Aloca memória para o vetor e contagens na GPU
-            cudaMalloc(&d_counts[idx], numValues * sizeof(int)); // Vetor de frequências
-	        cudaMalloc(&data_device[idx], elementsPerGPU[idx] * sizeof(int)); // Vetor de frequencias
 
-            long int offset = elementsPerGPU[0] * idx;
-            cudaMemcpy(data_device[idx], &h_data[offset], elementsPerGPU[idx]*sizeof(int), cudaMemcpyHostToDevice);
+        // Configura a grade de threads
+        long int numBlocks = ( elementsPerGPU[idx]/ blockSize) +1;
+        long int gridSize = (numValues + blockSize - 1) / blockSize;
+        
 
-            // Configura a grade de threads
-            long int numBlocks = ( elementsPerGPU[idx]/ blockSize) +1;
-            long int gridSize = (numValues + blockSize - 1) / blockSize;
+        initializeVectorCounts<<<gridSize,blockSize>>>(d_counts[idx],0,numValues);
+        
+        countValues<<<numBlocks, blockSize>>>(data_device[idx], d_counts[idx], elementsPerGPU[idx]);
 
-            initializeVectorCounts<<<gridSize,blockSize>>>(d_counts[idx],0,numValues);
-            countValues<<<numBlocks, blockSize>>>(data_device[idx], d_counts[idx], elementsPerGPU[idx]);
-
-        }
-
-        //Libera a memória
-        for (int i = 0; i < numGPUs; i++) {
-            int idx = i + (s*numGPUs);
-            cudaSetDevice(i);
-
-            cudaDeviceSynchronize();
-
-            cudaMemcpy(h_counts[idx], d_counts[idx], numValues * sizeof(int), cudaMemcpyDeviceToHost);
-
-            cudaFree(d_counts[idx]); 
-            d_counts[idx] = NULL;
-        }    
-        CheckCUDA_();
-    }
 
     
-    // Combina as contagens de todas as GPUs na CPU
-    omp_set_num_threads(32);
-    #pragma omp parallel for
-    for (int j = 0; j < numValues; j++) {
-        for (int i = 0; i < shards_num; i++) {
-            finalCounts[j] += h_counts[i][j];
-        }
     }
 
+    //Libera a memória
+
+    for (int i = 0; i < numGPUs; i++) {
+
+        int idx = i ;
+        cudaSetDevice(i);
+
+        cudaDeviceSynchronize();
+
+        cudaMemcpy(h_counts[idx], d_counts[idx], numValues * sizeof(int), cudaMemcpyDeviceToHost);
+
+        cudaFree(d_counts[idx]); 
+    }
+  
+
+    auto cuda_status = cudaGetLastError();
+    if (cuda_status != cudaSuccess) {
+        printf("%s hehehehehe",cudaGetErrorString(cuda_status));
+        exit(-1);
+    }
+
+
+     // Combina as contagens de todas as GPUs na CPU
+
+    for (int i = 0; i < shards_num; i++) {
+        for (int j = 0; j < numValues; j++) {
+            finalCounts[j] += h_counts[i][j];
+        }
+    }   
 
 
 }

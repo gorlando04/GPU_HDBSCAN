@@ -108,17 +108,47 @@ void Check(){
 
 }
 
-template <typename T>
-void avoid_pageFault(T *array,int numValues,int is_cpu=false){
+
+void avoid_pageFault(int numValues,long int *array,int is_cpu){
 
 
     if (is_cpu)
-        cudaMemPrefetchAsync(array,(size_t)numValues * sizeof(T),cudaCpuDeviceId);
+        cudaMemPrefetchAsync(array,(size_t)numValues * sizeof(long int),cudaCpuDeviceId);
         return;
 
     // Evita page fault
     for (int i=0;i<numGPUs;i++){
         cudaSetDevice(i);
-        cudaMemPrefetchAsync(array,(size_t)numValues * sizeof(T),i);
+        cudaMemPrefetchAsync(array,(size_t)numValues * sizeof(long int),i);
+    }
+}
+
+
+void avoid_pageFault(int numValues,int *array,int is_cpu){
+
+
+    if (is_cpu)
+        cudaMemPrefetchAsync(array,(size_t)numValues * sizeof(int),cudaCpuDeviceId);
+        return;
+
+    // Evita page fault
+    for (int i=0;i<numGPUs;i++){
+        cudaSetDevice(i);
+        cudaMemPrefetchAsync(array,(size_t)numValues * sizeof(int),i);
+    }
+}
+
+
+void avoid_pageFault(int numValues,Vertex *array,int is_cpu){
+
+
+    if (is_cpu)
+        cudaMemPrefetchAsync(array,(size_t)numValues * sizeof(Vertex),cudaCpuDeviceId);
+        return;
+
+    // Evita page fault
+    for (int i=0;i<numGPUs;i++){
+        cudaSetDevice(i);
+        cudaMemPrefetchAsync(array,(size_t)numValues * sizeof(Vertex),i);
     }
 }

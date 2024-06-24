@@ -28,6 +28,7 @@ void PrepareVector(string base,string out){
 
     FileTool::ReadTxtVecs(base_path,&vectors,&vecs_size,&vecs_dim);
 
+
     // Arquivo em que será criado o .fvecs que será utilizado
     string out_path = out;
 
@@ -36,5 +37,29 @@ void PrepareVector(string base,string out){
                               vecs_size,
                               vecs_dim);
 
+    long int data_size2, data_dim2;
+    float *vectors_data;
+    FileTool::ReadBinaryVecs(out_path,&vectors_data,&data_size2,&data_dim2);
     return;
+}
+
+
+float* jesus(int *antihubs,int num_antihubs,int* paz){
+
+    long int data_size2, data_dim2;
+    float *vectors_data;
+    const string out_path = "/nndescent/GPU_HDBSCAN/data/vectors.fvecs";
+
+    FileTool::ReadBinaryVecs(out_path,&vectors_data,&data_size2,&data_dim2);
+
+
+    float* antihubs_objects = new float[data_dim2 * num_antihubs];
+
+    for (long int i=0;i<num_antihubs;i++){
+	int idx = antihubs[i];
+        for(long int j=0;j<data_dim2;j++)
+   		antihubs_objects[i*data_dim2 + j] = vectors_data[idx*data_dim2 + j];
+    }
+    *paz = data_dim2;
+    return antihubs_objects;
 }

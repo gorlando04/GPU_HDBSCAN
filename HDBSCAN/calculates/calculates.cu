@@ -3,13 +3,17 @@
 #include "cuda_runtime.h"
 #include "math.h"
 #include <unistd.h>
-#include "../../tools/filetool.hpp"
 #include "../counts/count.cuh"
+#include "../../build_kNNG.cuh"
+
+
+
 
 #include <algorithm>
 #include <vector>
 #include <omp.h>
 #include <pthread.h>
+
 
 
 
@@ -163,170 +167,107 @@ void calculateUntieScore(Untie_hub *unties ,long int *indexesPerGPU,int *h_data,
     return;
 }
 
-void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int *indexesPerGPU,long int k,long int mpts){
+int calculate_shards_num(long int size,int long_=1){
 
-    float  *coreDistances_cpu[numGPUs];
+    int shards_num = numGPUs;
 
-    float  *coreDistances_gpu[numGPUs];
+    double total_size_mb = 3 * sizeof(int) *long_ * size  / pow(10,9);
 
-
-    for (int i = 0; i < numGPUs; i++) {
-
-        cudaSetDevice(i);
-
-        // Aloca memória para o vetor e contagens na GPU
-        cudaMalloc(&coreDistances_gpu[i],indexesPerGPU[i] * sizeof(float)); // Vetor de valores
-
-        // Inicializa o vetor em GPU de core_distances
-        long int numBlocks_ = (indexesPerGPU[i]/blockSize) + 1;
-        initializeVectorCounts<<<numBlocks_,blockSize>>>(coreDistances_gpu[i],0,indexesPerGPU[i]);
-
-
-
-        // Configura a grade de threads
-        long int numBlocks = ( indexesPerGPU[i]/ blockSize) +1;
-
-        calculateCoreDistance_<<<numBlocks,blockSize>>>(coreDistances_gpu[i],kNN_distances,indexesPerGPU[0],indexesPerGPU[i],k,mpts-1);
-        
-   
-        CheckCUDA_();
+    while (total_size_mb / shards_num > GPU_SIZE){
+        shards_num += numGPUs;
     }
+    return shards_num;
+}
 
-    // Juntando tudo em CPU
 
-    for (int i = 0; i < numGPUs; i++) {
-            cudaSetDevice(i);
 
-            cudaDeviceSynchronize();
+void calculateCoreDistance(float *kNN_distances, float *coreDistances ,long int numValues,long int k,long int mpts){
 
-            coreDistances_cpu[i] = new float[indexesPerGPU[i]];
-            cudaMemcpy(coreDistances_cpu[i], coreDistances_gpu[i], indexesPerGPU[i] * sizeof(float), cudaMemcpyDeviceToHost);
 
-            cudaFree(coreDistances_gpu[i]);
 
-            CheckCUDA_();
+    omp_set_num_threads(32);
+    #pragma omp parallel for 
+    for (long int i = 0; i < numValues; i++) 
+        coreDistances[i] = kNN_distances[i*k+mpts];
 
-    }   
-
-    // Junta em CPU
-    for (int i=0;i<numGPUs;i++){
-        for (int j=0;j<indexesPerGPU[i];j++)
-            coreDistances[(i*indexesPerGPU[0]) + j] = coreDistances_cpu[i][j];
-    }
 
     return;
 }
 
 
-
-
 void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistances,int *aux_nodes,int *aux_edges,long int size){
 
+/*    int shards_num = calculate_shards_num(size);
+    printf("SHARDS NUM = %d",shards_num);
+*/
 
-
-    int shards_num = numGPUs;
-
-    double total_size_mb = 3 * sizeof(aux_nodes[0]) * size  / pow(10,9);
-
-    while (total_size_mb / shards_num > GPU_SIZE){
-        shards_num += numGPUs;
-    }
-
-    printf("SHARDS NUM = %d e edges = %ld\n",shards_num,size);
+    int shards_num = calculate_shards_num(2*size);
+    printf("SHARDS NUM = %d",shards_num);
 
     int *d_nodes[shards_num], *d_edges[shards_num]; // Vetores na GPU
     float *d_distances[shards_num];  // Vetores na GPU
-    float *h_distances[shards_num]; // Contagens na CPU para cada GPU
-
-
-
-    CheckCUDA_();
 
 
     long int elementsPerGPU[shards_num];
-
     //Define o tamanho de cada shard
-    for (int i=0;i<shards_num;i++){
+    calculateElements(elementsPerGPU,shards_num,size);
 
-        if (i != (shards_num)-1){ elementsPerGPU[i] = size/ (shards_num);}
 
-        else{
-            elementsPerGPU[i] = size;
 
-            for (int j=0;j<i;j++)
-                elementsPerGPU[i] -= elementsPerGPU[j];
-            
 
-        }
-    }
-
-    // Inicializa contagens na CPU para cada GPU
-    for (int i = 0; i < shards_num; i++) {
-        h_distances[i] = new float[elementsPerGPU[i]];
-        memset(h_distances[i], 0,elementsPerGPU[i] * sizeof(float));
-    }
-
-    // Realiza a contagem de graus para todos os vértices
-
+    // Calcula o número de iterações necessárias
     int iters = shards_num / numGPUs;
+
+
     for (int s=0;s < iters;s++){
 
-	for (int i = 0; i < numGPUs; i++) {
+	    for (int i = 0; i < numGPUs; i++) {
 
-        long int idx = i + (s*numGPUs);
-        cudaSetDevice(i);
+            long int idx = i + (s*numGPUs);
+            cudaSetDevice(i);
 
-        // Aloca memória para o vetor de nohs na GPU
-        cudaMalloc(&d_nodes[idx],elementsPerGPU[idx] * sizeof(int)); 
-
-        // Aloca memória para o vetor e contagens na GPU
-        cudaMalloc(&d_edges[idx],elementsPerGPU[idx] * sizeof(int)); 
-
-        // Aloca memória para o vetor e contagens na GPU
-        cudaMalloc(&d_distances[idx], elementsPerGPU[idx] * sizeof(float)); 
+            // Aloca memória para o vetor de nohs na GPU
+            cudaMalloc(&d_nodes[idx],elementsPerGPU[idx] * sizeof(int)); 
+            // Aloca memória para o vetor e contagens na GPU
+            cudaMalloc(&d_edges[idx],elementsPerGPU[idx] * sizeof(int)); 
+            // Aloca memória para o vetor e contagens na GPU
+            cudaMalloc(&d_distances[idx], elementsPerGPU[idx] * sizeof(float)); 
 
 
-        // Configura a grade de threads
-        long int numBlocks = ( elementsPerGPU[idx]/ blockSize) +1;
-        
-/*        ShardVector<<<numBlocks,blockSize>>>(d_nodes[idx],aux_nodes,elementsPerGPU[idx],elementsPerGPU[0],idx);
-        ShardVector<<<numBlocks,blockSize>>>(d_edges[idx],aux_edges,elementsPerGPU[idx],elementsPerGPU[0],idx);
-*/
-        long int offset = elementsPerGPU[0] * idx;
-        cudaMemcpy(d_nodes[idx], &aux_nodes[offset], elementsPerGPU[idx]*sizeof(int), cudaMemcpyHostToDevice);
-        cudaMemcpy(d_edges[idx], &aux_edges[offset], elementsPerGPU[idx]*sizeof(int), cudaMemcpyHostToDevice);
+            // Configura a grade de threads
+            long int numBlocks = ( elementsPerGPU[idx]/ blockSize) +1;
+            long int offset = elementsPerGPU[0] * idx;
+
+            cudaMemcpy(d_nodes[idx], &aux_nodes[offset], elementsPerGPU[idx]*sizeof(int), cudaMemcpyHostToDevice);
+            cudaMemcpy(d_edges[idx], &aux_edges[offset], elementsPerGPU[idx]*sizeof(int), cudaMemcpyHostToDevice);
         
         
-        calculateMRD<<<numBlocks,blockSize>>>(d_distances[idx],d_nodes[idx],d_edges[idx],coreDistances,elementsPerGPU[idx]);
-
-        
+            calculateMRD<<<numBlocks,blockSize>>>(d_distances[idx],d_nodes[idx],d_edges[idx],coreDistances,elementsPerGPU[idx]);
         }
 
         //Libera a memória
-
         for (int i = 0; i < numGPUs; i++) {
             int idx = i + (s*numGPUs);
             cudaSetDevice(i);
 
             cudaDeviceSynchronize();
 
-            cudaMemcpy(h_distances[idx], d_distances[idx], elementsPerGPU[idx] * sizeof(int), cudaMemcpyDeviceToHost);
+            //cudaMemcpy(h_distances[idx], d_distances[idx], elementsPerGPU[idx] * sizeof(int), cudaMemcpyDeviceToHost);
 
+            long int offset = elementsPerGPU[0] * idx;
+
+            cudaMemcpy(&graphDistances[offset],d_distances[idx], elementsPerGPU[idx] * sizeof(float), cudaMemcpyDeviceToHost);
+            
             cudaFree(d_nodes[idx]);
             cudaFree(d_edges[idx]);
             cudaFree(d_distances[idx]);  
-
+            d_nodes[idx] = NULL;
+            d_edges[idx] = NULL;
+            d_distances[idx] = NULL;
         }    
-
         CheckCUDA_();
-    
     }
-
-    for (int i = 0; i < shards_num; i++) {
-        for (int j = 0; j < elementsPerGPU[i]; j++) {
-		graphDistances[j+ (i * elementsPerGPU[0])] = h_distances[i][j];
-        }
-    }    
+    
    return;
 
 }
@@ -464,12 +405,9 @@ void calculate_nlist(int nodes, int *kNN,int k, bool *flag_knn,ECLgraph *g,int *
 void calculate_coreDistance_antihubs(ECLgraph *g,long int *auxiliar_edges,int *antihubs,long int num_antihubs){
 
 
-    // Read vector txtx
-    const std::string path_to_data_binary = "/nndescent/GPU_HDBSCAN/data/vectors.fvecs";
-    long int data_size2, data_dim2;
-    float *vectors_data;
+    int data_dim2 = -1;
+    float *vectors_data = jesus(antihubs,num_antihubs,&data_dim2);
 
-    FileTool::ReadBinaryAntihubs(path_to_data_binary,&vectors_data, &data_size2, &data_dim2,antihubs,num_antihubs);    	
 
     for (long int i=0;i<num_antihubs;i++){
 
@@ -494,12 +432,13 @@ void calculate_coreDistance_antihubs(ECLgraph *g,long int *auxiliar_edges,int *a
 }
 
 
-int* calculate_degrees(int *kNN,long int vectorSize,int shards_num,long int numValues){
+int* calculate_degrees(int *kNN,long int vectorSize,long int numValues){
 
     cudaMemPrefetchAsync(kNN,(size_t)vectorSize * sizeof(int), cudaCpuDeviceId);
- 
 
- 
+    int shards_num = calculate_shards_num(vectorSize + numValues,2);
+
+
     // Calcula a quantidade de elementos por GPU
     long int elementsPerGPU[shards_num];
     calculateElements(elementsPerGPU,shards_num,vectorSize);
@@ -508,14 +447,13 @@ int* calculate_degrees(int *kNN,long int vectorSize,int shards_num,long int numV
     int *finalCounts; // Contagens finais após a combinação das GPUs
     cudaMallocManaged(&finalCounts,(size_t)numValues * sizeof(int));
 
-    
     int gridSize = (numValues + blockSize - 1) / blockSize;
     // Inicializa o vetor
     initializeVectorCounts<<<gridSize,blockSize>>>(finalCounts,0,numValues);
     Check();        
 
     // Conta os graus de cada vértice
-    countDegrees(finalCounts,kNN,numGPUs,elementsPerGPU,numValues);
+    countDegrees(finalCounts,kNN,shards_num,elementsPerGPU,numValues);
 
 
     return finalCounts;
@@ -545,7 +483,7 @@ int* calculate_finalAntihubs(Vertex *vertexes,int *kNN,int* finalCounts,int* ant
 	cudaMallocManaged(&treshold_idx,(size_t)countsTreshold * sizeof(int));
     get_IndexThreshold(finalCounts,treshold_idx,value_threshold,numValues);
 
-    avoid_pageFault(treshold_idx,countsTreshold);
+    avoid_pageFault(countsTreshold,treshold_idx,false);
 
     // Calcula quantos elementos serão processados por cada GPU
     long int indexesPerGPU[numGPUs];

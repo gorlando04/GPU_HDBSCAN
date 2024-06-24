@@ -16,22 +16,15 @@
 
 
 
-__device__ bool compareEdgeByWeight(const MSTedge &a, const MSTedge &b);
-
-__device__ bool isWeightEqual(const MSTedge &a, const MSTedge &b);
-
-__device__ void merge(int l,int m,int r,MSTedge data[],MSTedge tmp[]);
-
-__global__ void merge_kernel(int N, int chunk,MSTedge data[],MSTedge tmp[]);
 
 
-void mergeSort(int N,MSTedge *input,MSTedge *output,int device=0);
+//void mergeSort(int N,MSTedge *input,MSTedge *output,int device=0);
 
-void mergeSortMultiGPU(int N,MSTedge *input,MSTedge *output,int offset,int device=0);
+//void mergeSortMultiGPU(int N,MSTedge *input,MSTedge *output,int offset,int device=0);
 
 
-void calculateElements(int *elementsPerGPU,int shards_num,long int vectorSize);
+//void calculateElements(int *elementsPerGPU,int shards_num,long int vectorSize);
 
-void merging_partial_results(int *elementsPerGPU, MSTedge **partial_results,int numValues,MSTedge *results);
+//void merging_partial_results(int *elementsPerGPU, MSTedge **partial_results,int numValues,MSTedge *results);
 
 MSTedge* sort_edges(MSTedge *arr,int numValues);

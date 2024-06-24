@@ -17,7 +17,7 @@ __global__ void initializeVertex(Vertex *vertexes, int *counts,long int size);//
 
 __global__ void initializeVectorCounts_(long int *vector,long int value,int size);//
 
-__global__ void initializeVectorCounts(float *vector,float value,int size);//
+__global__ void initializeVectorCountsF(float *vector,float value,int size);//
 
 __global__ void initializeUntieHubs(Untie_hub *untie, int value, int size);//
 

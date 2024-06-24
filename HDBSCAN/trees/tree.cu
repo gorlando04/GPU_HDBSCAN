@@ -496,7 +496,7 @@ Stability* compute_stability(CondensedTreeNode *condensed_tee, int size,int *poi
 
     
     int gridSize = (num_clusters + blockSize - 1) / blockSize;
-    initializeVectorCounts<<<gridSize,blockSize>>>(result_array,0.0,num_clusters);
+    initializeVectorCountsF<<<gridSize,blockSize>>>(result_array,0.0,num_clusters);
 
     cudaDeviceSynchronize();
     CheckCUDA_();

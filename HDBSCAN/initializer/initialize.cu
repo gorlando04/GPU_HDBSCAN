@@ -31,7 +31,7 @@ __global__ void initializeVectorCounts_(long int *vector,long int value,int size
 
 }
 
-__global__ void initializeVectorCounts(float *vector,float value,int size){
+__global__ void initializeVectorCountsF(float *vector,float value,int size){
 
     long int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < size) {

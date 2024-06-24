@@ -13,8 +13,10 @@
 
 #include "merge_sort.cuh"
 
+#include <time.h>
 
-__device__ bool compareEdgeByWeight(const MSTedge &a, const MSTedge &b){
+
+__device__ bool compareEdgeByWeightGPU(const MSTedge &a, const MSTedge &b){
     return a.weight < b.weight;
 }
 
@@ -27,7 +29,7 @@ __device__ void merge(int l,int m,int r,MSTedge data[],MSTedge tmp[])
     int i=l,j=m,k=l;
     while (i<m&&j<r)
     {
-        if (isWeightEqual(tmp[i],tmp[j]) || compareEdgeByWeight(tmp[i],tmp[j]))
+        if (isWeightEqual(tmp[i],tmp[j]) || compareEdgeByWeightGPU(tmp[i],tmp[j]))
         {
             data[k].weight = tmp[i].weight; 
             data[k].from_node = tmp[i].from_node;
@@ -73,7 +75,7 @@ __global__ void merge_kernel(int N, int chunk,MSTedge data[],MSTedge tmp[])
     merge(left, mid,right,data,tmp);
 }
 
-void mergeSort(int N,MSTedge *input,MSTedge *output,int device=0)
+void mergeSort(int N,MSTedge *input,MSTedge *output,int device)
 {
     cudaSetDevice(device);
 
@@ -113,7 +115,7 @@ void mergeSort(int N,MSTedge *input,MSTedge *output,int device=0)
 }
 
 
-void mergeSortMultiGPU(int N,MSTedge *input,MSTedge *output,int offset,int device=0)
+void mergeSortMultiGPU(int N,MSTedge *input,MSTedge *output,int offset,int device)
 {
     cudaSetDevice(device);
 
@@ -183,7 +185,7 @@ void merging_partial_results(int *elementsPerGPU, MSTedge **partial_results,int 
 
     for(int i=0;i<numValues;i++){
 
-        int menor = INT_MAX;
+        float menor = 1e8;
         int idx_shard_menor = -1;
         int idx_menor = -1;
 
@@ -205,7 +207,7 @@ void merging_partial_results(int *elementsPerGPU, MSTedge **partial_results,int 
                 }
             }           
         }
-        control[idx_menor] += 1;
+        control[idx_shard_menor] += 1;
         results[i].from_node = partial_results[idx_shard_menor][idx_menor].to_node;
         results[i].to_node =  partial_results[idx_shard_menor][idx_menor].from_node; 
         results[i].weight = partial_results[idx_shard_menor][idx_menor].weight;
@@ -218,12 +220,14 @@ void merging_partial_results(int *elementsPerGPU, MSTedge **partial_results,int 
 MSTedge* sort_edges(MSTedge *arr,int numValues){
 
 
+   clock_t t;
+   t = clock();
     //Create CPU based Arrays
     MSTedge*  result = new MSTedge[numValues];
 
 
     bool flag_gpu = false;
-    if (numValues < 1000000) flag_gpu = true;
+    if (numValues < 10000000) flag_gpu = true;
  
 
     // ORDENAÇÃO APENAS EM 1 GPU
@@ -250,8 +254,15 @@ MSTedge* sort_edges(MSTedge *arr,int numValues){
     for (auto &t: threads)
         t.join ();  
 
+
+
+
+
     merging_partial_results(elements_per_GPU, partial_results,numValues,result);
 
+     t = clock() - t; 
+  double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
 
+  printf("Ordenacao das asrestas demorou: %lf \n",time_taken);
     return result;
 }

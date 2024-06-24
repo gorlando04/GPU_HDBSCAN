@@ -1,4 +1,4 @@
-CMakeFiles/hdbcuda.dir/graphs/graph.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/graph.cu \
+CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/merge_sort/merge_sort.cu \
     /usr/include/stdc-predef.h \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda_runtime.h \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/crt/host_config.h \
@@ -159,17 +159,29 @@ CMakeFiles/hdbcuda.dir/graphs/graph.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/graphs
     /usr/include/c++/11/bits/move.h \
     /usr/include/c++/11/type_traits \
     /usr/include/c++/11/initializer_list \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/graph.cuh \
-    /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda.h \
-    /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h \
-    /usr/include/stdint.h \
+    /usr/include/c++/11/iostream \
+    /usr/include/c++/11/ostream \
+    /usr/include/c++/11/ios \
+    /usr/include/c++/11/iosfwd \
+    /usr/include/c++/11/bits/stringfwd.h \
+    /usr/include/c++/11/bits/memoryfwd.h \
+    /usr/include/c++/11/bits/postypes.h \
+    /usr/include/c++/11/cwchar \
+    /usr/include/wchar.h \
     /usr/include/x86_64-linux-gnu/bits/wchar.h \
-    /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../structs/hdbscan_elements.cuh \
-    /usr/include/c++/11/vector \
+    /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
+    /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h \
+    /usr/include/x86_64-linux-gnu/bits/wchar2.h \
+    /usr/include/c++/11/exception \
+    /usr/include/c++/11/bits/exception_ptr.h \
+    /usr/include/c++/11/bits/exception_defines.h \
+    /usr/include/c++/11/bits/cxxabi_init_exception.h \
+    /usr/include/c++/11/typeinfo \
+    /usr/include/c++/11/bits/hash_bytes.h \
+    /usr/include/c++/11/bits/nested_exception.h \
+    /usr/include/c++/11/bits/char_traits.h \
     /usr/include/c++/11/bits/stl_algobase.h \
     /usr/include/c++/11/bits/functexcept.h \
-    /usr/include/c++/11/bits/exception_defines.h \
     /usr/include/c++/11/ext/numeric_traits.h \
     /usr/include/c++/11/bits/stl_iterator_base_types.h \
     /usr/include/c++/11/bits/stl_iterator_base_funcs.h \
@@ -179,41 +191,10 @@ CMakeFiles/hdbcuda.dir/graphs/graph.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/graphs
     /usr/include/c++/11/bits/ptr_traits.h \
     /usr/include/c++/11/debug/debug.h \
     /usr/include/c++/11/bits/predefined_ops.h \
-    /usr/include/c++/11/bits/allocator.h \
-    /usr/include/x86_64-linux-gnu/c++/11/bits/c++allocator.h \
-    /usr/include/c++/11/ext/new_allocator.h \
-    /usr/include/c++/11/bits/memoryfwd.h \
-    /usr/include/c++/11/bits/stl_construct.h \
-    /usr/include/c++/11/bits/stl_uninitialized.h \
-    /usr/include/c++/11/ext/alloc_traits.h \
-    /usr/include/c++/11/bits/alloc_traits.h \
-    /usr/include/c++/11/bits/stl_vector.h \
-    /usr/include/c++/11/bits/stl_bvector.h \
-    /usr/include/c++/11/bits/functional_hash.h \
-    /usr/include/c++/11/bits/hash_bytes.h \
-    /usr/include/c++/11/bits/range_access.h \
-    /usr/include/c++/11/bits/vector.tcc \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../structs/ECLgraph.h \
-    /usr/include/c++/11/cstdio \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../initializer/initialize.cuh \
-    /usr/include/c++/11/iostream \
-    /usr/include/c++/11/ostream \
-    /usr/include/c++/11/ios \
-    /usr/include/c++/11/iosfwd \
-    /usr/include/c++/11/bits/stringfwd.h \
-    /usr/include/c++/11/bits/postypes.h \
-    /usr/include/c++/11/cwchar \
-    /usr/include/wchar.h \
-    /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
-    /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h \
-    /usr/include/x86_64-linux-gnu/bits/wchar2.h \
-    /usr/include/c++/11/exception \
-    /usr/include/c++/11/bits/exception_ptr.h \
-    /usr/include/c++/11/bits/cxxabi_init_exception.h \
-    /usr/include/c++/11/typeinfo \
-    /usr/include/c++/11/bits/nested_exception.h \
-    /usr/include/c++/11/bits/char_traits.h \
     /usr/include/c++/11/cstdint \
+    /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h \
+    /usr/include/stdint.h \
+    /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
     /usr/include/c++/11/bits/localefwd.h \
     /usr/include/x86_64-linux-gnu/c++/11/bits/c++locale.h \
     /usr/include/c++/11/clocale \
@@ -236,12 +217,20 @@ CMakeFiles/hdbcuda.dir/graphs/graph.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/graphs
     /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
     /usr/include/c++/11/bits/locale_classes.h \
     /usr/include/c++/11/string \
+    /usr/include/c++/11/bits/allocator.h \
+    /usr/include/x86_64-linux-gnu/c++/11/bits/c++allocator.h \
+    /usr/include/c++/11/ext/new_allocator.h \
     /usr/include/c++/11/bits/ostream_insert.h \
     /usr/include/c++/11/bits/cxxabi_forced.h \
     /usr/include/c++/11/bits/stl_function.h \
     /usr/include/c++/11/backward/binders.h \
+    /usr/include/c++/11/bits/range_access.h \
     /usr/include/c++/11/bits/basic_string.h \
+    /usr/include/c++/11/ext/alloc_traits.h \
+    /usr/include/c++/11/bits/alloc_traits.h \
+    /usr/include/c++/11/bits/stl_construct.h \
     /usr/include/c++/11/ext/string_conversions.h \
+    /usr/include/c++/11/cstdio \
     /usr/include/c++/11/cerrno \
     /usr/include/errno.h \
     /usr/include/x86_64-linux-gnu/bits/errno.h \
@@ -251,6 +240,7 @@ CMakeFiles/hdbcuda.dir/graphs/graph.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/graphs
     /usr/include/asm-generic/errno-base.h \
     /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
     /usr/include/c++/11/bits/charconv.h \
+    /usr/include/c++/11/bits/functional_hash.h \
     /usr/include/c++/11/bits/basic_string.tcc \
     /usr/include/c++/11/bits/locale_classes.tcc \
     /usr/include/c++/11/system_error \
@@ -271,33 +261,42 @@ CMakeFiles/hdbcuda.dir/graphs/graph.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/graphs
     /usr/include/c++/11/bits/ostream.tcc \
     /usr/include/c++/11/istream \
     /usr/include/c++/11/bits/istream.tcc \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../initializer/../structs/hdbscan_elements.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../initializer/../structs/ECLgraph.h \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../getters/getters.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../getters/../structs/hdbscan_elements.cuh \
-    /usr/include/c++/11/tuple \
-    /usr/include/c++/11/array \
-    /usr/include/c++/11/bits/uses_allocator.h \
-    /usr/include/c++/11/bits/invoke.h \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../calculates/calculates.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../calculates/../structs/hdbscan_elements.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../calculates/../structs/ECLgraph.h \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../calculates/../getters/getters.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../counts/count.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/../counts/../structs/hdbscan_elements.cuh \
-    /usr/include/unistd.h \
-    /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
-    /usr/include/x86_64-linux-gnu/bits/environments.h \
-    /usr/include/x86_64-linux-gnu/bits/confname.h \
-    /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
-    /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
-    /usr/include/x86_64-linux-gnu/bits/unistd.h \
-    /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
-    /usr/include/linux/close_range.h \
     /usr/include/c++/11/algorithm \
     /usr/include/c++/11/bits/stl_algo.h \
     /usr/include/c++/11/bits/algorithmfwd.h \
     /usr/include/c++/11/bits/stl_heap.h \
     /usr/include/c++/11/bits/stl_tempbuf.h \
     /usr/include/c++/11/bits/uniform_int_dist.h \
-    /usr/lib/gcc/x86_64-linux-gnu/11/include/omp.h
+    /usr/include/getopt.h \
+    /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
+    /usr/include/x86_64-linux-gnu/bits/getopt_ext.h \
+    /usr/include/c++/11/fstream \
+    /usr/include/c++/11/bits/codecvt.h \
+    /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
+    /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
+    /usr/include/c++/11/bits/fstream.tcc \
+    /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda.h \
+    /usr/include/c++/11/thread \
+    /usr/include/c++/11/bits/std_thread.h \
+    /usr/include/c++/11/tuple \
+    /usr/include/c++/11/array \
+    /usr/include/c++/11/bits/uses_allocator.h \
+    /usr/include/c++/11/bits/invoke.h \
+    /usr/include/c++/11/bits/refwrap.h \
+    /usr/include/c++/11/bits/unique_ptr.h \
+    /usr/include/c++/11/bits/this_thread_sleep.h \
+    /usr/include/c++/11/chrono \
+    /usr/include/c++/11/ratio \
+    /usr/include/c++/11/limits \
+    /usr/include/c++/11/ctime \
+    /usr/include/c++/11/bits/parse_numbers.h \
+    /usr/include/c++/11/vector \
+    /usr/include/c++/11/bits/stl_uninitialized.h \
+    /usr/include/c++/11/bits/stl_vector.h \
+    /usr/include/c++/11/bits/stl_bvector.h \
+    /usr/include/c++/11/bits/vector.tcc \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/merge_sort/merge_sort.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/merge_sort/../initializer/initialize.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/merge_sort/../initializer/../structs/hdbscan_elements.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/merge_sort/../initializer/../structs/ECLgraph.h \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/merge_sort/../structs/ECLgraph.h

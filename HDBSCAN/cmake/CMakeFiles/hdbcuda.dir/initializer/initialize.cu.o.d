@@ -268,4 +268,5 @@ CMakeFiles/hdbcuda.dir/initializer/initialize.cu.o : /nndescent/GPU_HDBSCAN/HDBS
     /usr/include/c++/11/bits/stl_uninitialized.h \
     /usr/include/c++/11/bits/stl_vector.h \
     /usr/include/c++/11/bits/stl_bvector.h \
-    /usr/include/c++/11/bits/vector.tcc
+    /usr/include/c++/11/bits/vector.tcc \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/initializer/../structs/ECLgraph.h

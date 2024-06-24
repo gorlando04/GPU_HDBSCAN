@@ -31,6 +31,7 @@ void ConstructLargeKNNGraph(int shards, string ref, string result);
 
 void PrepareVector(string base,string out);
 
+float* jesus(int *antihubs,int num_antihubs,int *paz);
 #endif
 
 

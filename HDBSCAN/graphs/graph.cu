@@ -6,6 +6,7 @@
 #include <time.h>
 #include <unistd.h>
 
+
 #include <algorithm>
 #include <vector>
 #include <omp.h>
@@ -14,7 +15,7 @@
 
 ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k,long int mpts, int *antihubs, long int num_antihubs,int mst_gpu)
 {
-
+   printf("Estamos aqui");
 
     long int numValues = nodes;
     ECLgraph g;
@@ -32,7 +33,6 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
     cudaMemPrefetchAsync(g.nindex,(size_t)(g.nodes + 1) * sizeof(g.nindex[0]),cudaCpuDeviceId);
 
     bool *flag_knn = (bool*)malloc(numValues*k * sizeof(bool));
-
     calculate_nindex(nodes, kNN, flag_knn,&g,antihubs,num_antihubs);
 
     // Nesse pontos os nós já estão calculados, agora precisamos inserir as arestas. Essa parte será bem demorada.
@@ -41,7 +41,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
     cudaMallocManaged(&auxiliar_edges,(size_t)(g.nodes) * sizeof(long int)); // nindex[0] = X, nindex[1] = y, nindex[2] = z
     gridSize = (g.nodes + 1  + blockSize - 1) / blockSize;
     initializeVectorCounts_<<<gridSize,blockSize>>>(auxiliar_edges,0,g.nodes); //Aqui usar GPU
-    avoid_pageFault(auxiliar_edges,g.nodes,true);
+    avoid_pageFault(g.nodes,auxiliar_edges,true);
     Check();
 
 
@@ -61,28 +61,27 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
     long int elementsPerGPU[numGPUs];
     calculateElements(elementsPerGPU,numGPUs,numValues); 
 
+
+
+
+
     float *coreDistances;
     cudaMallocManaged(&coreDistances,(size_t)(numValues) * sizeof(float)); 
-    calculateCoreDistance(distances,coreDistances,elementsPerGPU,k,mpts); //Aqui usa GPU
+    calculateCoreDistance(distances,coreDistances,numValues,k,mpts-1);   
     Check();
-
-     // Testar esse substituição
-    /*
-    float *coreDistances;
-    cudaMallocManaged(&coreDistances,(size_t)(numValues) * sizeof(float)); 
-    calculateCoreDistance(distances,coreDistances,numValues,k,mpts); //Aqui usa GPU
-    */
-
 
     cudaFree(kNN);
     kNN = NULL;
 
     if(mst_gpu != 1){cudaFree(distances); distances = NULL; }
 
+    printf("Estamos aqui 2");
 
     calculateMutualReachabilityDistance(g.eweight,coreDistances,aux_nodes,g.nlist,g.edges);  //Aqui usa GPU
+
     Check();
 
+    printf("Estamos aqui 3");
     // Read vector txtx
     calculate_coreDistance_antihubs(&g,auxiliar_edges,antihubs,num_antihubs);
 
@@ -94,10 +93,11 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
 
 ECLgraph buildEnhancedKNNG(int *kNN, float *distances, int shards_num, long int numValues,long int k,long int mpts ,int mst_gpu){
 
+
+
+
     long int vectorSize = numValues*k;
-
-    int *finalCounts = calculate_degrees(kNN,vectorSize,shards_num,numValues);
-
+    int *finalCounts = calculate_degrees(kNN,vectorSize,numValues);
     Vertex *vertexes;
 	cudaMallocManaged(&vertexes,(size_t)numValues * sizeof(Vertex));
     int gridSize = (numValues + blockSize - 1) / blockSize;    
@@ -111,7 +111,7 @@ ECLgraph buildEnhancedKNNG(int *kNN, float *distances, int shards_num, long int 
     printf("A posicao do threshold eh: %d e o valor eh: %d\n",pos_threshold-1,value_threshold);
 
 
-    avoid_pageFault(vertexes,numValues);
+    avoid_pageFault(numValues,vertexes,false);
 
     // Encontrar quantos valores são iguais ao threshold
     long int elementsPerGPU_[numGPUs];
@@ -119,7 +119,6 @@ ECLgraph buildEnhancedKNNG(int *kNN, float *distances, int shards_num, long int 
 
     // Encontra quantos valores são iguais ao threshold
     int countsTreshold = countThreshold_(elementsPerGPU_,vertexes,value_threshold);
-
     int *antihubs;
     antihubs = new int[pos_threshold];
 
@@ -134,7 +133,6 @@ ECLgraph buildEnhancedKNNG(int *kNN, float *distances, int shards_num, long int 
         for(int i=0;i< pos_threshold;i++)
             antihubs[i] = vertexes[i].index;
     }
-
     // Ordena pelo índice para inserir na MST
     std::sort(antihubs,antihubs+pos_threshold);
 
@@ -147,6 +145,9 @@ ECLgraph buildEnhancedKNNG(int *kNN, float *distances, int shards_num, long int 
 
 
     ECLgraph g;
+
+
+
     
     g = buildECLgraph(numValues, vectorSize,kNN, distances,k,mpts, antihubs, pos_threshold,mst_gpu);
 
