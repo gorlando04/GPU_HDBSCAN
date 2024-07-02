@@ -8,10 +8,10 @@ function clean_job() {
 repeat(){
 
 	sleep 1
-	shards=9
+	shards=15
         fodasse=0
 	M='M'
-        for n in 100000000 
+        for n in 90000000 
 	do
 	ID=$((n /1000000))
 	#mkdir ../results_large/$ID$M
@@ -19,16 +19,17 @@ repeat(){
  
 
 		## Cria o dataset em .txt
-	#	python3 /nndescent/GPU_HDBSCAN/data/artificial/create.py $n
+		python3 /nndescent/GPU_HDBSCAN/data/artificial/create.py $n
 		sleep 1
                 echo "$n"
 		file="../results_large/$ID$M/graphConstruction_${ID}"
 		file+=".txt"
 		./hdbscan_ $n 32 $shards 0 #> ${file}
 
-		#rm ../../results/NNDescent-KNNG.*
+		rm ../../results/NNDescent-KNNG.*
+		rm ../../results/dict.*
 		#rm /nndescent/GPU_HDBSCAN/HDBSCAN/groundtruth/approximate_result.txt
-		#rm /nndescent/GPU_HDBSCAN/data/vectors.*
+		rm /nndescent/GPU_HDBSCAN/data/vectors.*
 
 	if [ $n -eq 60000000 ]
 		then

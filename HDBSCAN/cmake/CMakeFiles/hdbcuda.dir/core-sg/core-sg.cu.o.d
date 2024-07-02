@@ -1,4 +1,4 @@
-CMakeFiles/hdbscan_.dir/new.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/new.cu \
+CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/core-sg.cu \
     /usr/include/stdc-predef.h \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda_runtime.h \
     /usr/local/cuda/bin/../targets/x86_64-linux/include/crt/host_config.h \
@@ -159,6 +159,7 @@ CMakeFiles/hdbscan_.dir/new.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/new.cu \
     /usr/include/c++/11/bits/move.h \
     /usr/include/c++/11/type_traits \
     /usr/include/c++/11/initializer_list \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/core-sg.cuh \
     /usr/include/c++/11/iostream \
     /usr/include/c++/11/ostream \
     /usr/include/c++/11/ios \
@@ -261,20 +262,7 @@ CMakeFiles/hdbscan_.dir/new.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/new.cu \
     /usr/include/c++/11/bits/ostream.tcc \
     /usr/include/c++/11/istream \
     /usr/include/c++/11/bits/istream.tcc \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../tools/filetool.hpp \
-    /usr/include/c++/11/fstream \
-    /usr/include/c++/11/bits/codecvt.h \
-    /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
-    /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
-    /usr/include/c++/11/bits/fstream.tcc \
-    /usr/include/c++/11/vector \
-    /usr/include/c++/11/bits/stl_uninitialized.h \
-    /usr/include/c++/11/bits/stl_vector.h \
-    /usr/include/c++/11/bits/stl_bvector.h \
-    /usr/include/c++/11/bits/vector.tcc \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../tools/nndescent_element.cuh \
-    /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda.h \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../build_kNNG.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../build_kNNG.cuh \
     /usr/include/unistd.h \
     /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
     /usr/include/x86_64-linux-gnu/bits/environments.h \
@@ -295,12 +283,18 @@ CMakeFiles/hdbscan_.dir/new.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/new.cu \
     /usr/include/c++/11/limits \
     /usr/include/c++/11/ctime \
     /usr/include/c++/11/bits/parse_numbers.h \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../gpuknn/gen_large_knngraph.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../gpuknn/knncuda_tools.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../gpuknn/../tools/nndescent_element.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../gpuknn/knnmerge.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../gpuknn/nndescent.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../gpuknn/../xmuknn.h \
+    /usr/include/c++/11/vector \
+    /usr/include/c++/11/bits/stl_uninitialized.h \
+    /usr/include/c++/11/bits/stl_vector.h \
+    /usr/include/c++/11/bits/stl_bvector.h \
+    /usr/include/c++/11/bits/vector.tcc \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../gpuknn/gen_large_knngraph.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../gpuknn/knncuda_tools.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../gpuknn/../tools/nndescent_element.cuh \
+    /usr/local/cuda/bin/../targets/x86_64-linux/include/cuda.h \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../gpuknn/knnmerge.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../gpuknn/nndescent.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../gpuknn/../xmuknn.h \
     /usr/include/c++/11/list \
     /usr/include/c++/11/bits/stl_list.h \
     /usr/include/c++/11/bits/allocated_ptr.h \
@@ -313,7 +307,7 @@ CMakeFiles/hdbscan_.dir/new.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/new.cu \
     /usr/include/c++/11/numeric \
     /usr/include/c++/11/bits/stl_numeric.h \
     /usr/include/c++/11/bit \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../tools/distfunc.hpp \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../tools/distfunc.hpp \
     /usr/lib/gcc/x86_64-linux-gnu/11/include/xmmintrin.h \
     /usr/lib/gcc/x86_64-linux-gnu/11/include/mmintrin.h \
     /usr/lib/gcc/x86_64-linux-gnu/11/include/mm_malloc.h \
@@ -321,7 +315,14 @@ CMakeFiles/hdbscan_.dir/new.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/new.cu \
     /usr/lib/gcc/x86_64-linux-gnu/11/include/ammintrin.h \
     /usr/lib/gcc/x86_64-linux-gnu/11/include/pmmintrin.h \
     /usr/lib/gcc/x86_64-linux-gnu/11/include/mwaitintrin.h \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../tools/knndata_manager.hpp \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../tools/filetool.hpp \
+    /usr/include/c++/11/fstream \
+    /usr/include/c++/11/bits/codecvt.h \
+    /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
+    /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
+    /usr/include/c++/11/bits/fstream.tcc \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../tools/nndescent_element.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../tools/knndata_manager.hpp \
     /usr/include/c++/11/memory \
     /usr/include/c++/11/bits/stl_raw_storage_iter.h \
     /usr/include/c++/11/bits/align.h \
@@ -349,10 +350,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/new.cu \
     /usr/include/c++/11/mutex \
     /usr/include/c++/11/bits/std_mutex.h \
     /usr/include/c++/11/bits/unique_lock.h \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../tools/timer.hpp \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/../xmuknn.h \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/core-sg.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../build_kNNG.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../tools/timer.hpp \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../../xmuknn.h \
     /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../structs/hdbscan_elements.cuh \
     /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../structs/ECLgraph.h \
     /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../graphs/graph.cuh \

@@ -202,7 +202,6 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
 */
 
     int shards_num = calculate_shards_num(2*size);
-    printf("SHARDS NUM = %d",shards_num);
 
     int *d_nodes[shards_num], *d_edges[shards_num]; // Vetores na GPU
     float *d_distances[shards_num];  // Vetores na GPU
@@ -298,9 +297,9 @@ void calculate_nindex(int nodes, int *kNN, bool *flag_knn,ECLgraph *g,int *antih
 
             //Verifica se i esta na lista de neig
             int FLAG = findKNNlist(kNN,neig,i,k);
-	        flag_knn[i*k + j] = FLAG;
+	    flag_knn[i*k + j] = FLAG;
 
-            if (FLAG > 1){ g->nindex[neig+1] += FLAG-1; g->nindex[i+1] -= (FLAG-1);}
+//            if (FLAG > 1){ g->nindex[neig+1] += FLAG-1; g->nindex[i+1] -= (FLAG-1);}
 
             g->nindex[neig+1] += 1;
            
@@ -320,13 +319,19 @@ void calculate_nindex(int nodes, int *kNN, bool *flag_knn,ECLgraph *g,int *antih
             g->nindex[i+1] += (num_antihubs-1);
     }
      
-    
     //Calcular offsets
     for (long int i=1;i<nodes+1;i++){
 
         g->nindex[i] = g->nindex[i-1] + g->nindex[i];
 
     }
+
+    // Salvar o vetor de booleanos
+    long int numValues = nodes;
+    write_bool_dict(flag_knn,numValues,k);
+
+   return;
+
 
 }
 

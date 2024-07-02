@@ -166,6 +166,30 @@ calculates/calculates.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/calculates/calculates.cu.s
 .PHONY : calculates/calculates.cu.s
 
+core-sg/core-sg.o: core-sg/core-sg.cu.o
+.PHONY : core-sg/core-sg.o
+
+# target to build an object file
+core-sg/core-sg.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o
+.PHONY : core-sg/core-sg.cu.o
+
+core-sg/core-sg.i: core-sg/core-sg.cu.i
+.PHONY : core-sg/core-sg.i
+
+# target to preprocess a source file
+core-sg/core-sg.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.i
+.PHONY : core-sg/core-sg.cu.i
+
+core-sg/core-sg.s: core-sg/core-sg.cu.s
+.PHONY : core-sg/core-sg.s
+
+# target to generate assembly for a file
+core-sg/core-sg.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.s
+.PHONY : core-sg/core-sg.cu.s
+
 counts/count.o: counts/count.cu.o
 .PHONY : counts/count.o
 
@@ -563,6 +587,9 @@ help:
 	@echo "... calculates/calculates.o"
 	@echo "... calculates/calculates.i"
 	@echo "... calculates/calculates.s"
+	@echo "... core-sg/core-sg.o"
+	@echo "... core-sg/core-sg.i"
+	@echo "... core-sg/core-sg.s"
 	@echo "... counts/count.o"
 	@echo "... counts/count.i"
 	@echo "... counts/count.s"

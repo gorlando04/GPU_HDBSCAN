@@ -355,6 +355,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o
  /usr/include/c++/11/bits/unique_lock.h
  /nndescent/GPU_HDBSCAN/tools/timer.hpp
  /nndescent/GPU_HDBSCAN/xmuknn.h
+ /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/core-sg.cuh
+ /nndescent/GPU_HDBSCAN/build_kNNG.cuh
  /nndescent/GPU_HDBSCAN/HDBSCAN/structs/hdbscan_elements.cuh
  /nndescent/GPU_HDBSCAN/HDBSCAN/structs/ECLgraph.h
  /nndescent/GPU_HDBSCAN/HDBSCAN/graphs/graph.cuh
@@ -365,6 +367,13 @@ CMakeFiles/hdbscan_.dir/new.cu.o
  /usr/include/x86_64-linux-gnu/sys/time.h
  /nndescent/GPU_HDBSCAN/HDBSCAN/structs/ECLgraph.h
  /nndescent/GPU_HDBSCAN/HDBSCAN/structs/hdbscan_elements.cuh
- /nndescent/GPU_HDBSCAN/HDBSCAN/trees/tree.cuh
+ /nndescent/GPU_HDBSCAN/HDBSCAN/initializer/initialize.cuh
  /nndescent/GPU_HDBSCAN/HDBSCAN/structs/hdbscan_elements.cuh
+ /nndescent/GPU_HDBSCAN/HDBSCAN/structs/ECLgraph.h
+ /nndescent/GPU_HDBSCAN/HDBSCAN/calculates/calculates.cuh
+ /nndescent/GPU_HDBSCAN/HDBSCAN/structs/hdbscan_elements.cuh
+ /nndescent/GPU_HDBSCAN/HDBSCAN/structs/ECLgraph.h
+ /nndescent/GPU_HDBSCAN/HDBSCAN/getters/getters.cuh
+ /nndescent/GPU_HDBSCAN/HDBSCAN/structs/hdbscan_elements.cuh
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/omp.h
 

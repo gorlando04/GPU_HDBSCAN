@@ -21,6 +21,8 @@ add_library(hdbcuda STATIC
     trees/tree.cuh
     merge_sort/merge_sort.cu
     merge_sort/merge_sort.cuh
+    core-sg/core-sg.cu
+    core-sg/core-sg.cuh
     ../gpuknn/gen_large_knngraph.cu
     ../gpuknn/gen_large_knngraph.cuh
     ../gpuknn/knncuda.cu

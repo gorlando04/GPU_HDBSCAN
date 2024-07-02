@@ -195,10 +195,24 @@ CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CUDA source to assembly CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.s"
 	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
 
+CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o: CMakeFiles/hdbcuda.dir/flags.make
+CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o: ../core-sg/core-sg.cu
+CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o: CMakeFiles/hdbcuda.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CUDA object CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o"
+	/usr/local/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o -MF CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o.d -x cu -c /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/core-sg.cu -o CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o
+
+CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CUDA source to CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.i"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_PREPROCESSED_SOURCE
+
+CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CUDA source to assembly CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.s"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
+
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o: CMakeFiles/hdbcuda.dir/flags.make
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o: /nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o: CMakeFiles/hdbcuda.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o"
 	/usr/local/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o -MF CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o.d -x cu -c /nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu -o CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o
 
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.i: cmake_force
@@ -212,7 +226,7 @@ CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.s: cma
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o: CMakeFiles/hdbcuda.dir/flags.make
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o: /nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o: CMakeFiles/hdbcuda.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o"
 	/usr/local/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o -MF CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o.d -x cu -c /nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu -o CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o
 
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.i: cmake_force
@@ -226,7 +240,7 @@ CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.s: cmake_force
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o: CMakeFiles/hdbcuda.dir/flags.make
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o: /nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o: CMakeFiles/hdbcuda.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o"
 	/usr/local/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o -MF CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o.d -x cu -c /nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu -o CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o
 
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.i: cmake_force
@@ -240,7 +254,7 @@ CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.s: cmake_force
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o: CMakeFiles/hdbcuda.dir/flags.make
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o: /nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o: CMakeFiles/hdbcuda.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o"
 	/usr/local/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o -MF CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o.d -x cu -c /nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu -o CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.o
 
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.i: cmake_force
@@ -254,7 +268,7 @@ CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda_tools.cu.s: cmake_fo
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o: CMakeFiles/hdbcuda.dir/flags.make
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o: /nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o: CMakeFiles/hdbcuda.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o"
 	/usr/local/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o -MF CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o.d -x cu -c /nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu -o CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.o
 
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.i: cmake_force
@@ -268,7 +282,7 @@ CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knnmerge.cu.s: cmake_force
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.o: CMakeFiles/hdbcuda.dir/flags.make
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.o: /nndescent/GPU_HDBSCAN/xmuknn.cpp
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.o: CMakeFiles/hdbcuda.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.o -MF CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.o.d -o CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.o -c /nndescent/GPU_HDBSCAN/xmuknn.cpp
 
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.i: cmake_force
@@ -282,7 +296,7 @@ CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.s: cmake_force
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o: CMakeFiles/hdbcuda.dir/flags.make
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o: /nndescent/GPU_HDBSCAN/build_kNNG.cu
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o: CMakeFiles/hdbcuda.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CUDA object CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o"
 	/usr/local/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o -MF CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o.d -x cu -c /nndescent/GPU_HDBSCAN/build_kNNG.cu -o CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o
 
 CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.i: cmake_force
@@ -304,6 +318,7 @@ hdbcuda_OBJECTS = \
 "CMakeFiles/hdbcuda.dir/mst/mst.cu.o" \
 "CMakeFiles/hdbcuda.dir/trees/tree.cu.o" \
 "CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.o" \
+"CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o" \
 "CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o" \
 "CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o" \
 "CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o" \
@@ -324,6 +339,7 @@ libhdbcuda.a: CMakeFiles/hdbcuda.dir/counts/count.cu.o
 libhdbcuda.a: CMakeFiles/hdbcuda.dir/mst/mst.cu.o
 libhdbcuda.a: CMakeFiles/hdbcuda.dir/trees/tree.cu.o
 libhdbcuda.a: CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.o
+libhdbcuda.a: CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o
 libhdbcuda.a: CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/gen_large_knngraph.cu.o
 libhdbcuda.a: CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/knncuda.cu.o
 libhdbcuda.a: CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/gpuknn/nndescent.cu.o
@@ -333,7 +349,7 @@ libhdbcuda.a: CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/xmuknn.cpp.o
 libhdbcuda.a: CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o
 libhdbcuda.a: CMakeFiles/hdbcuda.dir/build.make
 libhdbcuda.a: CMakeFiles/hdbcuda.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX static library libhdbcuda.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/nndescent/GPU_HDBSCAN/HDBSCAN/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX static library libhdbcuda.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/hdbcuda.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/hdbcuda.dir/link.txt --verbose=$(VERBOSE)
 

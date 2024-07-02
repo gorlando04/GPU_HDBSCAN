@@ -15,7 +15,6 @@
 
 ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int k,long int mpts, int *antihubs, long int num_antihubs,int mst_gpu)
 {
-   printf("Estamos aqui");
 
     long int numValues = nodes;
     ECLgraph g;
@@ -73,15 +72,13 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
     cudaFree(kNN);
     kNN = NULL;
 
-    if(mst_gpu != 1){cudaFree(distances); distances = NULL; }
+    if(mst_gpu != -99){cudaFree(distances); distances = NULL; }
 
-    printf("Estamos aqui 2");
 
     calculateMutualReachabilityDistance(g.eweight,coreDistances,aux_nodes,g.nlist,g.edges);  //Aqui usa GPU
 
     Check();
 
-    printf("Estamos aqui 3");
     // Read vector txtx
     calculate_coreDistance_antihubs(&g,auxiliar_edges,antihubs,num_antihubs);
 

@@ -354,6 +354,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
   /usr/include/c++/11/bits/unique_lock.h \
   /nndescent/GPU_HDBSCAN/tools/timer.hpp \
   /nndescent/GPU_HDBSCAN/xmuknn.h \
+  ../core-sg/core-sg.cuh \
+  /nndescent/GPU_HDBSCAN/build_kNNG.cuh \
   ../structs/hdbscan_elements.cuh \
   ../structs/ECLgraph.h \
   ../graphs/graph.cuh \
@@ -364,9 +366,18 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
   /usr/include/x86_64-linux-gnu/sys/time.h \
   ../structs/ECLgraph.h \
   ../structs/hdbscan_elements.cuh \
-  ../trees/tree.cuh \
-  ../structs/hdbscan_elements.cuh
+  ../initializer/initialize.cuh \
+  ../structs/hdbscan_elements.cuh \
+  ../structs/ECLgraph.h \
+  ../calculates/calculates.cuh \
+  ../structs/hdbscan_elements.cuh \
+  ../structs/ECLgraph.h \
+  ../getters/getters.cuh \
+  ../structs/hdbscan_elements.cuh \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/omp.h
 
+
+../calculates/calculates.cuh:
 
 /usr/include/x86_64-linux-gnu/sys/time.h:
 
@@ -411,6 +422,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /nndescent/GPU_HDBSCAN/tools/knndata_manager.hpp:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/mwaitintrin.h:
+
+../getters/getters.cuh:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/pmmintrin.h:
 
@@ -539,6 +552,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/include/c++/11/cstdlib:
 
 /usr/include/c++/11/bits/stl_iterator_base_types.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/omp.h:
 
 /usr/include/c++/11/bits/refwrap.h:
 
@@ -822,6 +837,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 
 /usr/include/x86_64-linux-gnu/bits/types/error_t.h:
 
+../core-sg/core-sg.cuh:
+
 /usr/local/cuda/targets/x86_64-linux/include/texture_types.h:
 
 /usr/include/c++/11/bits/random.tcc:
@@ -907,6 +924,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/local/cuda/targets/x86_64-linux/include/texture_indirect_functions.h:
 
 /usr/local/cuda/targets/x86_64-linux/include/surface_indirect_functions.h:
+
+../initializer/initialize.cuh:
 
 /usr/include/c++/11/bits/shared_ptr.h:
 
@@ -1055,8 +1074,6 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/include/asm-generic/errno.h:
 
 /usr/include/c++/11/bits/functional_hash.h:
-
-../trees/tree.cuh:
 
 /usr/local/cuda/targets/x86_64-linux/include/crt/cudacc_ext.h:
 

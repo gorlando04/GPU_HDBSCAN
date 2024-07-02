@@ -63,3 +63,55 @@ float* jesus(int *antihubs,int num_antihubs,int* paz){
     *paz = data_dim2;
     return antihubs_objects;
 }
+
+
+void write_bool_dict(bool* dict,long int numValues,long int k){
+
+    const string out_path = "/nndescent/GPU_HDBSCAN/results/dict.binary";
+
+    FileTool::WriteBinaryVecs(out_path, dict, numValues,k); 
+
+    return;
+
+}
+
+
+bool* read_bool_dict(){
+
+    const string out_path = "/nndescent/GPU_HDBSCAN/results/dict.binary";
+    long int data_size2, data_dim2;
+    bool *vectors_data;
+
+    FileTool::ReadBinaryVecs(out_path,&vectors_data,&data_size2,&data_dim2);
+
+
+     return vectors_data;
+
+}
+
+NNDElement* ReadkNNGgraph(){
+
+    const std::string path_to_kNNG = "/nndescent/GPU_HDBSCAN/results/NNDescent-KNNG.kgraph";
+    
+    NNDElement *result_graph;
+    long int knng_num, knng_dim;
+    FileTool::ReadBinaryVecs(path_to_kNNG , &result_graph, &knng_num, &knng_dim);
+
+    return result_graph;
+
+
+}
+
+
+float* ReadObjects(long int* pf){
+
+    float *vectors_data;
+    long int data_size, data_dim;
+
+    const std::string path_to_data ="/nndescent/GPU_HDBSCAN/data/vectors.fvecs";
+    FileTool::ReadBinaryVecs(path_to_data , &vectors_data, &data_size, &data_dim);
+
+    *pf = data_dim;
+    return vectors_data;
+
+}

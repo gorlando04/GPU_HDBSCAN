@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/hdbcuda.dir/calculates/calculates.cu.o"
   "CMakeFiles/hdbcuda.dir/calculates/calculates.cu.o.d"
+  "CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o"
+  "CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o.d"
   "CMakeFiles/hdbcuda.dir/counts/count.cu.o"
   "CMakeFiles/hdbcuda.dir/counts/count.cu.o.d"
   "CMakeFiles/hdbcuda.dir/getters/getters.cu.o"

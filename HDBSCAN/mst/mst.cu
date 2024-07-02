@@ -283,7 +283,7 @@ bool* gpuMST(const GPUECLgraph& g, int threshold)
 }
 
 
-MSTedge* buildMST(ECLgraph g,bool *edges, int shards_num){
+MSTedge* buildMST(ECLgraph g,bool *edges){
 
 
 
@@ -328,7 +328,7 @@ MSTedge* buildMST(ECLgraph g,bool *edges, int shards_num){
 
 
 
-MSTedge* buildMST_gpu(GPUECLgraph g,bool *edges, int shards_num,int mult){
+MSTedge* buildMST_gpu(GPUECLgraph g,bool *edges,int mult){
 
 
 

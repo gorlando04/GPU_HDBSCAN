@@ -32,7 +32,19 @@ void ConstructLargeKNNGraph(int shards, string ref, string result);
 void PrepareVector(string base,string out);
 
 float* jesus(int *antihubs,int num_antihubs,int *paz);
+
+void write_bool_dict(bool* dict,long int numValues,long int k);
+
+bool* read_bool_dict();
+
+NNDElement* ReadkNNGgraph();
+
+
+float* ReadObjects(long int* pf);
+
+
 #endif
+
 
 
 
