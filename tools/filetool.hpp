@@ -307,95 +307,6 @@ class FileTool {
   }
 
 
-static void ReadTxtVecsAntiHubs(const string &data_path, float **vectors_ptr,
-                          long int *num_ptr, long int *dim_ptr, int *antihubs,long int num_antihubs,
-                          const bool show_process = true) {
-
-
-    float *&vecs = *vectors_ptr;
-    long int &num = *num_ptr;
-    long int &dim = *dim_ptr;
-    std::ifstream in(data_path);
-    if (!in.is_open()) {
-      throw(std::string("Failed to open ") + data_path);
-    }
-    in >> num >> dim;
-    //std::cerr << num << " " << dim << std::endl;
-    vecs = new float[num_antihubs*dim];
-
-   long int indice_soma = 0;
-   for (long int i = 0; i < num; i++) {
-
-      if (antihubs[indice_soma] == i){
-      for (long int j = 0; j < dim; j++) {
-        
-        in >> vecs[indice_soma * dim + j];
-      	}
-
-	indice_soma += 1;
-      }
-
-	else{
-	float bin;
-      for (int j = 0; j < dim; j++) {
-        
-        in >> bin;
-        }
-
-      }
-
-
-	if (indice_soma ==  num_antihubs) break;
-	}
-
-
-    if (show_process) {
-      std::cerr << std::endl;
-    }
-    in.close();
-  }
-
-
-  static void ReadBinaryAntihubs(const string &data_path, float **vectors_ptr,
-                             long int *num_ptr, long int *dim_ptr,int *antihubs,int num_antihubs) {
-
-    float *&vectors = *vectors_ptr;
-    long int &num = *num_ptr;
-    long int &dim = *dim_ptr;
-    FILE *file_ptr = fopen(data_path.c_str(), "r");
-    if (file_ptr != NULL) {
-      fread((char *)&dim, sizeof(char), 4, file_ptr);
-      fseek(file_ptr, 0, SEEK_END);
-      size_t file_size = ftell(file_ptr);
-      int total_num = file_size / (size_t)(4 + dim * sizeof(float));
-      num = total_num ;
-      rewind(file_ptr);
-      vectors = new float[(size_t)num * (size_t)dim];
-      int tmp;
-      float *temp_vector = new float[(size_t)dim];
-      int aux_antihubs = 0;
-
-      for (int i = 0; i < num; i++) {
-        fread((char *)&tmp, sizeof(char), 4, file_ptr);
-	
-	if (antihubs[aux_antihubs] == i){
-        	fread((char *)(vectors + (size_t)i * dim), sizeof(char),
-               		dim * sizeof(float), file_ptr);
-		aux_antihubs += 1;
-	}
-
-	else { fread((char *)(&temp_vector), sizeof(char),
-                        dim * sizeof(float), file_ptr);}
-	if (aux_antihubs == num_antihubs) break;
-
-      }
-    } else {
-      fclose(file_ptr);
-      cerr << "Open " << data_path << " failed." << endl;
-      exit(-1);
-    }
-    fclose(file_ptr);
-  }
 
   template <typename T>
   static double GetMinDistanceFromKNNG(const string &data_path, T **vectors_ptr,
@@ -434,6 +345,49 @@ static void ReadTxtVecsAntiHubs(const string &data_path, float **vectors_ptr,
 
 	return min_value;
   }
+
+
+    template <typename T>
+  static void WriteBinaryDistances_(const string &data_path, const T *vectors,
+                              const long int num) {
+    FILE *file_ptr = fopen(data_path.c_str(), "w");
+    if (file_ptr != NULL) {
+        fwrite((char *)&num, sizeof(char), 8, file_ptr);
+        fwrite((char *)(vectors), sizeof(char),
+               num * sizeof(T), file_ptr);
+    } else {
+      fclose(file_ptr);
+      cerr << "Open " << data_path << " failed." << endl;
+      exit(-1);
+    }
+    fclose(file_ptr);
+  }
+
+  template <typename T>
+  static void ReadBinaryDistances(const string &data_path, T **vectors_ptr,
+                             long int *num_ptr) {
+
+    T *&vectors = *vectors_ptr;
+    long int &num = *num_ptr;
+    FILE *file_ptr = fopen(data_path.c_str(), "r");
+    if (file_ptr != NULL) {
+      fread((char *)&num, sizeof(char), 8, file_ptr);
+     
+      vectors = new T[(size_t)num];
+
+      fread((char *)(vectors ), sizeof(char),
+               num * sizeof(T), file_ptr);
+    } else {
+      fclose(file_ptr);
+      cerr << "Open " << data_path << " failed." << endl;
+      exit(-1);
+    }
+    fclose(file_ptr);
+  }
+
+
+
+
 
 
 };

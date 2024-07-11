@@ -1,0 +1,10 @@
+NUM VALUES SET TO 100000000.
+mpts SET TO 32.
+SHARDS SET TO 15.
+MST WILL BE CONSTRUCTED IN GPU: 0
+Iniciando o HDBSCAN
+There is no active ID.
+TEMPO KNNG: 4454.033286
+kNNG size = 100000000 e 32
+A posicao do threshold eh: 9999 e o valor eh: 0
+Estamos aquiEstamos aqui 2SHARDS NUM = 21Estamos aqui 3TEMPO ENHANCED KNNG: 1600.942637

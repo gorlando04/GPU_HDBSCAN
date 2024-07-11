@@ -169,6 +169,14 @@ CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o : /nndescent/GPU_HD
     /usr/include/x86_64-linux-gnu/bits/unistd.h \
     /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
     /usr/include/linux/close_range.h \
+    /usr/lib/gcc/x86_64-linux-gnu/11/include/omp.h \
+    /usr/include/pthread.h \
+    /usr/include/sched.h \
+    /usr/include/x86_64-linux-gnu/bits/sched.h \
+    /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
+    /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
+    /usr/include/x86_64-linux-gnu/bits/setjmp.h \
+    /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
     /usr/include/c++/11/algorithm \
     /usr/include/c++/11/bits/stl_algobase.h \
     /usr/include/c++/11/bits/functexcept.h \
@@ -228,13 +236,6 @@ CMakeFiles/hdbcuda.dir/nndescent/GPU_HDBSCAN/build_kNNG.cu.o : /nndescent/GPU_HD
     /usr/include/c++/11/ext/atomicity.h \
     /usr/include/x86_64-linux-gnu/c++/11/bits/gthr.h \
     /usr/include/x86_64-linux-gnu/c++/11/bits/gthr-default.h \
-    /usr/include/pthread.h \
-    /usr/include/sched.h \
-    /usr/include/x86_64-linux-gnu/bits/sched.h \
-    /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
-    /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
-    /usr/include/x86_64-linux-gnu/bits/setjmp.h \
-    /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
     /usr/include/x86_64-linux-gnu/c++/11/bits/atomic_word.h \
     /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
     /usr/include/c++/11/bits/locale_classes.h \

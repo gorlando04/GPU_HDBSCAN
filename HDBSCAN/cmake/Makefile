@@ -166,6 +166,30 @@ calculates/calculates.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/calculates/calculates.cu.s
 .PHONY : calculates/calculates.cu.s
 
+core-sg/core-sg.o: core-sg/core-sg.cu.o
+.PHONY : core-sg/core-sg.o
+
+# target to build an object file
+core-sg/core-sg.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o
+.PHONY : core-sg/core-sg.cu.o
+
+core-sg/core-sg.i: core-sg/core-sg.cu.i
+.PHONY : core-sg/core-sg.i
+
+# target to preprocess a source file
+core-sg/core-sg.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.i
+.PHONY : core-sg/core-sg.cu.i
+
+core-sg/core-sg.s: core-sg/core-sg.cu.s
+.PHONY : core-sg/core-sg.s
+
+# target to generate assembly for a file
+core-sg/core-sg.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.s
+.PHONY : core-sg/core-sg.cu.s
+
 counts/count.o: counts/count.cu.o
 .PHONY : counts/count.o
 
@@ -261,6 +285,30 @@ initializer/initialize.s: initializer/initialize.cu.s
 initializer/initialize.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/initializer/initialize.cu.s
 .PHONY : initializer/initialize.cu.s
+
+merge_sort/merge_sort.o: merge_sort/merge_sort.cu.o
+.PHONY : merge_sort/merge_sort.o
+
+# target to build an object file
+merge_sort/merge_sort.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.o
+.PHONY : merge_sort/merge_sort.cu.o
+
+merge_sort/merge_sort.i: merge_sort/merge_sort.cu.i
+.PHONY : merge_sort/merge_sort.i
+
+# target to preprocess a source file
+merge_sort/merge_sort.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.i
+.PHONY : merge_sort/merge_sort.cu.i
+
+merge_sort/merge_sort.s: merge_sort/merge_sort.cu.s
+.PHONY : merge_sort/merge_sort.s
+
+# target to generate assembly for a file
+merge_sort/merge_sort.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hdbcuda.dir/build.make CMakeFiles/hdbcuda.dir/merge_sort/merge_sort.cu.s
+.PHONY : merge_sort/merge_sort.cu.s
 
 mst/mst.o: mst/mst.cu.o
 .PHONY : mst/mst.o
@@ -539,6 +587,9 @@ help:
 	@echo "... calculates/calculates.o"
 	@echo "... calculates/calculates.i"
 	@echo "... calculates/calculates.s"
+	@echo "... core-sg/core-sg.o"
+	@echo "... core-sg/core-sg.i"
+	@echo "... core-sg/core-sg.s"
 	@echo "... counts/count.o"
 	@echo "... counts/count.i"
 	@echo "... counts/count.s"
@@ -551,6 +602,9 @@ help:
 	@echo "... initializer/initialize.o"
 	@echo "... initializer/initialize.i"
 	@echo "... initializer/initialize.s"
+	@echo "... merge_sort/merge_sort.o"
+	@echo "... merge_sort/merge_sort.i"
+	@echo "... merge_sort/merge_sort.s"
 	@echo "... mst/mst.o"
 	@echo "... mst/mst.i"
 	@echo "... mst/mst.s"

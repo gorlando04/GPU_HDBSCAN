@@ -31,7 +31,7 @@ __global__ void initializeVectorCounts_(long int *vector,long int value,int size
 
 }
 
-__global__ void initializeVectorCounts(float *vector,float value,int size){
+__global__ void initializeVectorCountsF(float *vector,float value,int size){
 
     long int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < size) {
@@ -108,3 +108,49 @@ HashLabels initializeHash(CondensedTreeNode *condensed_tree,int condensed_size){
     return hash;
 }
 
+
+void createNodeList(int *vector,ECLgraph *g){
+
+    #pragma omp parallel for
+    for(int i=0;i<g->nodes;i++){
+        
+        long int begin = g->nindex[i];
+        long int end = g->nindex[i+1];
+
+        for (long int j=begin;j<end;j++)
+            vector[j] = i;
+    }
+
+}
+
+void createNodeList_gpu(int *vector,GPUECLgraph *g){
+
+    #pragma omp parallel for
+    for(int i=0;i<g->nodes;i++){
+
+        long int begin = g->nindex[i];
+        long int end = g->nindex[i+1];
+
+        for (long int j=begin;j<end;j++)
+            vector[j] = i;
+    }
+}
+
+
+void createEdgeList(int *vector,ECLgraph *g){
+
+    #pragma omp parallel for
+    for(long int i=0;i<g->edges;i++){
+        
+        vector[i] = g->nlist[i];
+    }
+}
+
+void createWeightList(float *vector,ECLgraph *g){
+
+    #pragma omp parallel for
+    for(long int i=0;i<g->edges;i++){
+        
+        vector[i] = g->eweight[i];
+    }
+}

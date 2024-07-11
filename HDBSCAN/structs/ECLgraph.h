@@ -55,14 +55,6 @@ struct GPUECLgraph {
 };
 
 
-/*void freeECLgraph(ECLgraph &g)
-{
-  if (g.nindex != NULL) free(g.nindex);
-  if (g.nlist != NULL) free(g.nlist);
-  if (g.eweight != NULL) free(g.eweight);
-  g.nindex = NULL;
-  g.nlist = NULL;
-  g.eweight = NULL;
-}*/
+
 
 #endif

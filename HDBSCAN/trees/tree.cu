@@ -5,6 +5,7 @@
 #include "../getters/getters.cuh"
 
 
+// Essa função pode claramente ser otimizada
 UnionFind::UnionFind(int N) {
 
 
@@ -98,6 +99,7 @@ int UnionFind::getNextLabel(){
 
 
 
+// Essa função pode ser otimizada, talvez com OpenMP
 TreeUnionFind::TreeUnionFind(int size){
 
     this->size = size;
@@ -200,7 +202,7 @@ SingleLinkageNode* build_Linkage_tree( MSTedge *mst_edges ,int num,int num_nodes
 }
 
 
-
+// Essa função talvez possa ser otimizada
 std::vector<int> BFS_from_hierarchy(SingleLinkageNode *hierarchy,int bfs_root, int num_nodes){
 
     int dim = num_nodes;
@@ -421,6 +423,8 @@ CondensedTreeNode* build_Condensed_tree(SingleLinkageNode *hierarchy,int num ,in
 
     }
 
+
+    // Essa parte pode ser otimizada
     CondensedTreeNode *result_list_;
     result_list_ = new CondensedTreeNode[append_variable];
 
@@ -452,6 +456,7 @@ Stability* compute_stability(CondensedTreeNode *condensed_tee, int size,int *poi
  std::vector<std::tuple<int,float>> sorted;
 
 
+    // Aqui pode ser um problema, pelo push_back
     for(int i=0;i<size;i++)
         sorted.push_back(std::make_tuple(condensed_tee[i].child,condensed_tee[i].lambda_val));
 
@@ -491,7 +496,7 @@ Stability* compute_stability(CondensedTreeNode *condensed_tee, int size,int *poi
 
     
     int gridSize = (num_clusters + blockSize - 1) / blockSize;
-    initializeVectorCounts<<<gridSize,blockSize>>>(result_array,0.0,num_clusters);
+    initializeVectorCountsF<<<gridSize,blockSize>>>(result_array,0.0,num_clusters);
 
     cudaDeviceSynchronize();
     CheckCUDA_();
@@ -572,6 +577,7 @@ int* do_labelling(CondensedTreeNode *condensed_tree, int condensed_size, std::ve
 
     HashLabels arrays;
 
+    // Aqui pode ser paralelizável
     arrays = initializeHash(condensed_tree,condensed_size);
 
     //classe maluca, passando max_parent_array+1
@@ -588,6 +594,8 @@ int* do_labelling(CondensedTreeNode *condensed_tree, int condensed_size, std::ve
     }
 
    int soma=0;
+
+   // Isso aqui talvez possa ser paralelizado
     for (long int n=0;n<root_cluster;n++){
 
         int cluster = union_find.Find(n);
@@ -627,6 +635,8 @@ int* get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stabili
     }
 
     int count = 0;
+
+    // Paralelizar com o OpenMP
     for(long int i=0;i<condensed_size;i++)
         if (condensed_tree[i].child_size > 1)
             count += 1;
@@ -731,10 +741,7 @@ int* get_clusters(CondensedTreeNode *condensed_tree, int condensed_size, Stabili
     }
     int *labels;
     labels = do_labelling(condensed_tree,condensed_size,cluster,cluster_map);
-/*    for (int i=numValues;i>-1;i--){
 
-        printf("{ID: %d, Clus_ID: %d}, ",i,labels[i]);
-    }*/
     return labels;
 }
 
