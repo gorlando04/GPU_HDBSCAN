@@ -49,6 +49,8 @@ bool* cpuMST(const ECLgraph& g)
       }
     }
   }
+
+  // Esse sort pode ser transformado em multi-GPU maluco.
   std::sort(list.begin(), list.end());
 
   int count = g.nodes - 1;
@@ -66,7 +68,10 @@ bool* cpuMST(const ECLgraph& g)
     }
   }
 
+    list.clear();
 
+    // Reduzir a capacidade do vetor para caber exatamente no tamanho atual (que é zero)
+    list.shrink_to_fit();
 
   delete [] parent;
   return inMST;
@@ -317,6 +322,8 @@ MSTedge* buildMST(ECLgraph g,bool *edges){
     exit(1);
   }
 
+   cudaFree(aux_nodes);
+   aux_nodes = NULL;
 
   // Ordena em GPU
   finalEdges = sort_edges(finalEdges,g.nodes-1);
@@ -366,6 +373,10 @@ MSTedge* buildMST_gpu(GPUECLgraph g,bool *edges,int mult){
     printf("MST montada incorretamente\n");
     exit(1);
   }
+
+   cudaFree(aux_nodes);
+   aux_nodes = NULL;
+
 
   // Ordena em GPU
   finalEdges = sort_edges(finalEdges,g.nodes-1);

@@ -19,17 +19,18 @@ repeat(){
  
 
 		## Cria o dataset em .txt
-		python3 /nndescent/GPU_HDBSCAN/data/artificial/create.py $n
+#		python3 /nndescent/GPU_HDBSCAN/data/artificial/create.py $n
 		sleep 1
                 echo "$n"
 		file="../results_large/$ID$M/graphConstruction_${ID}"
 		file+=".txt"
 		./hdbscan_ $n 32 $shards 0 #> ${file}
 
-		rm ../../results/NNDescent-KNNG.*
-		rm ../../results/dict.*
+#		rm ../../results/NNDescent-KNNG.*
+#		rm ../../results/dict.*
+#		rm ../../results/euclidean.*
 		#rm /nndescent/GPU_HDBSCAN/HDBSCAN/groundtruth/approximate_result.txt
-		rm /nndescent/GPU_HDBSCAN/data/vectors.*
+#		rm /nndescent/GPU_HDBSCAN/data/vectors.*
 
 	if [ $n -eq 60000000 ]
 		then

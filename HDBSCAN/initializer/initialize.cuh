@@ -3,7 +3,8 @@
 
 #include <cuda.h>
 #include <iostream>
-
+#include <omp.h>
+#include <pthread.h>
 
 #include "cuda_runtime.h"
 #include "../structs/hdbscan_elements.cuh"

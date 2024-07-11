@@ -110,7 +110,7 @@ void mergeSort(int N,MSTedge *input,MSTedge *output,int device)
 
     cudaFree(device_i);
     cudaFree(tmp);
-
+    device_i = NULL; tmp = NULL;
     return;
 }
 
@@ -152,7 +152,7 @@ void mergeSortMultiGPU(int N,MSTedge *input,MSTedge *output,int offset,int devic
 
     cudaFree(device_i);
     cudaFree(tmp);
-
+device_i = NULL; tmp = NULL;
     return;
 }
 
@@ -213,6 +213,12 @@ void merging_partial_results(int *elementsPerGPU, MSTedge **partial_results,int 
         results[i].weight = partial_results[idx_shard_menor][idx_menor].weight;
     }
 
+    // Libera a memoria
+    for(int i=0;i<numGPUs;i++){
+    free(partial_results[i]);
+    partial_results[i] = NULL;
+    }
+
     return;
 }
 
@@ -264,5 +270,10 @@ MSTedge* sort_edges(MSTedge *arr,int numValues){
   double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds */
 
   printf("Ordenacao das asrestas demorou: %lf \n",time_taken);
+
+    // Libera a memoria
+    free(arr);
+    arr = NULL;
+
     return result;
 }

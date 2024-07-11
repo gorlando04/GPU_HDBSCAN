@@ -144,7 +144,7 @@ void calculateUntieScore(Untie_hub *unties ,long int *indexesPerGPU,int *h_data,
             cudaMemcpy(unties_cpus[i], unties_gpus[i], indexesPerGPU[i] * sizeof(Untie_hub), cudaMemcpyDeviceToHost);
 
             cudaFree(unties_gpus[i]);
-
+            unties_gpus[i] = NULL;
         auto cuda_status = cudaGetLastError();
         if (cuda_status != cudaSuccess) {
             printf("%s hehehehehe",cudaGetErrorString(cuda_status));
@@ -162,6 +162,7 @@ void calculateUntieScore(Untie_hub *unties ,long int *indexesPerGPU,int *h_data,
             unties[ j + (i*indexesPerGPU[0])].index = unties_cpus[i][j].index;
             unties[ j + (i*indexesPerGPU[0])].score = unties_cpus[i][j].score;
         }
+        free(unties_cpus[i]);unties_cpus[i] = NULL;
     }
 
     return;
@@ -251,7 +252,6 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
 
             cudaDeviceSynchronize();
 
-            //cudaMemcpy(h_distances[idx], d_distances[idx], elementsPerGPU[idx] * sizeof(int), cudaMemcpyDeviceToHost);
 
             long int offset = elementsPerGPU[0] * idx;
 
@@ -274,7 +274,7 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
 
 float calculate_euclidean_distance(float *vector,long int idxa,long int idxb,int dim){
 
-    float soma = 0.0;
+    float  soma = 0.0;
     for(long int i=0;i<dim;i++){
         soma += ( pow(vector[idxa*dim+i] - vector[idxb*dim+i],2) );
     }
@@ -283,7 +283,7 @@ float calculate_euclidean_distance(float *vector,long int idxa,long int idxb,int
 }
 
 
-void calculate_nindex(int nodes, int *kNN, bool *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs){
+void calculate_nindex(int nodes, int *kNN, int *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs){
 
  // Calcula quantas arestas cada noh terá, levando em conta que eh um grafo não direcional.
     for (long int i=0;i<nodes;i++){
@@ -299,7 +299,7 @@ void calculate_nindex(int nodes, int *kNN, bool *flag_knn,ECLgraph *g,int *antih
             int FLAG = findKNNlist(kNN,neig,i,k);
 	    flag_knn[i*k + j] = FLAG;
 
-//            if (FLAG > 1){ g->nindex[neig+1] += FLAG-1; g->nindex[i+1] -= (FLAG-1);}
+            if (FLAG > 1){ g->nindex[neig+1] += FLAG-1; g->nindex[i+1] -= (FLAG-1);}
 
             g->nindex[neig+1] += 1;
            
@@ -330,12 +330,14 @@ void calculate_nindex(int nodes, int *kNN, bool *flag_knn,ECLgraph *g,int *antih
     long int numValues = nodes;
     write_bool_dict(flag_knn,numValues,k);
 
+
+
    return;
 
 
 }
 
-void calculate_nlist(int nodes, int *kNN,int k, bool *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs,long int *auxiliar_edges){
+void calculate_nlist(int nodes, int *kNN,int k, int *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs,long int *auxiliar_edges){
 
     long int k2 = k;
 
@@ -434,6 +436,12 @@ void calculate_coreDistance_antihubs(ECLgraph *g,long int *auxiliar_edges,int *a
 
         }
     }
+
+
+    free(vectors_data);
+    vectors_data = NULL;
+
+    return ;
 }
 
 

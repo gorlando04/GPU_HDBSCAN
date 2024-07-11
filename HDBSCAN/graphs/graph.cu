@@ -31,7 +31,7 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
     Check();
     cudaMemPrefetchAsync(g.nindex,(size_t)(g.nodes + 1) * sizeof(g.nindex[0]),cudaCpuDeviceId);
 
-    bool *flag_knn = (bool*)malloc(numValues*k * sizeof(bool));
+    int *flag_knn = (int*)malloc(numValues*k * sizeof(int));
     calculate_nindex(nodes, kNN, flag_knn,&g,antihubs,num_antihubs);
 
     // Nesse pontos os nós já estão calculados, agora precisamos inserir as arestas. Essa parte será bem demorada.
@@ -43,15 +43,22 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
     avoid_pageFault(g.nodes,auxiliar_edges,true);
     Check();
 
+printf("PROTAGONISTA 2\n");
 
     cudaMallocManaged(&g.nlist,(size_t)(g.nindex[nodes]) * sizeof(int));
     g.edges = g.nindex[nodes];
     calculate_nlist(nodes, kNN,k, flag_knn,&g,antihubs,num_antihubs,auxiliar_edges);
 
+     free(flag_knn);
+     flag_knn = NULL;
+
+    cudaFree(kNN);
+    kNN = NULL;
+printf("PROTAGONISTA 3\n");
 
     cudaMallocManaged(&g.eweight,(size_t)g.edges * sizeof(g.eweight[0]));
 
-	int *aux_nodes;
+    int *aux_nodes;
     cudaMallocManaged(&aux_nodes,(size_t)g.edges * sizeof(g.nlist[0]));
     createNodeList(aux_nodes,&g) ; //Aqui usar GPU
     Check();
@@ -62,25 +69,35 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
 
 
 
+printf("PROTAGONISTA 4\n");
 
 
     float *coreDistances;
     cudaMallocManaged(&coreDistances,(size_t)(numValues) * sizeof(float)); 
-    calculateCoreDistance(distances,coreDistances,numValues,k,mpts-1);   
+    calculateCoreDistance(distances,coreDistances,numValues,k,k-1);   
     Check();
 
-    cudaFree(kNN);
-    kNN = NULL;
 
-    if(mst_gpu != -99){cudaFree(distances); distances = NULL; }
+    cudaFree(distances); distances = NULL; 
 
+printf("PROTAGONISTA 5\n");
 
     calculateMutualReachabilityDistance(g.eweight,coreDistances,aux_nodes,g.nlist,g.edges);  //Aqui usa GPU
 
     Check();
 
+    cudaFree(aux_nodes);
+    aux_nodes = NULL;
+
+    cudaFree(coreDistances);
+    coreDistances = NULL;
+
+printf("PROTAGONISTA 6\n");
+
     // Read vector txtx
     calculate_coreDistance_antihubs(&g,auxiliar_edges,antihubs,num_antihubs);
+
+printf("PROTAGONISTA 7\n");
 
   return g;   
 }
@@ -143,10 +160,17 @@ ECLgraph buildEnhancedKNNG(int *kNN, float *distances, int shards_num, long int 
 
     ECLgraph g;
 
-
+printf("PROTAGONISTA 1\n");
 
     
     g = buildECLgraph(numValues, vectorSize,kNN, distances,k,mpts, antihubs, pos_threshold,mst_gpu);
+
+
+
+
+
+
+printf("PROTAGONISTA 8\n");
 
     return g;
 }

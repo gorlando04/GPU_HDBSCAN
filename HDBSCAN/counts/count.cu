@@ -81,6 +81,10 @@ void countDegrees(int *finalCounts,int *h_data,int shards_num,long int *elements
 
             cudaFree(d_counts[idx]); 
             d_counts[idx] = NULL;
+
+	    cudaFree(data_device[idx]);
+            data_device[idx] = NULL;
+
         }    
         CheckCUDA_();
     }
@@ -93,6 +97,12 @@ void countDegrees(int *finalCounts,int *h_data,int shards_num,long int *elements
             finalCounts[j] += h_counts[i][j];
         }
     }
+
+    for (int i = 0; i < shards_num; i++) {
+        free(h_counts[i]);
+	h_counts[i] = NULL;
+    }
+
 
 
 }
@@ -153,14 +163,15 @@ int countThreshold_(long int *elementsPerGPU_,Vertex *vertexes,int value_thresho
             cudaMemcpy(cpu_counts[i], gpu_count[i], numGPUs * sizeof(int), cudaMemcpyDeviceToHost);
 
             cudaFree(gpu_count[i]);  
-
+	    gpu_count[i] = NULL;
     }    
 
 
     for (int i=0;i<numGPUs;i++){
         // Quantidade de pontos que são iguais ao threshold
         countsTreshold += cpu_counts[i][0];
-    }
+     }
+
 
     return countsTreshold;
 }

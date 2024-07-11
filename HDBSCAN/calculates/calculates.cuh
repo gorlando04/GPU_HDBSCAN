@@ -29,9 +29,9 @@ void calculateMutualReachabilityDistance(float *graphDistances,float *coreDistan
 
 float calculate_euclidean_distance(float *vector,long int idxa,long int idxb,int dim); //
 
-void calculate_nindex(int nodes, int *kNN, bool *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs);
+void calculate_nindex(int nodes, int *kNN, int *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs);
 
-void calculate_nlist(int nodes, int *kNN,int k, bool *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs,long int *auxiliar_edges);
+void calculate_nlist(int nodes, int *kNN,int k, int *flag_knn,ECLgraph *g,int *antihubs,int num_antihubs,long int *auxiliar_edges);
 
 void calculate_coreDistance_antihubs(ECLgraph *g,long int *auxiliar_edges,int *antihubs,long int num_antihubs);
 

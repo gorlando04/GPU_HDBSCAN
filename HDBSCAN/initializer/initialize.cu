@@ -111,6 +111,7 @@ HashLabels initializeHash(CondensedTreeNode *condensed_tree,int condensed_size){
 
 void createNodeList(int *vector,ECLgraph *g){
 
+    #pragma omp parallel for
     for(int i=0;i<g->nodes;i++){
         
         long int begin = g->nindex[i];
@@ -119,10 +120,12 @@ void createNodeList(int *vector,ECLgraph *g){
         for (long int j=begin;j<end;j++)
             vector[j] = i;
     }
+
 }
 
 void createNodeList_gpu(int *vector,GPUECLgraph *g){
 
+    #pragma omp parallel for
     for(int i=0;i<g->nodes;i++){
 
         long int begin = g->nindex[i];
@@ -136,6 +139,7 @@ void createNodeList_gpu(int *vector,GPUECLgraph *g){
 
 void createEdgeList(int *vector,ECLgraph *g){
 
+    #pragma omp parallel for
     for(long int i=0;i<g->edges;i++){
         
         vector[i] = g->nlist[i];
@@ -144,6 +148,7 @@ void createEdgeList(int *vector,ECLgraph *g){
 
 void createWeightList(float *vector,ECLgraph *g){
 
+    #pragma omp parallel for
     for(long int i=0;i<g->edges;i++){
         
         vector[i] = g->eweight[i];

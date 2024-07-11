@@ -347,6 +347,46 @@ class FileTool {
   }
 
 
+    template <typename T>
+  static void WriteBinaryDistances_(const string &data_path, const T *vectors,
+                              const long int num) {
+    FILE *file_ptr = fopen(data_path.c_str(), "w");
+    if (file_ptr != NULL) {
+        fwrite((char *)&num, sizeof(char), 8, file_ptr);
+        fwrite((char *)(vectors), sizeof(char),
+               num * sizeof(T), file_ptr);
+    } else {
+      fclose(file_ptr);
+      cerr << "Open " << data_path << " failed." << endl;
+      exit(-1);
+    }
+    fclose(file_ptr);
+  }
+
+  template <typename T>
+  static void ReadBinaryDistances(const string &data_path, T **vectors_ptr,
+                             long int *num_ptr) {
+
+    T *&vectors = *vectors_ptr;
+    long int &num = *num_ptr;
+    FILE *file_ptr = fopen(data_path.c_str(), "r");
+    if (file_ptr != NULL) {
+      fread((char *)&num, sizeof(char), 8, file_ptr);
+     
+      vectors = new T[(size_t)num];
+
+      fread((char *)(vectors ), sizeof(char),
+               num * sizeof(T), file_ptr);
+    } else {
+      fclose(file_ptr);
+      cerr << "Open " << data_path << " failed." << endl;
+      exit(-1);
+    }
+    fclose(file_ptr);
+  }
+
+
+
 
 
 

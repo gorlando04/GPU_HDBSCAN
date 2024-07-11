@@ -25,7 +25,7 @@
 #include <cstdio>
 #include<unistd.h>
 
-void build_CoreSG(NNDElement *result_graph,long int numValues,long int mpts,int mst_gpu);
+ECLgraph build_CoreSG(NNDElement *result_graph,long int numValues,long int mpts,int mst_gpu);
 
 
 

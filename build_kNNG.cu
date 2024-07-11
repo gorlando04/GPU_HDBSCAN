@@ -1,6 +1,17 @@
 #include "build_kNNG.cuh"
 
 
+float calculate_euclidean_distance_fix(float *vector,long int idxa,long int idxb,int dim){
+
+    float  soma = 0.0;
+    for(long int i=0;i<dim;i++){
+        soma += ( pow(vector[idxa*dim+i] - vector[idxb*dim+i],2) );
+    }
+
+    return sqrt(soma);
+}
+
+
 void ConstructLargeKNNGraph(int shards, string ref, string result) {
 
 
@@ -65,7 +76,7 @@ float* jesus(int *antihubs,int num_antihubs,int* paz){
 }
 
 
-void write_bool_dict(bool* dict,long int numValues,long int k){
+void write_bool_dict(int* dict,long int numValues,long int k){
 
     const string out_path = "/nndescent/GPU_HDBSCAN/results/dict.binary";
 
@@ -76,11 +87,11 @@ void write_bool_dict(bool* dict,long int numValues,long int k){
 }
 
 
-bool* read_bool_dict(){
+int* read_bool_dict(){
 
     const string out_path = "/nndescent/GPU_HDBSCAN/results/dict.binary";
     long int data_size2, data_dim2;
-    bool *vectors_data;
+    int *vectors_data;
 
     FileTool::ReadBinaryVecs(out_path,&vectors_data,&data_size2,&data_dim2);
 
@@ -113,5 +124,78 @@ float* ReadObjects(long int* pf){
 
     *pf = data_dim;
     return vectors_data;
+
+}
+
+
+void fix_distances(NNDElement *result_graph,long int numValues,long int k){
+
+    long int knng_num = numValues;
+    long int knng_dim = k;
+
+    // Cast NNDElement to int and float
+    int *result_index_graph;
+
+
+    long int data_dim = -1;
+    float* vectors_data = ReadObjects(&data_dim);
+
+
+//    cudaMallocManaged(&result_index_graph,(size_t)knng_num*knng_dim * sizeof(int));
+    result_index_graph = new int[knng_num*knng_dim];
+
+    #pragma parallel for
+    for (long int i = 0; i < knng_num; i++) {
+      for (long int j = 0; j < knng_dim; j++) {
+        
+        result_index_graph[i * knng_dim + j] = result_graph[i * knng_dim + j].label();
+        }
+
+    } 
+
+
+   
+  //  cudaMallocManaged(&distances,(size_t)numValues*knng_dim * sizeof(float));
+    #pragma parallel for
+    for (long int i = 0; i < knng_num; i++) {
+        for (long int j = 0; j < knng_dim; j++) {
+
+          result_graph[i * knng_dim + j].SetDistance(calculate_euclidean_distance_fix(vectors_data,i,result_index_graph[i * knng_dim + j],data_dim));
+
+          }
+    }
+
+     FileTool::WriteBinaryVecs("/nndescent/GPU_HDBSCAN/results/NNDescent-KNNG.kgraph", result_graph,
+                              numValues,
+                              k);
+
+    return ;
+}
+
+
+
+void write_euclidean_distance_vecs(float* dict,long int numValues){
+
+    const std::string path_to_write = "/nndescent/GPU_HDBSCAN/results/euclidean.binary";
+
+
+    FileTool::WriteBinaryDistances_(path_to_write, dict,
+                              numValues);
+
+    return;
+
+}
+
+
+float* read_euclidean_distance_vecs(){
+
+    const std::string path_to_read = "/nndescent/GPU_HDBSCAN/results/euclidean.binary";
+  float *vector;
+  long int knng_num;
+  FileTool::ReadBinaryDistances(path_to_read, &vector,
+                              &knng_num);
+
+
+     return vector;
 
 }
