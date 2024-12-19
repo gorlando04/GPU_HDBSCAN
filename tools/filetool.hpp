@@ -373,7 +373,8 @@ class FileTool {
     if (file_ptr != NULL) {
       fread((char *)&num, sizeof(char), 8, file_ptr);
      
-      vectors = new T[(size_t)num];
+      //vectors = new T[(size_t)num];
+      cudaMallocManaged(&vectors,(size_t)num * sizeof(T));
 
       fread((char *)(vectors ), sizeof(char),
                num * sizeof(T), file_ptr);

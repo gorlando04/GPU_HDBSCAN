@@ -14,7 +14,7 @@
 #include <unistd.h>
 
 
-#define NUM_GPU 3
+#define NUM_GPU 4
 
 using namespace std;
 
@@ -49,7 +49,7 @@ void BuildEachShard(KNNDataManager &data_manager, const string &out_data_path,in
 
   int i = id;
 
-  cudaSetDevice(id % 3);
+  cudaSetDevice(id % NUM_GPU);
 
   mutex mtx;
   
@@ -432,7 +432,7 @@ void GenLargeKNNGraph(const string &vecs_data_path, const string &out_data_path,
     for (int i=0;i<NUM_GPU;i++)
       threads.push_back (thread ([&data_manager, out_data_path,s,i] () {
 
-        BuildEachShard(data_manager, out_data_path,(3*s+i));
+        BuildEachShard(data_manager, out_data_path,(NUM_GPU*s+i));
       })); 
 
     for (auto &t: threads)

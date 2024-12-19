@@ -738,6 +738,8 @@ CMakeFiles/hdbcuda.dir/core-sg/core-sg.cu.o: ../core-sg/core-sg.cu \
   ../structs/hdbscan_elements.cuh \
   ../structs/ECLgraph.h \
   ../getters/getters.cuh \
+  ../structs/hdbscan_elements.cuh \
+  ../trees/tree.cuh \
   ../structs/hdbscan_elements.cuh
 
 CMakeFiles/hdbcuda.dir/counts/count.cu.o: ../counts/count.cu \
@@ -5523,8 +5525,6 @@ CMakeFiles/hdbcuda.dir/trees/tree.cu.o: ../trees/tree.cu \
   ../structs/hdbscan_elements.cuh
 
 
-../trees/tree.cuh:
-
 ../trees/tree.cu:
 
 /usr/include/c++/11/bitset:
@@ -6037,6 +6037,10 @@ CMakeFiles/hdbcuda.dir/trees/tree.cu.o: ../trees/tree.cu \
 
 /usr/local/cuda/targets/x86_64-linux/include/thrust/system/detail/system_error.inl:
 
+/usr/local/cuda/targets/x86_64-linux/include/thrust/system/cuda/detail/dispatch.h:
+
+/usr/local/cuda/targets/x86_64-linux/include/thrust/system/detail/errno.h:
+
 /usr/local/cuda/targets/x86_64-linux/include/thrust/mr/fancy_pointer_resource.h:
 
 /usr/include/c++/11/bits/locale_facets.h:
@@ -6060,6 +6064,8 @@ CMakeFiles/hdbcuda.dir/trees/tree.cu.o: ../trees/tree.cu \
 /usr/include/c++/11/bits/basic_string.tcc:
 
 /usr/local/cuda/targets/x86_64-linux/include/crt/cudacc_ext.h:
+
+../trees/tree.cuh:
 
 /usr/local/cuda/targets/x86_64-linux/include/thrust/system/detail/generic/tag.h:
 
@@ -7366,10 +7372,6 @@ CMakeFiles/hdbcuda.dir/trees/tree.cu.o: ../trees/tree.cu \
 /usr/local/cuda/targets/x86_64-linux/include/thrust/iterator/iterator_traits.h:
 
 /usr/include/c++/11/bits/stream_iterator.h:
-
-/usr/local/cuda/targets/x86_64-linux/include/thrust/system/cuda/detail/dispatch.h:
-
-/usr/local/cuda/targets/x86_64-linux/include/thrust/system/detail/errno.h:
 
 /usr/local/cuda/targets/x86_64-linux/include/thrust/iterator/detail/iterator_traversal_tags.h:
 

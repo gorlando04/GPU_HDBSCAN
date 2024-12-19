@@ -314,16 +314,18 @@ MSTedge* buildMST(ECLgraph g,bool *edges){
       soma += 1;
     }
   }   
-  if (soma == g.nodes-1)
-    printf("MST montada corretamente\n");
-
-  else{
-    printf("MST montada incorretamente\n");
+  if (soma != g.nodes-1){
+	    printf("MST montada incorretamente\n");
     exit(1);
-  }
+}
+
 
    cudaFree(aux_nodes);
    aux_nodes = NULL;
+
+   free(edges);
+   edges = NULL;
+
 
   // Ordena em GPU
   finalEdges = sort_edges(finalEdges,g.nodes-1);
@@ -366,16 +368,16 @@ MSTedge* buildMST_gpu(GPUECLgraph g,bool *edges,int mult){
   }   
   
 
-  if (soma == g.nodes-1)
-    printf("MST montada corretamente\n");
-
-  else{
-    printf("MST montada incorretamente\n");
+  if (soma != g.nodes-1){
+            printf("MST montada incorretamente\n");
     exit(1);
-  }
+}
 
    cudaFree(aux_nodes);
    aux_nodes = NULL;
+
+   free(edges);
+   edges = NULL;
 
 
   // Ordena em GPU

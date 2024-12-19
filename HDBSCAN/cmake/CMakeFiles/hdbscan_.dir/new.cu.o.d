@@ -371,4 +371,6 @@ CMakeFiles/hdbscan_.dir/new.cu.o : /nndescent/GPU_HDBSCAN/HDBSCAN/new.cu \
     /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../calculates/../structs/hdbscan_elements.cuh \
     /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../calculates/../structs/ECLgraph.h \
     /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../calculates/../getters/getters.cuh \
-    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../calculates/../getters/../structs/hdbscan_elements.cuh
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../calculates/../getters/../structs/hdbscan_elements.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../trees/tree.cuh \
+    /nndescent/GPU_HDBSCAN/HDBSCAN/core-sg/../trees/../structs/hdbscan_elements.cuh

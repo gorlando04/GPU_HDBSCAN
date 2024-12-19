@@ -301,7 +301,6 @@ ECLgraph Union_kNNG_MST(long int nodes,MSTedge *mst_edges){
     int *kNN = extract_knng_index(kNN_,knng_num,knng_dim);
     float *distances = extract_knng_distance(kNN_,knng_num,knng_dim);
 
-printf("PROTAGONISTA 11\n");
 
 
     CheckCUDA_();
@@ -322,7 +321,6 @@ printf("PROTAGONISTA 11\n");
 
     core_sg_calculate_nindex(nodes,flag_knn,kNN,&g,mst_edges);
 
-printf("PROTAGONISTA 12\n");
 
     long int *offsets;
     cudaMallocManaged(&offsets,(size_t)(g.nodes) * sizeof(long int)); // nindex[0] = X, nindex[1] = y, nindex[2] = z
@@ -335,17 +333,14 @@ printf("PROTAGONISTA 12\n");
     avoid_pageFault(g.nodes,auxiliar_edges,true);
     Check();
 
-printf("PROTAGONISTA 13\n");
 
     cudaMallocManaged(&g.nlist,(size_t)(g.nindex[nodes]) * sizeof(int));
     g.edges = g.nindex[nodes];
     float *euclidean_distance = new float[g.edges];
 
-printf("PROTAGONISTA 14\n");
 
     core_sg_calculate_nlist(nodes,flag_knn,kNN,&g,mst_edges,auxiliar_edges,offsets,euclidean_distance,distances);
 
-printf("PROTAGONISTA 15\n");
 
     free(kNN);
     kNN = NULL;
@@ -363,7 +358,6 @@ printf("PROTAGONISTA 15\n");
     calculateElements(elementsPerGPU,numGPUs,nodes); 
 
 
-printf("PROTAGONISTA 16\n");
 
     float *coreDistances;
     cudaMallocManaged(&coreDistances,(size_t)(nodes) * sizeof(float)); 
@@ -373,7 +367,6 @@ printf("PROTAGONISTA 16\n");
     free(distances);
     distances = NULL;
 
-printf("PROTAGONISTA 17\n");
 
   cudaMallocManaged(&g.eweight,(size_t)g.edges * sizeof(g.eweight[0]));
 
@@ -383,13 +376,11 @@ printf("PROTAGONISTA 17\n");
      cudaFree(aux_nodes);
     aux_nodes = NULL;
 
-printf("PROTAGONISTA 18\n");
 
     // Calcular a MRD para os pontos da MST  
     core_sg_calculate_MRD_mst(&g,offsets,mst_edges,nodes,euclidean_distance);
     // Retornar o grafo
 
-printf("PROTAGONISTA 19\n");
 
     write_euclidean_distance_vecs(euclidean_distance,g.edges);  
 
@@ -398,7 +389,6 @@ printf("PROTAGONISTA 19\n");
     cudaFree(offsets); offsets = NULL;
     free(mst_edges);mst_edges = NULL;
     cudaFree(coreDistances);coreDistances = NULL;
-printf("PROTAGONISTA 20 EDGES = %ld\n",g.edges);
 
     return g;
 
@@ -409,23 +399,24 @@ printf("PROTAGONISTA 20 EDGES = %ld\n",g.edges);
 
 
 
-// Perguntar para o hermes se existe essa possibilidade?
-void calculate_euclidean_distance_core_sg(ECLgraph* g,float* vector_data,long int dim,float *euclidean_distances,int *aux_nodes){
 
+void calculate_coresg_mrd(float *graphDistances,float *coreDistances,int *aux_nodes,int *aux_edges,long int size){
 
+  #pragma omp parallel for
+  for(long int i=0;i<size;i++){
 
-  long int totl_edges = g->edges;
-  #pragma parallel omp parallel 
-  for(long int i =0;i<totl_edges;i++){
+    int idx_a = aux_nodes[i];
+    int idx_b = aux_edges[i];
 
-    long int idx_a = g->nlist[i];
-    long int idx_b = aux_nodes[i];
+    float aux_distance = coreDistances[idx_a];
 
-    euclidean_distances[i] = calculate_euclidean_distance(vector_data,idx_a,idx_b,dim);
+    if(aux_distance < coreDistances[idx_b])
+      aux_distance = coreDistances[idx_b];
+
+    if (aux_distance > graphDistances[i])
+      graphDistances[i] = aux_distance;
 
   }
-
-  return ;
 }
 
 
@@ -467,7 +458,11 @@ void update_core_sg_weights(ECLgraph* g ,int nodes,long int mpts){
 
 
 // Calcular a MRD, temos o vetor g->eweight com a distancia euclidiana dos pontos. MUito simples agora. Shard em aux_node, g eweight e g nlist
-   
+   calculate_coresg_mrd(g->eweight,coreDistances,aux_nodes,g->nlist,g->edges);
+  cudaFree(coreDistances);coreDistances= NULL;
+  cudaFree(aux_nodes);aux_nodes=NULL;  
+  free(distances);distances=NULL;
+
 }
 
 
@@ -485,6 +480,7 @@ ECLgraph  build_CoreSG(NNDElement *result_graph,long int numValues,long int mpts
 
 
     cudaMallocManaged(&result_index_graph,(size_t)knng_num*knng_dim * sizeof(int));
+    #pragma omp parallel for
     for (long int i = 0; i < knng_num; i++) {
       for (long int j = 0; j < knng_dim; j++) {
         
@@ -498,7 +494,7 @@ ECLgraph  build_CoreSG(NNDElement *result_graph,long int numValues,long int mpts
    
     cudaMallocManaged(&distances,(size_t)numValues*knng_dim * sizeof(float));
 
-
+    #pragma omp parallel for
     for (long int i = 0; i < knng_num; i++) {
         for (long int j = 0; j < knng_dim; j++) {
           
@@ -523,7 +519,6 @@ ECLgraph  build_CoreSG(NNDElement *result_graph,long int numValues,long int mpts
     ECLgraph g;
     g = buildEnhancedKNNG(result_index_graph,distances,shards_num,numValues,k,mpts,mst_gpu);
 
-printf("PROTAGONISTA 9\n");
 
     // Variáveis para a MST
     bool* edges;
@@ -552,20 +547,57 @@ printf("PROTAGONISTA 9\n");
     //g = NULL;
 
 
-printf("PROTAGONISTA 10\n");
 
 
     ECLgraph core_sg;
     // União kNNG + MST
     core_sg = Union_kNNG_MST(numValues,mst_edges);
 
-    printf("PROTAGONISTA ultimo\n");
 
     // EScrever o grafo na memória
-    update_core_sg_weights(&core_sg,numValues,k-2);
     return core_sg;
 }
 
 
+
+
+
+int* extract_clusters(ECLgraph *g,int qntd_nohs,long int mpts,int mst_gpu){
+    bool* edges;
+    MSTedge *mst_edges;
+
+    if(mst_gpu){
+
+        int multiplicacoes=0;
+        GPUECLgraph g_gpu = buildGPUgraph("/nndescent/GPU_HDBSCAN/results/NNDescent-KNNG.kgraph",g,&multiplicacoes);     
+        edges = gpuMST(g_gpu, INT_MAX);
+        mst_edges = buildMST_gpu(g_gpu,edges,multiplicacoes);
+        freeECLgraphGPU(g_gpu);
+    }
+
+    else{
+          //printf("FUJAM PARA AS COLINAS\n");
+        edges = cpuMST(*g);
+        //printf("OPA");
+        mst_edges = buildMST(*g,edges);
+    }
+  printf("MST construida\n");
+  SingleLinkageNode *result_arr;
+  result_arr = build_Linkage_tree(mst_edges ,qntd_nohs);
+
+  CondensedTreeNode* condensed_tree;
+  int condensed_size;
+  condensed_tree =  build_Condensed_tree(result_arr, qntd_nohs,qntd_nohs-1, mpts,&condensed_size);
+
+  Stability *stabilities;
+  int stability_size;
+  stabilities = compute_stability(condensed_tree,condensed_size,&stability_size);
+
+	int* labels;
+  labels = get_clusters(condensed_tree, condensed_size, stabilities,  stability_size, qntd_nohs);
+
+  return labels;
+
+}
 
 

@@ -16,6 +16,7 @@
 #include "../mst/mst.cuh"
 #include "../initializer/initialize.cuh"
 #include "../calculates/calculates.cuh"
+#include "../trees/tree.cuh"
 
 #include <omp.h>
 #include <pthread.h>
@@ -27,6 +28,9 @@
 
 ECLgraph build_CoreSG(NNDElement *result_graph,long int numValues,long int mpts,int mst_gpu);
 
+void update_core_sg_weights(ECLgraph* g ,int nodes,long int mpts);
+
+int* extract_clusters(ECLgraph *g,int qntd_nohs,long int mpts,int mst_gpu);
 
 
 

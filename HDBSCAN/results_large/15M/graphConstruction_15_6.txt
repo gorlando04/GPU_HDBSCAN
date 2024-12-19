@@ -1,0 +1,38 @@
+NUM VALUES SET TO 15000000.
+mpts SET TO 32.
+SHARDS SET TO 4.
+MST WILL BE CONSTRUCTED IN GPU: 0
+There is no active ID.
+Ordenacao das asrestas demorou: 10.605688 
+TEMPO para a construcao do SCORE-SG ::  693.723753
+CORE-SG foi construido, vamos iniciar a extracao dos cluters para os diferentes valores de mpts
+Extraindo clusters para mpts= 32
+Ordenacao das asrestas demorou: 10.525746 
+MST construida
+CLUSTERS FIND = 7 
+Non Outliers: 15000000
+TEMPO Iter 0:: 865.588836
+Extraindo clusters para mpts= 31
+Ordenacao das asrestas demorou: 10.504609 
+MST construida
+CLUSTERS FIND = 7 
+Non Outliers: 15000000
+TEMPO Iter 1:: 210.800782
+Extraindo clusters para mpts= 30
+Ordenacao das asrestas demorou: 10.498570 
+MST construida
+CLUSTERS FIND = 7 
+Non Outliers: 15000000
+TEMPO Iter 2:: 210.892734
+Extraindo clusters para mpts= 29
+Ordenacao das asrestas demorou: 10.518843 
+MST construida
+CLUSTERS FIND = 7 
+Non Outliers: 15000000
+TEMPO Iter 3:: 213.548062
+Extraindo clusters para mpts= 28
+Ordenacao das asrestas demorou: 10.520328 
+MST construida
+CLUSTERS FIND = 7 
+Non Outliers: 15000000
+TEMPO Iter 4:: 216.000863

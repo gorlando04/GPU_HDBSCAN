@@ -14,7 +14,6 @@ UnionFind::UnionFind(int N) {
     // Parent array
     int *aux_parent;
     cudaMallocManaged(&aux_parent,(size_t)(2 * N - 1) * sizeof(int));
-
     
     int gridSize = ((2 * N - 1) + blockSize - 1) / blockSize;
     initializeVectorCounts<<<gridSize,blockSize>>>(aux_parent,-1,(2 * N - 1));
@@ -25,6 +24,7 @@ UnionFind::UnionFind(int N) {
     this->parent_arr = new int[(2*N -1)];
     cudaMemcpy(this->parent_arr, aux_parent,(size_t)(2 * N - 1) * sizeof(int), cudaMemcpyDeviceToHost);
     cudaFree(aux_parent);
+    aux_parent = NULL;
 
     cudaDeviceSynchronize();
     CheckCUDA_();
@@ -32,7 +32,6 @@ UnionFind::UnionFind(int N) {
     // Size Array
     int *aux_size;
     cudaMallocManaged(&aux_size,(size_t)(2 * N - 1) * sizeof(int));
-
     
     gridSize = (N  + blockSize - 1) / blockSize;
     initializeVectorCounts<<<gridSize,blockSize>>>(aux_size,1,N);
@@ -45,19 +44,18 @@ UnionFind::UnionFind(int N) {
 
     cudaDeviceSynchronize();
     CheckCUDA_();
-
     this->size_arr = new int[(2*N -1)];
     cudaMemcpy(this->size_arr , aux_size ,(size_t)(2 * N - 1) * sizeof(int), cudaMemcpyDeviceToHost);
+    
     cudaFree(aux_size);
+    aux_size = NULL;
 
     cudaDeviceSynchronize();
     CheckCUDA_();
-
     /*this->parent = new int[(2*N -1)];
     cudaMemcpy(this->parent, this->parent_arr,(size_t)(2 * N - 1) * sizeof(int), cudaMemcpyHostToHost);
     cudaDeviceSynchronize();
     CheckCUDA_();*/
-
     
 }
 
@@ -97,6 +95,18 @@ int UnionFind::getNextLabel(){
     return this->next_label;
 }
 
+void UnionFind::clear(){
+
+
+    free(this->parent_arr);
+    this->parent_arr = NULL;
+   
+
+    free(this->size_arr);
+    this->size_arr = NULL;
+
+    return;
+}
 
 
 // Essa função pode ser otimizada, talvez com OpenMP
@@ -168,10 +178,10 @@ int TreeUnionFind::Find(int x){
     return this->_data0[x];
 }
 
-SingleLinkageNode* build_Linkage_tree( MSTedge *mst_edges ,int num,int num_nodes){
+SingleLinkageNode* build_Linkage_tree( MSTedge *mst_edges ,int num_nodes){
     
     
-    UnionFind U = UnionFind(num);
+    UnionFind U = UnionFind(num_nodes);
 
 
     SingleLinkageNode *result_arr;
@@ -194,6 +204,8 @@ SingleLinkageNode* build_Linkage_tree( MSTedge *mst_edges ,int num,int num_nodes
       U.Union(aa,bb);
 
     }
+
+//    U.clear();
 
 //    printf("Single Linkage Tree montada\n");
 

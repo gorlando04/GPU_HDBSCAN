@@ -21,6 +21,8 @@ public:
     int getSize(int n);
 
     int getNextLabel();
+    
+    void clear();
 
 private:
     int  *parent_arr;
@@ -30,7 +32,7 @@ private:
 
 
 
-SingleLinkageNode* build_Linkage_tree( MSTedge *mst_edges ,int num,int num_nodes);
+SingleLinkageNode* build_Linkage_tree( MSTedge *mst_edges,int num_nodes);
 
 
 

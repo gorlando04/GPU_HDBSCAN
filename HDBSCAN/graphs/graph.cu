@@ -43,7 +43,6 @@ ECLgraph buildECLgraph(int nodes, long int edges,int *kNN, float *distances,int 
     avoid_pageFault(g.nodes,auxiliar_edges,true);
     Check();
 
-printf("PROTAGONISTA 2\n");
 
     cudaMallocManaged(&g.nlist,(size_t)(g.nindex[nodes]) * sizeof(int));
     g.edges = g.nindex[nodes];
@@ -54,7 +53,6 @@ printf("PROTAGONISTA 2\n");
 
     cudaFree(kNN);
     kNN = NULL;
-printf("PROTAGONISTA 3\n");
 
     cudaMallocManaged(&g.eweight,(size_t)g.edges * sizeof(g.eweight[0]));
 
@@ -69,9 +67,6 @@ printf("PROTAGONISTA 3\n");
 
 
 
-printf("PROTAGONISTA 4\n");
-
-
     float *coreDistances;
     cudaMallocManaged(&coreDistances,(size_t)(numValues) * sizeof(float)); 
     calculateCoreDistance(distances,coreDistances,numValues,k,k-1);   
@@ -80,7 +75,6 @@ printf("PROTAGONISTA 4\n");
 
     cudaFree(distances); distances = NULL; 
 
-printf("PROTAGONISTA 5\n");
 
     calculateMutualReachabilityDistance(g.eweight,coreDistances,aux_nodes,g.nlist,g.edges);  //Aqui usa GPU
 
@@ -92,12 +86,10 @@ printf("PROTAGONISTA 5\n");
     cudaFree(coreDistances);
     coreDistances = NULL;
 
-printf("PROTAGONISTA 6\n");
 
     // Read vector txtx
     calculate_coreDistance_antihubs(&g,auxiliar_edges,antihubs,num_antihubs);
 
-printf("PROTAGONISTA 7\n");
 
   return g;   
 }
@@ -122,7 +114,7 @@ ECLgraph buildEnhancedKNNG(int *kNN, float *distances, int shards_num, long int 
     int pos_threshold = get_NumThreshold(numValues);
     std::partial_sort(vertexes, vertexes + pos_threshold, vertexes + numValues, compareVertexByDegree); 
     int value_threshold = vertexes[pos_threshold-1].grau;
-    printf("A posicao do threshold eh: %d e o valor eh: %d\n",pos_threshold-1,value_threshold);
+//    printf("A posicao do threshold eh: %d e o valor eh: %d\n",pos_threshold-1,value_threshold);
 
 
     avoid_pageFault(numValues,vertexes,false);
@@ -160,7 +152,6 @@ ECLgraph buildEnhancedKNNG(int *kNN, float *distances, int shards_num, long int 
 
     ECLgraph g;
 
-printf("PROTAGONISTA 1\n");
 
     
     g = buildECLgraph(numValues, vectorSize,kNN, distances,k,mpts, antihubs, pos_threshold,mst_gpu);
@@ -170,7 +161,6 @@ printf("PROTAGONISTA 1\n");
 
 
 
-printf("PROTAGONISTA 8\n");
 
     return g;
 }

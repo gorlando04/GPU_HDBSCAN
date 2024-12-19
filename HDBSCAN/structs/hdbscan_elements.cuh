@@ -5,7 +5,7 @@
 #include "vector"
 #include "cuda_runtime.h"
 
-const int numGPUs = 3;
+const int numGPUs = 4;
 const int blockSize = 256;
 const int k = 32;
 const int mpts=k;

@@ -374,6 +374,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
   ../structs/hdbscan_elements.cuh \
   ../structs/ECLgraph.h \
   ../getters/getters.cuh \
+  ../structs/hdbscan_elements.cuh \
+  ../trees/tree.cuh \
   ../structs/hdbscan_elements.cuh
 
 
@@ -1074,6 +1076,8 @@ CMakeFiles/hdbscan_.dir/new.cu.o: ../new.cu \
 /usr/include/asm-generic/errno.h:
 
 /usr/include/c++/11/bits/functional_hash.h:
+
+../trees/tree.cuh:
 
 /usr/local/cuda/targets/x86_64-linux/include/crt/cudacc_ext.h:
 
